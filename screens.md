@@ -1,4 +1,5 @@
 
+# old rust variant
 caches implementation from here
 https://matklad.github.io/2022/06/11/caches-in-rust.html
 

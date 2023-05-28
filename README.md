@@ -1,12 +1,4 @@
-# Deno CultKit
 
-> Warning: this project is in beta. Design, workflows, and user accounts are
-> subject to change.
-
-todo discord link
-
-Deno CultKit is an open-sourced, highly performant
-template for building your Cult quickly and easily.
 
 ## Features
 
@@ -88,7 +80,7 @@ deno task start
 ```
 
 Go to [http://localhost:8000](http://localhost:8000) to begin playing with your
-new Cult app.
+new app.
 
 > Note: You can use
 > [Stripe's test credit cards](https://stripe.com/docs/testing) to make test
@@ -116,7 +108,7 @@ for a full list of properties and their types.
 ### Themes
 
 You can customize theme options such as spacing, color, etc. By default, Deno
-CultKit comes with `primary` and `secondary` colors predefined within
+comes with `primary` and `secondary` colors predefined within
 `twind.config.ts`. Change these values to match your desired color scheme.
 
 ## Deploying to Production
@@ -171,13 +163,3 @@ apply, such as:
 - Modular functionality
 - Clearly defined behavior with validation through tests
 
-## Community and Resources
-
-Join
-[the `#saaskit` channel in Deno's Discord](https://discord.com/channels/684898665143206084/1085986084653109438)
-to meet other CultKit developers, ask questions, and get unblocked.
-
-Here's a list of articles, how to guides, and videos about CultKit:
-
-- [Announcing Deno CultKit](https://deno.com/blog/announcing-deno-saaskit)
-- [Getting Started with CultKit (video walkthrough)](https://www.youtube.com/watch?v=1GYs3NbVCfE)

@@ -18,23 +18,20 @@ import * as $11 from "./routes/api/vote.ts";
 import * as $12 from "./routes/blog/[slug].tsx";
 import * as $13 from "./routes/blog/index.tsx";
 import * as $14 from "./routes/callback.ts";
-import * as $15 from "./routes/chronicle/[id].tsx";
-import * as $16 from "./routes/cult/[id].tsx";
-import * as $17 from "./routes/cult/index.tsx";
-import * as $18 from "./routes/cult/products/[id].tsx";
-import * as $19 from "./routes/feed.ts";
-import * as $20 from "./routes/index.tsx";
-import * as $21 from "./routes/item/[id].tsx";
-import * as $22 from "./routes/login.ts";
-import * as $23 from "./routes/logout.ts";
-import * as $24 from "./routes/meeting/index.tsx";
-import * as $25 from "./routes/personas/_middleware.ts";
-import * as $26 from "./routes/personas/index.tsx";
-import * as $27 from "./routes/pricing.tsx";
-import * as $28 from "./routes/submit.tsx";
-import * as $29 from "./routes/this_persona_participation/index.tsx";
+import * as $15 from "./routes/discover/[id].tsx";
+import * as $16 from "./routes/discover/index.tsx";
+import * as $17 from "./routes/feed.ts";
+import * as $18 from "./routes/index.tsx";
+import * as $19 from "./routes/item/[id].tsx";
+import * as $20 from "./routes/login.ts";
+import * as $21 from "./routes/logout.ts";
+import * as $22 from "./routes/my-lists/index.tsx";
+import * as $23 from "./routes/new-list/index.tsx";
+import * as $24 from "./routes/pricing.tsx";
+import * as $25 from "./routes/submit.tsx";
 import * as $$0 from "./islands/OpenFormButton.tsx";
 import * as $$1 from "./islands/VoteButton.tsx";
+import * as $$2 from "./islands/WantToReadList.tsx";
 
 const manifest = {
   routes: {
@@ -53,25 +50,22 @@ const manifest = {
     "./routes/blog/[slug].tsx": $12,
     "./routes/blog/index.tsx": $13,
     "./routes/callback.ts": $14,
-    "./routes/chronicle/[id].tsx": $15,
-    "./routes/cult/[id].tsx": $16,
-    "./routes/cult/index.tsx": $17,
-    "./routes/cult/products/[id].tsx": $18,
-    "./routes/feed.ts": $19,
-    "./routes/index.tsx": $20,
-    "./routes/item/[id].tsx": $21,
-    "./routes/login.ts": $22,
-    "./routes/logout.ts": $23,
-    "./routes/meeting/index.tsx": $24,
-    "./routes/personas/_middleware.ts": $25,
-    "./routes/personas/index.tsx": $26,
-    "./routes/pricing.tsx": $27,
-    "./routes/submit.tsx": $28,
-    "./routes/this_persona_participation/index.tsx": $29,
+    "./routes/discover/[id].tsx": $15,
+    "./routes/discover/index.tsx": $16,
+    "./routes/feed.ts": $17,
+    "./routes/index.tsx": $18,
+    "./routes/item/[id].tsx": $19,
+    "./routes/login.ts": $20,
+    "./routes/logout.ts": $21,
+    "./routes/my-lists/index.tsx": $22,
+    "./routes/new-list/index.tsx": $23,
+    "./routes/pricing.tsx": $24,
+    "./routes/submit.tsx": $25,
   },
   islands: {
     "./islands/OpenFormButton.tsx": $$0,
     "./islands/VoteButton.tsx": $$1,
+    "./islands/WantToReadList.tsx": $$2,
   },
   baseUrl: import.meta.url,
   config,

@@ -17,7 +17,7 @@ export default function OpenFormButton(props: OpenFormButtonProps) {
       // const url = `/api/vote?item_id=${props.user.id}`;
       // const method = "POST";
       // const response = await fetch(url, { method, credentials: "same-origin" });
-      dialog?.show();
+      // dialog?.show();
 
       // if (response.status === 401) {
       //   window.location.href = "/login";

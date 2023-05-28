@@ -26,7 +26,7 @@ export function Meta(props: MetaProps = DEFAULT_META_PROPS) {
     ...DEFAULT_META_PROPS,
     ...props,
   };
-  const title = props.title ? `${props.title} ◄ ${SITE_NAME}` : SITE_NAME;
+  const title = props.title ? `${props.title} ╤ ${SITE_NAME}` : SITE_NAME;
 
   return (
     <>

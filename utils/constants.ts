@@ -1,6 +1,6 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-export const SITE_NAME = "Cultspace kit";
-export const SITE_DESCRIPTION = "Discover new Deno projects. Share your own.";
+export const SITE_NAME = "lit tracker";
+export const SITE_DESCRIPTION = "Track your reading lists.";
 export const REDIRECT_PATH_AFTER_LOGIN = "/";
 
 /**
@@ -18,3 +18,5 @@ export const SITE_WIDTH_STYLES = "mx-auto max-w-7xl w-full";
 
 export const PREMIUM_LIMIT = 10;
 export const DEFAULT_LIMIT = 5;
+
+export const MAX_LIST_LENGTH = 20;

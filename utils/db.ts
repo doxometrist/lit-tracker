@@ -1,6 +1,5 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import { AssertionError } from "std/testing/asserts.ts";
-import { Persona } from "@/utils/db/db_persona.ts";
 
 export const kv = await Deno.openKv();
 
@@ -203,7 +202,6 @@ export interface InitUser {
 
 export interface User extends InitUser {
   isSubscribed: boolean;
-  personas: Persona[]
   joinDate: Date;
 }
 

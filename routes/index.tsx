@@ -17,7 +17,6 @@ import {
 interface HomePageData extends State {
   users: User[];
   items: Item[];
-  areVoted: boolean[];
 }
 
 export function compareScore(a: Item, b: Item) {
@@ -37,15 +36,15 @@ export const handler: Handlers<HomePageData, State> = {
     /** @todo Add pagination functionality */
     const items = (await getAllItems({ limit: 10 })).sort(compareScore);
     const users = await getUsersByIds(items.map((item) => item.userId));
-    let votedItemIds: string[] = [];
+    // let votedItemIds: string[] = [];
     if (ctx.state.sessionId) {
-      const sessionUser = await getUserBySessionId(ctx.state.sessionId!);
-      votedItemIds = await getVotedItemIdsByUser(sessionUser!.id);
+      // const sessionUser = await getUserBySessionId(ctx.state.sessionId!);
+      // votedItemIds = await getVotedItemIdsByUser(sessionUser!.id);
     }
 
     /** @todo Optimise */
-    const areVoted = items.map((item) => votedItemIds.includes(item.id));
-    return ctx.render({ ...ctx.state, items, users, areVoted });
+    // const areVoted = items.map((item) => votedItemIds.includes(item.id));
+    return ctx.render({ ...ctx.state, items, users });
   },
 };
 

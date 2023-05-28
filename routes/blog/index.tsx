@@ -45,7 +45,7 @@ export default function BlogPage(props: PageProps<BlogPageData>) {
     <>
       <Head
         title="Blog"
-        description="This is the blog for Cultkit"
+        description="This is the blog for..."
         href={props.url.href}
       />
       <Layout session={props.data.sessionId}>

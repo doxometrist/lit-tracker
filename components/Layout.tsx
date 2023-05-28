@@ -14,10 +14,10 @@ function Notice() {
       <div class={`text-center px-4`}>
         Welcome! Checkout the{" "}
         <a
-          href="https://github.com/doxometrist/cultkit"
+          href="https://github.com/doxometrist/lit-tracker"
           class="underline"
         >
-          roadmap
+          repo
         </a>.
       </div>
     </div>
@@ -56,8 +56,7 @@ function Header(props: JSX.HTMLAttributes<HTMLElement>) {
       }`}
     >
       <a href="/">
-        <Logo height="48" />
-        {/* <h3>Cultspace</h3> */}
+        <Logo height={48} width={80} />
       </a>
       {props.children}
     </header>
@@ -88,19 +87,18 @@ interface LayoutProps {
 export default function Layout(props: LayoutProps) {
   const headerNavItems = [
     {
-      href: "/cult",
-      inner: "Browse cults",
+      href: "/discover",
+      inner: "Discover",
     },
     {
-
-      href: "/this_persona_participation",
-      inner: "My participations",
+      href: "/my-lists",
+      inner: "My lists",
     },
     {
-
-      href: "/personas",
-      inner: "My personas",
+      href: "/new-list",
+      inner: "New list",
     },
+
     props.session
       ? {
         href: "/account",
@@ -122,8 +120,8 @@ export default function Layout(props: LayoutProps) {
       inner: "Blog",
     },
     {
-      inner: "Source code",
-      href: "https://github.com/doxometrist/cultkit",
+      inner: "follow me on twitter!",
+      href: "https://twitter.com/doxometrist",
     },
     {
       href: "https://fresh.deno.dev",
@@ -140,7 +138,7 @@ export default function Layout(props: LayoutProps) {
 
   return (
     <div class="flex flex-col min-h-screen">
-      <Notice />
+      {/* <Notice /> */}
       <Header>
         <Nav items={headerNavItems} />
       </Header>
