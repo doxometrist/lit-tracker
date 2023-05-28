@@ -14,13 +14,12 @@ export function timeAgo(time: number | Date) {
   return pluralize(~~(between / 86400), "day");
 }
 
-export interface ItemSummaryProps {
-  item: Book;
+export interface BookCardProps {
+  book: Book;
   user: User;
-  isVoted: boolean;
 }
 
-export default function ItemSummary(props: ItemSummaryProps) {
+export default function BookCard(props: BookCardProps) {
   return (
     <div class="py-2 flex gap-2 text-gray-500">
       {
@@ -31,20 +30,20 @@ export default function ItemSummary(props: ItemSummaryProps) {
       }
       <div>
         <span class="mr-2">
-          <a class="text-black hover:underline" href={`/item/${props.item.id}`}>
-            {props.item.title}
+          <a class="text-black hover:underline" href={`/item/${props.book.id}`}>
+            {props.book.title}
           </a>
         </span>
         <span>
-          <a class="hover:underline" href={props.item.url} target="_blank">
-            {new URL(props.item.url).host} ↗
+          <a class="hover:underline" href={props.book.url} target="_blank">
+            {new URL(props.book.url).host} ↗
           </a>
         </span>
         <p>
           {props.user.login}{" "}
           {props.user?.isSubscribed && <span title="Premium user">🦕{" "}
           </span>}
-          {timeAgo(new Date(props.item.createdAt))} ago
+          {timeAgo(new Date(props.book.createdAt))} ago
         </p>
       </div>
     </div>

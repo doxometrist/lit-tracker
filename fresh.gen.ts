@@ -25,10 +25,11 @@ import * as $18 from "./routes/index.tsx";
 import * as $19 from "./routes/item/[id].tsx";
 import * as $20 from "./routes/login.ts";
 import * as $21 from "./routes/logout.ts";
-import * as $22 from "./routes/my-lists/index.tsx";
-import * as $23 from "./routes/new-list/index.tsx";
-import * as $24 from "./routes/pricing.tsx";
-import * as $25 from "./routes/submit.tsx";
+import * as $22 from "./routes/my-lists/_middleware.ts";
+import * as $23 from "./routes/my-lists/index.tsx";
+import * as $24 from "./routes/new-list/index.tsx";
+import * as $25 from "./routes/pricing.tsx";
+import * as $26 from "./routes/submit.tsx";
 import * as $$0 from "./islands/OpenFormButton.tsx";
 import * as $$1 from "./islands/VoteButton.tsx";
 import * as $$2 from "./islands/WantToReadList.tsx";
@@ -57,10 +58,11 @@ const manifest = {
     "./routes/item/[id].tsx": $19,
     "./routes/login.ts": $20,
     "./routes/logout.ts": $21,
-    "./routes/my-lists/index.tsx": $22,
-    "./routes/new-list/index.tsx": $23,
-    "./routes/pricing.tsx": $24,
-    "./routes/submit.tsx": $25,
+    "./routes/my-lists/_middleware.ts": $22,
+    "./routes/my-lists/index.tsx": $23,
+    "./routes/new-list/index.tsx": $24,
+    "./routes/pricing.tsx": $25,
+    "./routes/submit.tsx": $26,
   },
   islands: {
     "./islands/OpenFormButton.tsx": $$0,

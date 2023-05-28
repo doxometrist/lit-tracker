@@ -1,6 +1,6 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-import VoteButton from "@/islands/VoteButton.tsx";
-import type { Book, User } from "@/utils/db.ts";
+import type { User } from "@/utils/db.ts";
+import { ReadingList } from "../utils/db_interfaces.ts";
 
 export function pluralize(unit: number, label: string) {
   return unit === 1 ? `${unit} ${label}` : `${unit} ${label}s`;
@@ -14,13 +14,13 @@ export function timeAgo(time: number | Date) {
   return pluralize(~~(between / 86400), "day");
 }
 
-export interface ItemSummaryProps {
-  item: Book;
+export interface ListCardProps {
+  list: ReadingList;
   user: User;
-  isVoted: boolean;
+  followed: boolean;
 }
 
-export default function ItemSummary(props: ItemSummaryProps) {
+export default function ListCard(props: ListCardProps) {
   return (
     <div class="py-2 flex gap-2 text-gray-500">
       {
@@ -31,20 +31,23 @@ export default function ItemSummary(props: ItemSummaryProps) {
       }
       <div>
         <span class="mr-2">
-          <a class="text-black hover:underline" href={`/item/${props.item.id}`}>
-            {props.item.title}
+          <a class="text-black hover:underline" href={`/lists/${props.list.id}`}>
+            {props.list.title}
           </a>
         </span>
         <span>
-          <a class="hover:underline" href={props.item.url} target="_blank">
-            {new URL(props.item.url).host} ↗
-          </a>
+          here url if it made sense
+          {
+            /* <a class="hover:underline" href={props.list.url} target="_blank">
+            {new URL(props.list.url).host} ↗
+          </a> */
+          }
         </span>
         <p>
           {props.user.login}{" "}
           {props.user?.isSubscribed && <span title="Premium user">🦕{" "}
           </span>}
-          {timeAgo(new Date(props.item.createdAt))} ago
+          {timeAgo(new Date(props.list.createdAt))} ago
         </p>
       </div>
     </div>

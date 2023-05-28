@@ -1,5 +1,6 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import { AssertionError } from "std/testing/asserts.ts";
+import { Book } from "./db_interfaces.ts";
 
 export const kv = await Deno.openKv();
 
@@ -9,23 +10,20 @@ interface InitItem {
   url: string;
 }
 
-export interface Item extends InitItem {
-  id: string;
-  createdAt: Date;
-  score: number;
-}
-
 export async function createItem(initItem: InitItem) {
   let res = { ok: false };
   while (!res.ok) {
     const id = crypto.randomUUID();
     const itemKey = ["items", id];
     const itemsByUserKey = ["items_by_user", initItem.userId, id];
-    const item: Item = {
+    const item: Book = {
       ...initItem,
       id,
-      score: 0,
-      createdAt: new Date(),
+      finishedUserIds: [],
+      pages: 0,
+      author: "",
+      description: "",
+      creatorId: ""
     };
 
     res = await kv.atomic()
@@ -40,19 +38,19 @@ export async function createItem(initItem: InitItem) {
 }
 
 export async function getAllItems(options?: Deno.KvListOptions) {
-  const iter = await kv.list<Item>({ prefix: ["items"] }, options);
+  const iter = await kv.list<Book>({ prefix: ["items"] }, options);
   const items = [];
   for await (const res of iter) items.push(res.value);
   return items;
 }
 
 export async function getItemById(id: string) {
-  const res = await kv.get<Item>(["items", id]);
+  const res = await kv.get<Book>(["items", id]);
   return res.value;
 }
 
 export async function getItemByUser(userId: string, itemId: string) {
-  const res = await kv.get<Item>(["items_by_users", userId, itemId]);
+  const res = await kv.get<Book>(["items_by_users", userId, itemId]);
   return res.value;
 }
 
@@ -111,7 +109,7 @@ export async function createVote(initVote: InitVote) {
 
   let res = { ok: false };
   while (!res.ok) {
-    const itemRes = await kv.get<Item>(itemKey);
+    const itemRes = await kv.get<Book>(itemKey);
 
     if (itemRes.value === null) throw new Error("Item does not exist");
 
@@ -121,7 +119,7 @@ export async function createVote(initVote: InitVote) {
       itemRes.value.id,
     ];
 
-    const itemByUserRes = await kv.get<Item>(itemByUserKey);
+    const itemByUserRes = await kv.get<Book>(itemByUserKey);
 
     if (itemByUserRes.value === null) {
       throw new Error("Item by user does not exist");
@@ -147,8 +145,8 @@ export async function deleteVote(initVote: InitVote) {
 
   let res = { ok: false };
   while (!res.ok) {
-    const itemRes = await kv.get<Item>(itemKey);
-    const voteByUserRes = await kv.get<Item>(voteByUserKey);
+    const itemRes = await kv.get<Book>(itemKey);
+    const voteByUserRes = await kv.get<Book>(voteByUserKey);
 
     if (itemRes.value === null) throw new Error("Item does not exist");
 
@@ -158,7 +156,7 @@ export async function deleteVote(initVote: InitVote) {
       itemRes.value.id,
     ];
 
-    const itemByUserRes = await kv.get<Item>(itemByUserKey);
+    const itemByUserRes = await kv.get<Book>(itemByUserKey);
 
     if (itemByUserRes.value === null) {
       throw new Error("Item by user does not exist");
@@ -274,55 +272,6 @@ function assertIsEntry<T>(
     throw new AssertionError(`${entry.key} does not exist`);
   }
 }
-
-// export async function setUserSubscription(
-//   user: User,
-//   isSubscribed: User["isSubscribed"],
-// ) {
-//   const usersKey = ["users", user.id];
-//   const usersByLoginKey = ["users_by_login", user.login];
-//   const usersBySessionKey = ["users_by_session", user.sessionId];
-//   // const usersByStripeCustomerKey = [
-//   //   "users_by_stripe_customer",
-//   //   user.stripeCustomerId,
-//   // ];
-
-//   const [
-//     userRes,
-//     userByLoginRes,
-//     userBySessionRes,
-//     userByStripeCustomerRes,
-//   ] = await kv.getMany<User[]>([
-//     usersKey,
-//     usersByLoginKey,
-//     usersBySessionKey,
-//     usersByStripeCustomerKey,
-//   ]);
-
-//   [
-//     userRes,
-//     userByLoginRes,
-//     userBySessionRes,
-//     userByStripeCustomerRes,
-//   ].forEach((res) => assertIsEntry<User>(res));
-
-//   user = { ...user, isSubscribed } as User;
-
-//   const res = await kv.atomic()
-//     .check(userRes)
-//     .check(userByLoginRes)
-//     .check(userBySessionRes)
-//     .check(userByStripeCustomerRes)
-//     .set(usersKey, user)
-//     .set(usersByLoginKey, user)
-//     .set(usersBySessionKey, user)
-//     .set(usersByStripeCustomerKey, user)
-//     .commit();
-
-//   if (!res.ok) {
-//     throw res;
-//   }
-// }
 
 /** This assumes that the previous session has been cleared */
 export async function setUserSession(

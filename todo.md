@@ -4,6 +4,18 @@
 - [ ] list of books
 - [ ] list of lists
 
+- [ ] setup the auth on local with github
+
+- [ ] do read stuff with mock data and raw html
+  - [ ] my lists
+  - [ ] all lists
+- [ ] do create stuff
+  - [ ] new book
+  - [ ] new reading list
+- [ ] 
+
+add author field?
+
 # routes
 browse lists
   - like lists
@@ -18,6 +30,7 @@ add new element - choose to which list - form
 
 also a default list all stuff lands on
 
+- [ ] algorithm for discover taking into account the tags user likes
 
 # main landing page
 

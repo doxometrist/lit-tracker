@@ -6,20 +6,20 @@ import Head from "@/components/Head.tsx";
 import type { State } from "./_middleware.ts";
 import ItemSummary from "@/components/ItemSummary.tsx";
 import {
+  type Book,
   getAllItems,
   getUserBySessionId,
   getUsersByIds,
   getVotedItemIdsByUser,
-  type Item,
   type User,
 } from "@/utils/db.ts";
 
 interface HomePageData extends State {
   users: User[];
-  items: Item[];
+  items: Book[];
 }
 
-export function compareScore(a: Item, b: Item) {
+export function compareScore(a: Book, b: Book) {
   const x = Number(a.score);
   const y = Number(b.score);
   if (x > y) {
@@ -56,16 +56,18 @@ export default function HomePage(props: PageProps<HomePageData>) {
         <div class={`${SITE_WIDTH_STYLES} flex-1 px-4 snap-proximity snap-y `}>
           <section class="h-screen snap-center">
             <h2>page 1</h2>
-            <p >
+            <p>
               lorem ipsum
             </p>
           </section>
-          {/* <section class="h-screen snap-center">
+          {
+            /* <section class="h-screen snap-center">
             <h2>page 2</h2>
             <p >
               lorem ipsum
             </p>
-          </section> */}
+          </section> */
+          }
           {
             /* {props.data.items.map((item, index) => (
             <ItemSummary
