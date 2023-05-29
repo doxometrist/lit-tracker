@@ -31,7 +31,7 @@ add these good things for hero, features list https://fresh.deno.dev/components#
 
 ## shared components
 
-- [ ] setup the auth on local with github
+- [x] setup the auth on local with github
 - [ ] get the data going alright
   - [ ] list of books
   - [ ] list of lists

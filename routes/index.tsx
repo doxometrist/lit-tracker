@@ -6,7 +6,6 @@ import Head from "@/components/Head.tsx";
 import type { State } from "./_middleware.ts";
 import ItemSummary from "@/components/ItemSummary.tsx";
 import {
-  type Book,
   getAllItems,
   getUserBySessionId,
   getUsersByIds,
@@ -16,15 +15,15 @@ import {
 import Hero from "../components/LandingHero.tsx";
 import Features from "../components/Features.tsx";
 import Carousel from "../components/Carousel.tsx";
+import { Book } from "../utils/db_interfaces.ts";
 
 interface HomePageData extends State {
-  users: User[];
   items: Book[];
 }
 
-export function compareScore(a: Book, b: Book) {
-  const x = Number(a.score);
-  const y = Number(b.score);
+export function comparePages(a: Book, b: Book) {
+  const x = Number(a.pages);
+  const y = Number(b.pages);
   if (x > y) {
     return -1;
   }
@@ -36,9 +35,7 @@ export function compareScore(a: Book, b: Book) {
 
 export const handler: Handlers<HomePageData, State> = {
   async GET(_req, ctx) {
-    /** @todo Add pagination functionality */
-    const items = (await getAllItems({ limit: 10 })).sort(compareScore);
-    const users = await getUsersByIds(items.map((item) => item.userId));
+    const items = (await getAllItems({ limit: 10 })).sort(comparePages);
     // let votedItemIds: string[] = [];
     if (ctx.state.sessionId) {
       // const sessionUser = await getUserBySessionId(ctx.state.sessionId!);
@@ -47,7 +44,7 @@ export const handler: Handlers<HomePageData, State> = {
 
     /** @todo Optimise */
     // const areVoted = items.map((item) => votedItemIds.includes(item.id));
-    return ctx.render({ ...ctx.state, items, users });
+    return ctx.render({ ...ctx.state, items });
   },
 };
 
@@ -59,32 +56,7 @@ export default function HomePage(props: PageProps<HomePageData>) {
         <div class={`${SITE_WIDTH_STYLES} flex-1 px-4 snap-proximity snap-y `}>
           <Hero />
           <Features />
-          <Carousel/>
-          {
-            /* <section class="h-screen snap-center">
-            <h2>page 1</h2>
-            <p>
-              lorem ipsum
-            </p>
-          </section> */
-          }
-          {
-            /* <section class="h-screen snap-center">
-            <h2>page 2</h2>
-            <p >
-              lorem ipsum
-            </p>
-          </section> */
-          }
-          {
-            /* {props.data.items.map((item, index) => (
-            <ItemSummary
-              item={item}
-              isVoted={props.data.areVoted[index]}
-              user={props.data.users[index]}
-            />
-          ))} */
-          }
+          <Carousel />
         </div>
       </Layout>
     </>

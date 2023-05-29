@@ -4,13 +4,13 @@ import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import { BUTTON_STYLES, NOTICE_STYLES } from "@/utils/constants.ts";
 import { State } from "@/routes/_middleware.ts";
-import { ReadingList } from "@/utils/db_interfaces.ts";
+import { Book } from "@/utils/db_interfaces.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
 import { getAllReadingLists } from "../../utils/new-db.ts";
 import ListCard from "../../components/ListCard.tsx";
 
 interface ListsPageData extends State {
-  lists: ReadingList[];
+  lists: Book[];
   user: User;
 }
 // todo add sorting by author, likes, etc
@@ -35,7 +35,7 @@ export default function ListsPage(props: PageProps<ListsPageData>) {
           </h1>
         </div>
         <div>
-          {props.data.lists.length === 0 && 'sowwy,  no lists here!'}
+          {props.data.lists.length === 0 && "sowwy,  no lists here!"}
           <ul>
             {props.data.lists.map((l, i) => {
               return (

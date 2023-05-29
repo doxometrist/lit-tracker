@@ -56,7 +56,7 @@ export const handler: Handlers<NewListPageData, State> = {
 
     // Redirect user to thank you page.
     const headers = new Headers();
-    headers.set("location", "/thanks-for-subscribing");
+    headers.set("location", "/my-lists");
     return new Response(null, {
       status: 303, // See Other
       headers,

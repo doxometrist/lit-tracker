@@ -1,9 +1,8 @@
-//  Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import { getUserBySessionId, User } from "../../utils/db.ts";
-import { ReadingList } from "../../utils/db_interfaces.ts";
+import { Book, ReadingList } from "../../utils/db_interfaces.ts";
 import { getReadingListsByUserId } from "../../utils/new-db.ts";
 import { State } from "../_middleware.ts";
 import ListCard from "../../components/ListCard.tsx";
@@ -30,6 +29,11 @@ export default function MyLists(props: PageProps<MyListsPageData>) {
           <h1 class="text-3xl mb-4">
             <strong>any</strong>
           </h1>
+          <div id="goToNewList">
+            <a href="/new-list">
+              make a new list
+            </a>
+          </div>
           <div id="test" class="bg-primary">
             <ul>
               {props.data.lists.map((l, i) => {

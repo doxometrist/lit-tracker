@@ -6,6 +6,15 @@ export async function getReadingListsByUserId(userId: string, options?: Deno.KvL
   const iter = await kv.list<ReadingList>({ prefix: ["lists_by_user", userId] }, options);
   const items = [];
   for await (const res of iter) items.push(res.value);
+  console.log('list items from by user: ', items);
+  return items;
+}
+
+
+export async function getAllBooks(options?: Deno.KvListOptions): Promise<Book[]> {
+  const iter = await kv.list<Book>({ prefix: ["books"] }, options);
+  const items = [];
+  for await (const res of iter) items.push(res.value);
   return items;
 }
 
@@ -27,14 +36,16 @@ export async function getBooksByReadingListId(id: string, options?: Deno.KvListO
 }
 
 
+export async function getReadingListByid(listId: string): Promise<ReadingList> {
+  const res = await kv.get<ReadingList>(["lists", listId]);
+  console.log('res: ', res)
+  return res.value;
 
-export async function getReadingListByid(id: string, options?: Deno.KvListOptions): Promise<ReadingList[]> {
-  const iter = await kv.list<ReadingList>({ prefix: ["lists", id] }, options);
-  const items = [];
-  for await (const res of iter) items.push(res.value);
-  return items;
+  // const items = [];
+  // for await (const res of res) items.push(res.value);
+  // console.log('list items: ', items)
+  // return items;
 }
-
 
 export async function createReadingList(initList: InitReadingList) {
   let res = { ok: false };
@@ -70,7 +81,8 @@ export async function createBook(initBook: InitBook) {
     const book: Book = {
       ...initBook,
       id,
-      finishedUserIds: []
+      finishedUserIds: [],
+      createdAt: new Date()
     };
 
     res = await kv.atomic()
@@ -82,7 +94,7 @@ export async function createBook(initBook: InitBook) {
   }
 }
 
-export async function getAllReadingLists(options?: Deno.KvListOptions) {
+export async function getAllReadingLists(options?: Deno.KvListOptions): Promise<ReadingList[]> {
   const iter = await kv.list<ReadingList>({ prefix: ["lists"] }, options);
   const items = [];
   for await (const res of iter) items.push(res.value);

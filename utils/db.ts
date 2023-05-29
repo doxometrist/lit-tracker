@@ -1,5 +1,4 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-import { AssertionError } from "std/testing/asserts.ts";
 import { Book } from "./db_interfaces.ts";
 
 export const kv = await Deno.openKv();

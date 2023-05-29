@@ -1,6 +1,6 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-import VoteButton from "@/islands/VoteButton.tsx";
-import type { Book, User } from "@/utils/db.ts";
+import type { User } from "@/utils/db.ts";
+import { Book } from "../utils/db_interfaces.ts";
 
 export function pluralize(unit: number, label: string) {
   return unit === 1 ? `${unit} ${label}` : `${unit} ${label}s`;
@@ -16,7 +16,7 @@ export function timeAgo(time: number | Date) {
 
 export interface BookCardProps {
   book: Book;
-  user: User;
+  user: User | null;
 }
 
 export default function BookCard(props: BookCardProps) {
@@ -35,16 +35,22 @@ export default function BookCard(props: BookCardProps) {
           </a>
         </span>
         <span>
-          <a class="hover:underline" href={props.book.url} target="_blank">
+          {
+            /* <a class="hover:underline" href={props.book.url} target="_blank">
             {new URL(props.book.url).host} ↗
-          </a>
+          </a> */
+          }
         </span>
-        <p>
-          {props.user.login}{" "}
-          {props.user?.isSubscribed && <span title="Premium user">🦕{" "}
-          </span>}
-          {timeAgo(new Date(props.book.createdAt))} ago
-        </p>
+        {props.user &&
+          (
+            <p>
+              {props.user.login}{" "}
+              {props.user?.isSubscribed && (
+                <span title="Premium user">🦕{" "}</span>
+              )}
+              {timeAgo(new Date(props.book.createdAt))} ago
+            </p>
+          )}
       </div>
     </div>
   );

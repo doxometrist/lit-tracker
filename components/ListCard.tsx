@@ -1,6 +1,6 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { User } from "@/utils/db.ts";
-import { ReadingList } from "../utils/db_interfaces.ts";
+import { Book, ReadingList } from "../utils/db_interfaces.ts";
 
 export function pluralize(unit: number, label: string) {
   return unit === 1 ? `${unit} ${label}` : `${unit} ${label}s`;
@@ -31,7 +31,10 @@ export default function ListCard(props: ListCardProps) {
       }
       <div>
         <span class="mr-2">
-          <a class="text-black hover:underline" href={`/lists/${props.list.id}`}>
+          <a
+            class="text-black hover:underline"
+            href={`/lists/${props.list.id}`}
+          >
             {props.list.title}
           </a>
         </span>

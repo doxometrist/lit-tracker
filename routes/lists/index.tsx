@@ -4,27 +4,27 @@ import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import { BUTTON_STYLES, NOTICE_STYLES } from "@/utils/constants.ts";
 import { State } from "@/routes/_middleware.ts";
-import { Book } from "@/utils/db_interfaces.ts";
+import { ReadingList } from "@/utils/db_interfaces.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
-import { getAllBooks, getAllReadingLists } from "../../utils/new-db.ts";
+import { getAllReadingLists } from "../../utils/new-db.ts";
 import ListCard from "../../components/ListCard.tsx";
 
-interface BooksPageData extends State {
-  books: Book[];
+interface ListsPageData extends State {
+  lists: ReadingList[];
   user: User;
 }
 // todo add sorting by author, likes, etc
 
-export const handler: Handlers<BooksPageData, State> = {
+export const handler: Handlers<ListsPageData, State> = {
   // todo here the discovery algorithm
   async GET(_request, ctx) {
     const user = await getUserBySessionId(ctx.state.sessionId!) as User;
-    const books = await getAllBooks();
-    return ctx.render({ ...ctx.state, user, books });
+    const lists = await getAllReadingLists();
+    return ctx.render({ ...ctx.state, user, lists });
   },
 };
 
-export default function ListsPage(props: PageProps<BooksPageData>) {
+export default function ListsPage(props: PageProps<ListsPageData>) {
   return (
     <>
       <Head title="any" href={props.url.href} />
@@ -35,9 +35,9 @@ export default function ListsPage(props: PageProps<BooksPageData>) {
           </h1>
         </div>
         <div>
-          {props.data.books.length === 0 && "sowwy,  no lists here!"}
+          {props.data.lists.length === 0 && 'sowwy,  no lists here!'}
           <ul>
-            {props.data.books.map((l, i) => {
+            {props.data.lists.map((l, i) => {
               return (
                 <li>
                   <ListCard list={l} user={props.data.user} followed={false} />
