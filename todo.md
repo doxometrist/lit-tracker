@@ -12,7 +12,7 @@
 - [ ] do create stuff
   - [ ] new book
   - [ ] new reading list
-- [ ] 
+- [ ]  make the styles as Chat suggested!
 
 add author field?
 

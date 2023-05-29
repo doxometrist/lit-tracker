@@ -1,5 +1,5 @@
 import { kv } from "./db.ts";
-import { Book, InitBook, ReadingList } from "./db_interfaces.ts";
+import { Book, InitBook, InitReadingList, ReadingList } from "./db_interfaces.ts";
 
 
 export async function getReadingListsByUserId(userId: string, options?: Deno.KvListOptions): Promise<ReadingList[]> {
@@ -10,7 +10,33 @@ export async function getReadingListsByUserId(userId: string, options?: Deno.KvL
 }
 
 
-export async function createReadingList(initList: InitBook) {
+export async function getBooksByReadingListId(id: string, options?: Deno.KvListOptions): Promise<Book[]> {
+  const listIter = await kv.list<string>({ prefix: ["lists", id, 'book_ids'] }, options);
+  const booksIter = await kv.list<Book>({ prefix: ['books', id] })
+  const wantedBookIds: string[] = [];
+  for await (const res of listIter) {
+    wantedBookIds.push(res.value);
+  }
+  const books: Book[] = [];
+  for await (const res of booksIter) {
+    if (wantedBookIds.includes(res.value.id)) {
+      books.push(res.value)
+    }
+  };
+  return books;
+}
+
+
+
+export async function getReadingListByid(id: string, options?: Deno.KvListOptions): Promise<ReadingList[]> {
+  const iter = await kv.list<ReadingList>({ prefix: ["lists", id] }, options);
+  const items = [];
+  for await (const res of iter) items.push(res.value);
+  return items;
+}
+
+
+export async function createReadingList(initList: InitReadingList) {
   let res = { ok: false };
   while (!res.ok) {
     const id = crypto.randomUUID();
@@ -41,7 +67,6 @@ export async function createBook(initBook: InitBook) {
   while (!res.ok) {
     const id = crypto.randomUUID();
     const itemKey = ["books", id];
-    const itemsByUserKey = ["books_by_user", initBook.creatorId, id];
     const book: Book = {
       ...initBook,
       id,
@@ -50,9 +75,7 @@ export async function createBook(initBook: InitBook) {
 
     res = await kv.atomic()
       .check({ key: itemKey, versionstamp: null })
-      .check({ key: itemsByUserKey, versionstamp: null })
       .set(itemKey, book)
-      .set(itemsByUserKey, book)
       .commit();
 
     return book;
