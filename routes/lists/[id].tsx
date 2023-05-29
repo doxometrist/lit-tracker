@@ -6,11 +6,11 @@ import Layout from "@/components/Layout.tsx";
 import type { State } from "@/routes/_middleware.ts";
 import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import {
+  type Comment,
   createComment,
   getCommentsByItem,
   getUserBySessionId,
   getUsersByIds,
-  type Comment,
   type User,
 } from "@/utils/db.ts";
 import { Book, ReadingList } from "@/utils/db_interfaces.ts";
@@ -86,6 +86,7 @@ export const handler: Handlers<ListPageData, State> = {
 
 export default function ListPage(props: PageProps<ListPageData>) {
   console.log("list: ", props.data.list);
+  const books = props.data.books;
   return (
     <>
       <Head title={props.data.list.title} href={props.url.href} />
@@ -95,7 +96,7 @@ export default function ListPage(props: PageProps<ListPageData>) {
             <h3>here contents of this list:</h3>
           </div>
           <ul>
-            {props.data.books.map((b, i) => {
+            {books.map((b, i) => {
               return (
                 <li>
                   <BookCard book={b} user={props.data.user} />

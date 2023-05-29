@@ -16,7 +16,7 @@ export const NOTICE_STYLES =
   "px-4 py-2 rounded-lg bg-yellow-100 text-yellow-700";
 export const SITE_WIDTH_STYLES = "mx-auto max-w-7xl w-full";
 
-export const PREMIUM_LIMIT = 10;
-export const DEFAULT_LIMIT = 5;
+export const PREMIUM_LISTS_LIMIT = 10;
+export const DEFAULT_LISTS_LIMIT = 5;
 
 export const MAX_LIST_LENGTH = 20;

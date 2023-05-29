@@ -34,8 +34,9 @@ add these good things for hero, features list https://fresh.deno.dev/components#
 - [x] setup the auth on local with github
 - [ ] get the data going alright
   - [ ] list of books
-  - [ ] list of lists
+  - [x] list of lists
   - [ ] books - view individual ones and also see all
+  - [ ] addition of a book to list on creation does not work quite alright
 
 ### styling
 - [ ] element of a book - a horizontal bar with photo and buttons

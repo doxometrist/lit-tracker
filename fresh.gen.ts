@@ -30,8 +30,9 @@ import * as $23 from "./routes/login.ts";
 import * as $24 from "./routes/logout.ts";
 import * as $25 from "./routes/my-lists/_middleware.ts";
 import * as $26 from "./routes/my-lists/index.tsx";
-import * as $27 from "./routes/new-list/index.tsx";
-import * as $28 from "./routes/submit.tsx";
+import * as $27 from "./routes/new-book/index.tsx";
+import * as $28 from "./routes/new-list/index.tsx";
+import * as $29 from "./routes/submit.tsx";
 import * as $$0 from "./islands/OpenFormButton.tsx";
 import * as $$1 from "./islands/VoteButton.tsx";
 import * as $$2 from "./islands/WantToReadList.tsx";
@@ -65,8 +66,9 @@ const manifest = {
     "./routes/logout.ts": $24,
     "./routes/my-lists/_middleware.ts": $25,
     "./routes/my-lists/index.tsx": $26,
-    "./routes/new-list/index.tsx": $27,
-    "./routes/submit.tsx": $28,
+    "./routes/new-book/index.tsx": $27,
+    "./routes/new-list/index.tsx": $28,
+    "./routes/submit.tsx": $29,
   },
   islands: {
     "./islands/OpenFormButton.tsx": $$0,

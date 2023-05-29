@@ -1,15 +1,13 @@
 import { kv } from "./db.ts";
 import { Book, InitBook, InitReadingList, ReadingList } from "./db_interfaces.ts";
 
-
 export async function getReadingListsByUserId(userId: string, options?: Deno.KvListOptions): Promise<ReadingList[]> {
   const iter = await kv.list<ReadingList>({ prefix: ["lists_by_user", userId] }, options);
   const items = [];
   for await (const res of iter) items.push(res.value);
-  console.log('list items from by user: ', items);
+  // console.log('list items from by user: ', items);
   return items;
 }
-
 
 export async function getAllBooks(options?: Deno.KvListOptions): Promise<Book[]> {
   const iter = await kv.list<Book>({ prefix: ["books"] }, options);
@@ -17,7 +15,6 @@ export async function getAllBooks(options?: Deno.KvListOptions): Promise<Book[]>
   for await (const res of iter) items.push(res.value);
   return items;
 }
-
 
 export async function getBooksByReadingListId(id: string, options?: Deno.KvListOptions): Promise<Book[]> {
   const listIter = await kv.list<string>({ prefix: ["lists", id, 'book_ids'] }, options);
@@ -36,9 +33,8 @@ export async function getBooksByReadingListId(id: string, options?: Deno.KvListO
 }
 
 
-export async function getReadingListByid(listId: string): Promise<ReadingList> {
+export async function getReadingListByid(listId: string): Promise<ReadingList | null> {
   const res = await kv.get<ReadingList>(["lists", listId]);
-  console.log('res: ', res)
   return res.value;
 
   // const items = [];
@@ -73,7 +69,7 @@ export async function createReadingList(initList: InitReadingList) {
 }
 
 
-export async function createBook(initBook: InitBook) {
+export async function createBook(initBook: InitBook): Promise<Book> {
   let res = { ok: false };
   while (!res.ok) {
     const id = crypto.randomUUID();
@@ -82,7 +78,6 @@ export async function createBook(initBook: InitBook) {
       ...initBook,
       id,
       finishedUserIds: [],
-      createdAt: new Date()
     };
 
     res = await kv.atomic()
