@@ -24,8 +24,10 @@ import {
 } from "@/utils/db.ts";
 import { redirect } from "@/utils/http.ts";
 import { pluralize } from "@/components/ItemSummary.tsx";
+import { getReadingListsByUserId } from "../../utils/new-db.ts";
+import BookCard from "../../components/BookCard.tsx";
 
-interface ItemPageData extends State {
+interface BookPageData extends State {
   user: User;
   item: Book;
   comments: Comment[];
@@ -33,7 +35,8 @@ interface ItemPageData extends State {
   isVoted: boolean;
 }
 
-export const handler: Handlers<ItemPageData, State> = {
+// todo button to add to one of the lists
+export const handler: Handlers<BookPageData, State> = {
   async GET(_req, ctx) {
     const { id } = ctx.params;
 
@@ -55,6 +58,9 @@ export const handler: Handlers<ItemPageData, State> = {
     }
 
     const isVoted = votedItemIds.includes(id);
+
+    // todo error handling
+    const ownLists = await getReadingListsByUserId(user.id);
 
     return ctx.render({
       ...ctx.state,
@@ -89,7 +95,8 @@ export const handler: Handlers<ItemPageData, State> = {
   },
 };
 
-export default function ItemPage(props: PageProps<ItemPageData>) {
+
+export default function BookPage(props: PageProps<BookPageData>) {
   return (
     <>
       <Head title={props.data.item.title} href={props.url.href} />
@@ -100,6 +107,7 @@ export default function ItemPage(props: PageProps<ItemPageData>) {
             isVoted={props.data.isVoted}
             user={props.data.user}
           />
+          <BookCard user={props.data.user} book={props.data.book} />
           <form method="post">
             <textarea
               class={INPUT_STYLES}

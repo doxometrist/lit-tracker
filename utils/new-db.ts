@@ -114,3 +114,28 @@ export async function removeBookFromList(bookId: string, listId: string) {
   }
 }
 
+
+
+export async function deleteList(userId: string, listId: string) {
+  const itemKey = ["lists", listId];
+  const itemsByUserKey = ["lists_by_user", userId, listId];
+
+  const [
+    itemRes,
+    byUserRes
+  ] = await kv.getMany<ReadingList[]>([
+    itemKey,
+    itemsByUserKey
+  ]);
+
+  const res = await kv.atomic()
+    .check(itemRes)
+    .check(byUserRes)
+    .delete(itemKey)
+    .delete(itemsByUserKey)
+    .commit();
+
+  if (!res.ok) {
+    throw res;
+  }
+}

@@ -91,6 +91,10 @@ export default function Layout(props: LayoutProps) {
       inner: "Discover",
     },
     {
+      href: "/books",
+      inner: "Books",
+    },
+    {
       href: "/my-lists",
       inner: "My lists",
     },

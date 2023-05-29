@@ -48,7 +48,7 @@ function Form(props: { options: ReadingList[] }) {
         name="pages"
       />
       <label for="list">here select to which list does it belong</label>
-      <select id="list" name="list" required>
+      <select id="list" name="list" required multiple>
         {props.options.map((list, i) => {
           return (
             <option key={`option-${i}`} value={list.id}>{list.title}</option>

@@ -38,6 +38,8 @@ add these good things for hero, features list https://fresh.deno.dev/components#
   - [ ] books - view individual ones and also see all
   - [ ] addition of a book to list on creation does not work quite alright
 
+- [ ] selected books work
+
 ### styling
 - [ ] element of a book - a horizontal bar with photo and buttons
 - [ ] fill in the landing page so that it's not just the defaults icons from

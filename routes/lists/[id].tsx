@@ -4,7 +4,11 @@ import BookCard from "@/components/BookCard.tsx";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import type { State } from "@/routes/_middleware.ts";
-import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
+import {
+  DEFAULT_LISTS_LIMIT,
+  MAX_LIST_LENGTH,
+  SITE_WIDTH_STYLES,
+} from "@/utils/constants.ts";
 import {
   type Comment,
   createComment,
@@ -23,6 +27,8 @@ interface ListPageData extends State {
   books: Book[];
   comments: Comment[];
   commentsUsers: User[];
+  suggestions: Book[];
+  own: boolean;
 }
 
 export const handler: Handlers<ListPageData, State> = {
@@ -40,22 +46,32 @@ export const handler: Handlers<ListPageData, State> = {
     const commentsUsers = await getUsersByIds(
       comments.map((comment) => comment.userId),
     );
-    // const user = await getUserById(item.finishedUserIds);
 
     let user: User | null = null;
+    let own = false;
     if (ctx.state.sessionId) {
       // const sessionUser = await getUserBySessionId(ctx.state.sessionId);
       user = await getUserBySessionId(ctx.state.sessionId);
+      if (user?.id === list.creatorId) {
+        own = true;
+      }
     }
 
     const books = await getBooksByReadingListId(id);
+    let suggestions: Book[] = [];
+    if (books.length < MAX_LIST_LENGTH / 2) {
+      // todo use embeddings to get a close book
+      // todo need a tag system
+    }
 
     return ctx.render({
       ...ctx.state,
+      own: false,
       comments,
       books,
       list,
       user,
+      suggestions,
       commentsUsers,
     });
   },
@@ -80,9 +96,13 @@ export const handler: Handlers<ListPageData, State> = {
       text,
     });
 
-    return redirect(`/item/${ctx.params.id}`);
+    return redirect(`/list/${ctx.params.id}`);
   },
 };
+
+// todo here edit or delete it
+function ManageList() {
+}
 
 export default function ListPage(props: PageProps<ListPageData>) {
   console.log("list: ", props.data.list);
@@ -95,6 +115,14 @@ export default function ListPage(props: PageProps<ListPageData>) {
           <div>
             <h3>here contents of this list:</h3>
           </div>
+          <div id="addBooksRegion" class="m-2 p-2 bg-primary flex flex-row">
+          </div>
+          {
+            props.data.own ??
+            <div>delete?
+
+            </div>
+          }
           <ul>
             {books.map((b, i) => {
               return (
