@@ -1,26 +1,34 @@
-
-import IconAlarm from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/alarm.tsx";
-import IconAirBalloon from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/air-balloon.tsx";
-import IconArmchair from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/armchair.tsx";
 import IconChevronRight from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/chevron-right.tsx";
+
+import IconBook from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/book.tsx";
+
+import IconListNumbers from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/list-numbers.tsx";
+
+import IconCompass from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/compass.tsx";
+
+import IconSkull from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/skull.tsx";
 
 export default function Features() {
   const featureItems = [
     {
-      icon: IconAlarm,
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc ut aliquam aliquam",
-      link: "#",
+      icon: IconCompass,
+      description: "Discover new books",
+      link: "/discover",
     },
     {
-      icon: IconAirBalloon,
-      description:
-        "Nunc nisl aliquet nisl, eget aliquam nisl nisl sit amet lorem. Sed euismod, nunc ut aliquam aliquam, nunc nisl aliquet nisl, ",
+      icon: IconBook,
+      description: "See books ",
+      link: "/books",
     },
     {
-      icon: IconArmchair,
-      description: "Eget aliquam nisl nisl sit amet lorem.",
-      link: "#",
+      icon: IconListNumbers,
+      description: "Track your reads.",
+      link: "/lists",
+    },
+    {
+      icon: IconSkull,
+      description: "AGI is coming, plan your reading time well...",
+      link: "/login",
     },
   ];
 

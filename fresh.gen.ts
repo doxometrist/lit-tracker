@@ -33,6 +33,7 @@ import * as $26 from "./routes/my-lists/index.tsx";
 import * as $27 from "./routes/new-book/index.tsx";
 import * as $28 from "./routes/new-list/index.tsx";
 import * as $29 from "./routes/submit.tsx";
+import * as $30 from "./routes/tracking/index.tsx";
 import * as $$0 from "./islands/OpenFormButton.tsx";
 import * as $$1 from "./islands/VoteButton.tsx";
 import * as $$2 from "./islands/WantToReadList.tsx";
@@ -69,6 +70,7 @@ const manifest = {
     "./routes/new-book/index.tsx": $27,
     "./routes/new-list/index.tsx": $28,
     "./routes/submit.tsx": $29,
+    "./routes/tracking/index.tsx": $30,
   },
   islands: {
     "./islands/OpenFormButton.tsx": $$0,

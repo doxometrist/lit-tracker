@@ -4,54 +4,38 @@ import { useSignal } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
 import IconCircleChevronsRight from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/circle-chevrons-right.tsx";
 import IconCircleChevronsLeft from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/circle-chevrons-left.tsx";
+import { Slide, SlideData } from "./Slide.tsx";
 
-const SLIDE_DATA = [
+const SLIDE_DATA: SlideData[] = [
   {
     color: "bg-green-300",
-    text: "slide one",
-    url: asset("/illustration/deno-plush.svg"),
+    text: "Join the library...",
+    url:
+      "https://image.lexica.art/full_jpg/200ef043-2215-4fd7-9f93-2f28787b1479",
   },
+
   {
-    color: "bg-yellow-300",
-    text: "slide two",
-    url: asset("/illustration/lemon-squash.svg"),
+    color: "bg-green-300",
+    text: "Join the library...",
+    url:
+      "https://image.lexica.art/full_jpg/35cf1c34-5fcb-45a0-a3a1-b19d4284d395",
   },
-  {
-    color: "bg-blue-300",
-    text: "slide three",
-    url: asset("/illustration/deno-plush.svg"),
-  },
-  {
-    color: "bg-yellow-300",
-    text: "slide four",
-    url: asset("/illustration/lemon-squash.svg"),
-  },
+  // {
+  //   color: "bg-yellow-300",
+  //   text: "slide two",
+  //   url: asset("/illustration/lemon-squash.svg"),
+  // },
+  // {
+  //   color: "bg-blue-300",
+  //   text: "slide three",
+  //   url: asset("/illustration/deno-plush.svg"),
+  // },
+  // {
+  //   color: "bg-yellow-300",
+  //   text: "slide four",
+  //   url: asset("/illustration/lemon-squash.svg"),
+  // },
 ];
-
-type SlideProps = {
-  class?: string;
-  key?: number;
-  data: {
-    color: string;
-    text: string;
-    url: string;
-  };
-};
-
-const Slide = (props: SlideProps) => {
-  const { key, data } = props;
-  const { color, text, url } = data;
-  if (props.class === undefined) props.class = "";
-  return (
-    <div
-      key={key}
-      class={`${props.class} ${color} h-80 w-full text-center text-black p-5`}
-    >
-      {text}
-      <img src={url} />
-    </div>
-  );
-};
 
 type CarouselProps = {
   showNavigation?: boolean;

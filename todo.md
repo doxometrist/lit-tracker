@@ -32,6 +32,7 @@ add these good things for hero, features list https://fresh.deno.dev/components#
 ## shared components
 
 - [x] setup the auth on local with github
+- [x] fill in the landing page so that it's not just the defaults icons from here https://tabler-icons-tsx.deno.dev/
 - [ ] get the data going alright
   - [ ] list of books
   - [x] list of lists
@@ -42,8 +43,6 @@ add these good things for hero, features list https://fresh.deno.dev/components#
 
 ### styling
 - [ ] element of a book - a horizontal bar with photo and buttons
-- [ ] fill in the landing page so that it's not just the defaults icons from
-      here https://tabler-icons-tsx.deno.dev/
 - [ ] make the styles as Chat suggested!
 
 ### advanced uses
@@ -56,3 +55,57 @@ add these good things for hero, features list https://fresh.deno.dev/components#
   - [ ] update
 - [ ] reading time prediction - chat described, with tensorflow
 - [ ] algorithm for discover taking into account the tags user likes
+
+### outline of upload variant
+const express = require('express');
+const bodyParser = require('body-parser');
+const level = require('level');
+const multer = require('multer');
+const fs = require('fs');
+
+// Set up express app
+const app = express();
+app.use(bodyParser.json());
+
+// Set up multer for file handling
+const upload = multer({ dest: 'uploads/' });
+
+// Create or open the database
+const db = level('./mydb');
+
+// Endpoint to upload image
+app.post('/upload', upload.single('image'), (req, res) => {
+  // Read the image file, convert it to base64, then save it to the database
+  fs.readFile(req.file.path, (err, data) => {
+    if (err) throw err;
+
+    // convert image file to base64
+    const imgBase64 = data.toString('base64');
+    
+    // Generate a key. Here it's the filename, but it could be anything
+    const key = req.file.originalname;
+
+    db.put(key, imgBase64, function(err) {
+      if (err) return console.log('Error storing data', err);
+    });
+
+    res.json({ message: 'Image uploaded successfully' });
+  });
+});
+
+// Endpoint to get an image
+app.get('/image/:key', async (req, res) => {
+  // Use the key to get the base64 string from the database
+  const imageBase64 = await db.get(req.params.key);
+  
+  // Convert the base64 string back to a Buffer
+  const imageBuffer = Buffer.from(imageBase64, 'base64');
+
+  // Send the image back to the client
+  res.send(imageBuffer);
+});
+
+// Start the server
+app.listen(3000, () => {
+  console.log('Server is up and running on port 3000');
+});
