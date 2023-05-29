@@ -3,6 +3,7 @@
 - [ ] element of a book - a horizontal bar with photo and buttons
 - [ ] list of books
 - [ ] list of lists
+- [ ] books - view individual ones and also see all
 
 - [ ] setup the auth on local with github
 
@@ -40,3 +41,7 @@ https://fresh.deno.dev/components#
 - [ ] can submit new list
 - [ ] upload photos
 - [ ] save to ipfs
+- [ ] reeading time prediction
+- [ ] add stuff to the landing page so that it's not just the defaults
+icons sortout here
+https://tabler-icons-tsx.deno.dev/
