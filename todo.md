@@ -38,6 +38,7 @@ add these good things for hero, features list https://fresh.deno.dev/components#
   - [x] list of lists
   - [ ] books - view individual ones and also see all
   - [ ] addition of a book to list on creation does not work quite alright
+- [x] upload photos
 
 - [ ] selected books work
 
@@ -46,7 +47,6 @@ add these good things for hero, features list https://fresh.deno.dev/components#
 - [ ] make the styles as Chat suggested!
 
 ### advanced uses
-- [ ] upload photos
 - [ ] save to ipfs
   - [ ] credentials and keys for the project
   - [ ] save
@@ -55,6 +55,7 @@ add these good things for hero, features list https://fresh.deno.dev/components#
   - [ ] update
 - [ ] reading time prediction - chat described, with tensorflow
 - [ ] algorithm for discover taking into account the tags user likes
+- [ ] upload from goodreads
 
 ### outline of upload variant
 const express = require('express');

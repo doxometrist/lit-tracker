@@ -1,4 +1,4 @@
-import { kv } from "./db.ts";
+import { kv } from "@/utils/db.ts";
 import { Book, InitBook, InitReadingList, ReadingList } from "./db_interfaces.ts";
 
 export async function getReadingListsByUserId(userId: string, options?: Deno.KvListOptions): Promise<ReadingList[]> {
@@ -18,20 +18,30 @@ export async function getAllBooks(options?: Deno.KvListOptions): Promise<Book[]>
 
 export async function getBooksByReadingListId(id: string, options?: Deno.KvListOptions): Promise<Book[]> {
   const listIter = await kv.list<string>({ prefix: ["lists", id, 'book_ids'] }, options);
-  const booksIter = await kv.list<Book>({ prefix: ['books', id] })
-  const wantedBookIds: string[] = [];
-  for await (const res of listIter) {
-    wantedBookIds.push(res.value);
-  }
+  // const booksKey = ['books'];
+  // const bookIdsIter = await kv.getMany<string[]>([booksKey]);
+
   const books: Book[] = [];
-  for await (const res of booksIter) {
-    if (wantedBookIds.includes(res.value.id)) {
-      books.push(res.value)
+  for await (const res of listIter) {
+    const value: string | null = res.value;
+    if (value) {
+      const newBook: Book | null = await getBookById(value);
+      if (newBook) {
+        books.push(newBook);
+      }
     }
-  };
+  }
+  // console.log('wanted_ones', wantedBookIds)
+  // console.log('books iter:', bookIdsIter);
+  // for await (const res of bookIdsIter) {
+  //   console.log('res: ', res);
+  //   if (wantedBookIds.includes(res.value.id)) {
+  //     books.push(res.value)
+  //   }
+  // };
+  console.log('books', books);
   return books;
 }
-
 
 export async function getReadingListByid(listId: string): Promise<ReadingList | null> {
   const res = await kv.get<ReadingList>(["lists", listId]);
@@ -89,6 +99,12 @@ export async function createBook(initBook: InitBook): Promise<Book> {
   }
 }
 
+
+export async function getBookById(bookId: string): Promise<Book | null> {
+  const res = await kv.get<Book>(["books", bookId]);
+  return res.value;
+}
+
 export async function getAllReadingLists(options?: Deno.KvListOptions): Promise<ReadingList[]> {
   const iter = await kv.list<ReadingList>({ prefix: ["lists"] }, options);
   const items = [];
@@ -113,8 +129,6 @@ export async function removeBookFromList(bookId: string, listId: string) {
     return 1;
   }
 }
-
-
 
 export async function deleteList(userId: string, listId: string) {
   const itemKey = ["lists", listId];

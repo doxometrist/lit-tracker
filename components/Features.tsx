@@ -1,15 +1,17 @@
 import IconChevronRight from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/chevron-right.tsx";
-
 import IconBook from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/book.tsx";
-
 import IconListNumbers from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/list-numbers.tsx";
-
 import IconCompass from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/compass.tsx";
-
 import IconSkull from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/skull.tsx";
 
+interface FeatureItem {
+  icon: any;
+  description: string;
+  link: string;
+}
+
 export default function Features() {
-  const featureItems = [
+  const featureItems: FeatureItem[] = [
     {
       icon: IconCompass,
       description: "Discover new books",

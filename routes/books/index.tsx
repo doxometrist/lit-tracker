@@ -8,11 +8,13 @@ import { Book } from "@/utils/db_interfaces.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
 import { getAllBooks, getAllReadingLists } from "../../utils/new-db.ts";
 import ListCard from "../../components/ListCard.tsx";
+import BookCard from "../../components/BookCard.tsx";
 
 interface BooksPageData extends State {
   books: Book[];
   user: User;
 }
+
 // todo add sorting by author, likes, etc
 
 export const handler: Handlers<BooksPageData, State> = {
@@ -37,10 +39,10 @@ export default function ListsPage(props: PageProps<BooksPageData>) {
         <div>
           {props.data.books.length === 0 && "sowwy,  no lists here!"}
           <ul>
-            {props.data.books.map((l, i) => {
+            {props.data.books.map((b, i) => {
               return (
                 <li>
-                  <ListCard list={l} user={props.data.user} followed={false} />
+                  <BookCard book={b} user={props.data.user} />
                 </li>
               );
             })}

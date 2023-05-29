@@ -15,8 +15,7 @@ import {
   createBook,
   createReadingList,
   getReadingListsByUserId,
-} from "../../utils/new-db.ts";
-import { list } from "https://esm.sh/v122/postcss@8.4.23/esnext/postcss.mjs";
+} from "@/utils/new-db.ts";
 
 interface NewBookPageData extends State {
   user: User;
@@ -47,6 +46,15 @@ function Form(props: { options: ReadingList[] }) {
         placeholder="200"
         name="pages"
       />
+
+      <label
+        class={INPUT_STYLES}
+        for="cover"
+      >
+        Book cover image link
+      </label>
+      <input type="url" name="cover" />
+
       <label for="list">here select to which list does it belong</label>
       <select id="list" name="list" required multiple>
         {props.options.map((list, i) => {
@@ -71,18 +79,21 @@ export const handler: Handlers<NewBookPageData, State> = {
 
   async POST(req, ctx) {
     const form = await req.formData();
-    // const user = await getUserBySessionId(ctx.state.sessionId!) as User;
+    const r = req.body?.getReader();
     const book: InitBook = {
       description: form.get("description")?.toString() ?? "",
       title: form.get("title")?.toString() ?? "",
       pages: 0,
       author: "",
     };
+
+    const file = form.get("cover");
+    console.log("file: ", file);
     const addToListId: string = form.get("list")?.toString() ?? "";
 
     const createResponse = await createBook(book);
 
-    console.log('create response', createResponse);
+    console.log("create response", createResponse);
     if (createResponse.id) {
       const addResponse = await addBookToList(createResponse?.id, addToListId);
     }

@@ -212,7 +212,7 @@ export async function createUser(user: InitUser) {
   // ];
   const date = new Date();
 
-  user = { ...user, isSubscribed: false, joinDate: date, personas: [] } as User;
+  user = { ...user, isSubscribed: false, joinDate: date } as User;
 
   const res = await kv.atomic()
     .check({ key: usersKey, versionstamp: null })

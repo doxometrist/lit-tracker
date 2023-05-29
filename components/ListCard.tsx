@@ -38,6 +38,8 @@ export default function ListCard(props: ListCardProps) {
             {props.list.title}
           </a>
         </span>
+        {props.list.bookIds &&
+          <h3>Books: {props.list.bookIds.length ?? 0}</h3>}
         <span>
           here url if it made sense
           {
