@@ -6,6 +6,7 @@ import { State } from "@/routes/_middleware.ts";
 import { getAllBooks } from "@/utils/new-db.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
 import { Book } from "@/utils/db_interfaces.ts";
+import { BUTTON_STYLES } from "../../utils/constants.ts";
 
 export interface OwnUploadedBooksPageData extends State {
   user: User;
@@ -32,9 +33,11 @@ export default function OwnBooks(props: PageProps<OwnUploadedBooksPageData>) {
             <strong>Manage books you referenced</strong>
           </h1>
           <div id="goToNewList">
-            <a href="/new-book">
-              Add more books
-            </a>
+            <button class={`${BUTTON_STYLES}`}>
+              <a href="/new-book">
+                Add more books
+              </a>
+            </button>
           </div>
           <div id="test" class="bg-primary">
             <ul>

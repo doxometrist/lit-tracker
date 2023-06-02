@@ -53,37 +53,44 @@ add these good things for hero, features list https://fresh.deno.dev/components#
   - [ ] custom scrollbar - CANCELLED
 
 ### portability
+
 - [ ] save to ipfs
-  - [ ] investigate infura
-  - [ ] credentials and keys for the project
+  - [x] investigate infura
+  - [x] credentials and keys for the project
+  - [x] see link for export and third party usage
   - [ ] save
   - [ ] read from save
-  - [ ] see link for export and third party usage
   - [ ] update
 
+### but fixes
+- [x] why don't the books show alright if someone is a visitor?
+- [x] book card - a horizontal bar with photo and buttons
+- [x] fix the layout - hide the navigation better
 
 ### smooth use
 
 - [ ] blog post about the features
-- [ ] why don't the books show alright if someone is a visitor?
-- [ ] wrap delete calls to change in books status into a shared handler in the api folder
+- [ ] wrap delete calls to change in books status into a shared handler in the
+      api folder
   - [ ] edit lists
   - [ ] edit books
-- [ ] book card - a horizontal bar with photo and buttons
-- [ ] fix the layout - hide the navigation better
 - [ ] background image to a readinglist
+- [ ] pdf upload to get names
+- [ ] table that is saveable
 
 ### advanced uses
+
 - [ ] reading time prediction - chat described, with tensorflow
 - [ ] algorithm for discover taking into account the tags user likes
 - [ ] upload from goodreads
 - [ ] upload csv
 
 ### QoL features
-- [ ] throttling
-      does not seem to quite work
+
+- [ ] throttling does not seem to quite work
 
 # add lists
+
 - [ ] from pol
       https://www.google.com/search?q=pol+reading+list&sxsrf=APwXEde4TFb8OKWrQEvkmZeR3XnsaY55Uw:1685392401241&source=lnms&tbm=isch&sa=X&ved=2ahUKEwik94f7r5v_AhUZhFwKHVWTBRwQ_AUoAXoECAEQAw&biw=1536&bih=792&dpr=1.25
 - [ ] from pol 2015, split into parts
@@ -93,4 +100,5 @@ add these good things for hero, features list https://fresh.deno.dev/components#
 - [ ] curated blog
 
 ### cancelled
+
 - [ ] use datagrid for creation and edition faster than a form - data window

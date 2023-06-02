@@ -4,7 +4,11 @@ import BookCard from "@/components/BookCard.tsx";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import type { State } from "@/routes/_middleware.ts";
-import { MAX_LIST_LENGTH, SITE_WIDTH_STYLES } from "@/utils/constants.ts";
+import {
+  BUTTON_STYLES,
+  MAX_LIST_LENGTH,
+  SITE_WIDTH_STYLES,
+} from "@/utils/constants.ts";
 import {
   type Comment,
   getCommentsByItem,
@@ -20,6 +24,7 @@ import {
   getReadingListByid,
 } from "@/utils/new-db.ts";
 import EditListForm from "../../islands/EditListForm.tsx";
+import { getIpfsAddress, uploadJsonToIpfs } from "../../utils/ipfs_facade.ts";
 
 interface ListPageData extends State {
   user: User | null;
@@ -106,6 +111,7 @@ export const handler: Handlers<ListPageData, State> = {
 
 export default function ListPage(props: PageProps<ListPageData>) {
   const books = props.data.books;
+  const url = getIpfsAddress(props.data.list.id);
   return (
     <>
       <Head title={props.data.list.title} href={props.url.href} />
@@ -115,7 +121,29 @@ export default function ListPage(props: PageProps<ListPageData>) {
             <h2>{props.data.list.title}</h2>
             <h3>here contents of this list:</h3>
           </div>
-          <div id="addBooksRegion" class="m-2 p-2 bg-primary flex flex-row">
+          <div id="addBooksRegion" class="m-2 p-2 bg-primary flex flex-row gap-x-2">
+            <button
+              class={`${BUTTON_STYLES}`}
+              onClick={() => {
+                const item = {
+                  books: props.data.books,
+                  list: props.data.list,
+                };
+                const itemJson: string = JSON.stringify(item);
+                console.log("uploaded json", itemJson);
+                uploadJsonToIpfs(itemJson);
+                // todo add local backend indication that it's backed up. also move this to api shared class
+              }}
+            >
+              Save to IPFS
+            </button>
+            <button
+              class={`${BUTTON_STYLES}`}
+            >
+              <a href={url}>
+                See it on IPFS!
+              </a>
+            </button>
           </div>
           {props.data.own &&
             (

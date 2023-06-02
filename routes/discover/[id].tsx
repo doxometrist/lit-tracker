@@ -1,18 +1,15 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers, PageProps } from "$fresh/server.ts";
-import type { State } from "@/routes/_middleware.ts";
-import Layout from "@/components/Layout.tsx";
 import Head from "@/components/Head.tsx";
-import ItemSummary from "@/components/ItemSummary.tsx";
+import ItemSummary, { pluralize, timeAgo } from "@/components/ItemSummary.tsx";
+import Layout from "@/components/Layout.tsx";
+import type { State } from "@/routes/_middleware.ts";
 import {
   BUTTON_STYLES,
   INPUT_STYLES,
   SITE_WIDTH_STYLES,
 } from "@/utils/constants.ts";
-import { timeAgo } from "@/components/ItemSummary.tsx";
 import {
-  type Book,
-  type Comment,
   createComment,
   getCommentsByItem,
   getItemById,
@@ -20,10 +17,11 @@ import {
   getUserBySessionId,
   getUsersByIds,
   getVotedItemIdsByUser,
+  type Comment,
   type User,
 } from "@/utils/db.ts";
+import { Book } from "@/utils/db_interfaces.ts";
 import { redirect } from "@/utils/http.ts";
-import { pluralize } from "@/components/ItemSummary.tsx";
 
 interface ItemPageData extends State {
   user: User;
@@ -65,6 +63,7 @@ export const handler: Handlers<ItemPageData, State> = {
       isVoted,
     });
   },
+
   async POST(req, ctx) {
     if (!ctx.state.sessionId) {
       return redirect("/login");

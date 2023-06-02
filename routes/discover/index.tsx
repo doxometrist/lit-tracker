@@ -6,10 +6,7 @@ import ListCard from "@/components/ListCard.tsx";
 import { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
 import { ReadingList } from "@/utils/db_interfaces.ts";
-import {
-  getAllReadingLists,
-  getBooksByReadingListId,
-} from "@/utils/new-db.ts";
+import { getAllReadingLists, getBooksByReadingListId } from "@/utils/new-db.ts";
 
 interface ListsPageData extends State {
   lists: ReadingList[];
@@ -22,11 +19,12 @@ export const handler: Handlers<ListsPageData, State> = {
   // todo here the discovery algorithm
   async GET(_request, ctx) {
     let user: User | null = null;
-    let lists: ReadingList[] = [];
+    const lists: ReadingList[] = await getAllReadingLists();
+
     if (ctx.state.sessionId) {
       user = await getUserBySessionId(ctx.state.sessionId);
-      lists = await getAllReadingLists();
     }
+
     const booksNumber: number[] = await Promise.all(
       lists.map(async (list) =>
         (await getBooksByReadingListId(list.id)).length

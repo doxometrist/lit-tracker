@@ -40,7 +40,7 @@ export default function MyLists(props: PageProps<MyListsPageData>) {
           </h1>
           <div id="goToNewList">
             <a href="/new-list">
-              make a new list
+              Make a new list
             </a>
           </div>
           <div id="test" class="bg-primary">

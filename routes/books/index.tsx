@@ -21,10 +21,9 @@ export const handler: Handlers<BooksPageData, State> = {
   // todo here the discovery algorithm
   async GET(_request, ctx) {
     let user: User | null = null;
-    let books: Book[] = [];
+    const books: Book[] =  await getAllBooks();
     if (ctx.state.sessionId) {
       user = await getUserBySessionId(ctx.state.sessionId);
-      books = await getAllBooks();
     }
     return ctx.render({ ...ctx.state, user, books });
   },

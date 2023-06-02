@@ -115,28 +115,33 @@ interface LayoutProps {
   session?: string;
 }
 
-export default function Layout(props: LayoutProps) {
-  const headerNavLoggedInItems = [
-    {
-      href: "/my-lists",
-      inner: "My lists",
-    },
-    {
-      href: "/new-book",
-      inner: "New book",
-    },
+type NavItem = {
+  href: string;
+  inner: string | JSX.Element;
+};
 
+export default function Layout(props: LayoutProps) {
+  const headerNavLoggedInItems: NavItem[] = [
     {
       href: "/uploaded-by-me-books",
       inner: "Manage uploaded books",
     },
     {
-      href: "/new-list",
-      inner: "New list",
+      href: "/my-lists",
+      inner: "My lists",
+    },
+    {
+      href: "/account",
+      inner: "Account",
     },
   ];
 
-  const headerNavBaseItems = [
+  const headerNavGuestOnlyItems: NavItem[] = [{
+    href: "/login",
+    inner: <span>Login</span>,
+  }];
+
+  const headerNavBaseItems: NavItem[] = [
     {
       href: "/discover",
       inner: "Discover lists",
@@ -145,19 +150,13 @@ export default function Layout(props: LayoutProps) {
       href: "/books",
       inner: "Books",
     },
+  ];
 
-    props.session
-      ? {
-        href: "/account",
-        inner: "Account",
-      }
-      : {
-        href: "/login",
-        inner: <span class={BUTTON_STYLES}>Login</span>,
-      },
-  ].concat(props.session ? headerNavLoggedInItems : []);
+  const headerNavItems: NavItem[] = headerNavBaseItems.concat(
+    props.session ? headerNavLoggedInItems : headerNavGuestOnlyItems,
+  );
 
-  const footerNavItems = [
+  const footerNavItems: NavItem[] = [
     {
       href: "/blog",
       inner: "Blog",
@@ -179,7 +178,7 @@ export default function Layout(props: LayoutProps) {
     <div class="flex flex-col min-h-screen bg-accent2">
       {/* <Notice /> */}
       <Header>
-        <Nav items={headerNavBaseItems} />
+        <Nav items={headerNavItems} />
       </Header>
       {props.children}
       <Footer>

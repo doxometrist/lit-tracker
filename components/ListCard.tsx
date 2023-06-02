@@ -23,7 +23,7 @@ export interface ListCardProps {
 
 export default function ListCard(props: ListCardProps) {
   return (
-    <div class="py-2 flex gap-2 text-gray-500">
+    <div class="p-2 m-2 flex gap-2 bg-primary2 text-gray-500">
       {
         /* <VoteButton
         item={props.item}
