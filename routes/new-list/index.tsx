@@ -29,6 +29,13 @@ function Form() {
         required
         placeholder="Here goes your description"
       />
+      <input
+        class={INPUT_STYLES}
+        type="url"
+        name="background_url"
+        required
+        placeholder="Paste background url link"
+      />
       <button class={`${BUTTON_STYLES} block w-full`} type="submit">
         Submit
       </button>
@@ -38,17 +45,18 @@ function Form() {
 
 export const handler: Handlers<NewListPageData, State> = {
   async GET(_request, ctx) {
-    const user = await getUserBySessionId(ctx.state.sessionId!) as User ;
+    const user = await getUserBySessionId(ctx.state.sessionId!) as User;
     return ctx.render({ ...ctx.state, user });
   },
 
   async POST(req, ctx) {
     const form = await req.formData();
-    const user = await getUserBySessionId(ctx.state.sessionId!) ;
+    const user = await getUserBySessionId(ctx.state.sessionId!);
     const list: InitReadingList = {
       creatorId: user!.id,
       description: form.get("description")?.toString() ?? "",
       title: form.get("title")?.toString() ?? "",
+      backgroundImageUrl: form.get("background_url")?.toString() ?? "",
     };
 
     // Add email to list.

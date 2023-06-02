@@ -4,7 +4,7 @@ export interface InitBook {
   pages: number,
   author: string,
   description: string,
-  uploaderId:string,
+  uploaderId: string,
   coverUrl: string
 }
 
@@ -18,6 +18,7 @@ export interface InitReadingList {
   creatorId: string,
   description: string,
   title: string,
+  backgroundImageUrl: string, 
 }
 
 // maybe 0 for nothing, 1 want, 2 now, 3 finished 

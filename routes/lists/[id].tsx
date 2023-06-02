@@ -118,10 +118,16 @@ export default function ListPage(props: PageProps<ListPageData>) {
       <Layout session={props.data.sessionId}>
         <div class={`${SITE_WIDTH_STYLES} flex-1 px-4 space-y-8`}>
           <div>
+            <img src={props.data.list.backgroundImageUrl} width={200} height={200} />
+          </div>
+          <div>
             <h2>{props.data.list.title}</h2>
             <h3>here contents of this list:</h3>
           </div>
-          <div id="addBooksRegion" class="m-2 p-2 bg-primary flex flex-row gap-x-2">
+          <div
+            id="addBooksRegion"
+            class="m-2 p-2 bg-primary flex flex-row gap-x-2"
+          >
             <button
               class={`${BUTTON_STYLES}`}
               onClick={() => {

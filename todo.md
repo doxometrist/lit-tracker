@@ -62,28 +62,31 @@ add these good things for hero, features list https://fresh.deno.dev/components#
   - [ ] read from save
   - [ ] update
 
-### but fixes
+### bug fixes
 - [x] why don't the books show alright if someone is a visitor?
 - [x] book card - a horizontal bar with photo and buttons
 - [x] fix the layout - hide the navigation better
+- [x] background image to a readinglist
 
 ### smooth use
-
 - [ ] blog post about the features
+- [ ] add default image - must download it and use the asset function from deno
 - [ ] wrap delete calls to change in books status into a shared handler in the
       api folder
   - [ ] edit lists
   - [ ] edit books
-- [ ] background image to a readinglist
+
+### faster data addition
+- [ ] buttons to upload - from the lists index page
 - [ ] pdf upload to get names
 - [ ] table that is saveable
+- [ ] upload csv
 
 ### advanced uses
 
 - [ ] reading time prediction - chat described, with tensorflow
 - [ ] algorithm for discover taking into account the tags user likes
 - [ ] upload from goodreads
-- [ ] upload csv
 
 ### QoL features
 

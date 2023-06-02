@@ -24,12 +24,9 @@ export interface ListCardProps {
 export default function ListCard(props: ListCardProps) {
   return (
     <div class="p-2 m-2 flex gap-2 bg-primary2 text-gray-500">
-      {
-        /* <VoteButton
-        item={props.item}
-        isVoted={props.isVoted}
-      /> */
-      }
+      <div>
+        <img src={props.list.backgroundImageUrl} width={200} height={200} />
+      </div>
       <div>
         <span class="mr-2">
           <a
