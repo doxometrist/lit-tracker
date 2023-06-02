@@ -38,15 +38,15 @@ function Form() {
 
 export const handler: Handlers<NewListPageData, State> = {
   async GET(_request, ctx) {
-    const user = await getUserBySessionId(ctx.state.sessionId!) as User;
+    const user = await getUserBySessionId(ctx.state.sessionId!) as User ;
     return ctx.render({ ...ctx.state, user });
   },
 
   async POST(req, ctx) {
     const form = await req.formData();
-    const user = await getUserBySessionId(ctx.state.sessionId!) as User;
+    const user = await getUserBySessionId(ctx.state.sessionId!) ;
     const list: InitReadingList = {
-      creatorId: user.id,
+      creatorId: user!.id,
       description: form.get("description")?.toString() ?? "",
       title: form.get("title")?.toString() ?? "",
     };

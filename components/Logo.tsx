@@ -13,7 +13,7 @@ export default function Logo(props: JSX.HTMLAttributes<HTMLImageElement>) {
       width={width}
       src="/logo.png"
       alt={`${SITE_NAME} logo`}
-      class={`h-[${height}px] w-[${width}px] mx-auto ${props.class ?? ""}`}
+      class={`h-[${height}px] w-[${width}px] mx-auto ${props.class ?? ""} border border-1 border-accent1`}
     />
   );
 }

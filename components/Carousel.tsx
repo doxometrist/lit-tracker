@@ -4,18 +4,18 @@ import { useSignal } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
 import IconCircleChevronsRight from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/circle-chevrons-right.tsx";
 import IconCircleChevronsLeft from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/circle-chevrons-left.tsx";
-import { Slide, SlideData } from "./Slide.tsx";
+import { Slide, SlideData } from "@/components/Slide.tsx";
 
 const SLIDE_DATA: SlideData[] = [
   {
-    color: "bg-green-300",
+    color: "bg-accent1",
     text: "Join the library...",
     url:
       "https://image.lexica.art/full_jpg/200ef043-2215-4fd7-9f93-2f28787b1479",
   },
 
   {
-    color: "bg-green-300",
+    color: "bg-accent2",
     text: "Join the library...",
     url:
       "https://image.lexica.art/full_jpg/35cf1c34-5fcb-45a0-a3a1-b19d4284d395",
@@ -23,16 +23,6 @@ const SLIDE_DATA: SlideData[] = [
   // {
   //   color: "bg-yellow-300",
   //   text: "slide two",
-  //   url: asset("/illustration/lemon-squash.svg"),
-  // },
-  // {
-  //   color: "bg-blue-300",
-  //   text: "slide three",
-  //   url: asset("/illustration/deno-plush.svg"),
-  // },
-  // {
-  //   color: "bg-yellow-300",
-  //   text: "slide four",
   //   url: asset("/illustration/lemon-squash.svg"),
   // },
 ];
@@ -46,7 +36,7 @@ type CarouselProps = {
 };
 
 const Carousel = (props: CarouselProps) => {
-  const NAVIGATION_COLOR = `hover:text-gray-300 text-white`;
+  const NAVIGATION_COLOR = `hover:text-gray-300 text-bone`;
   const CHEVRON_STYLE =
     `absolute z-30 w-10 h-10 ${NAVIGATION_COLOR} cursor-pointer`;
   const SHOW_NAVIGATION = props.showNavigation === false ? false : true;

@@ -4,22 +4,22 @@ import BookCard from "@/components/BookCard.tsx";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import type { State } from "@/routes/_middleware.ts";
-import {
-  DEFAULT_LISTS_LIMIT,
-  MAX_LIST_LENGTH,
-  SITE_WIDTH_STYLES,
-} from "@/utils/constants.ts";
+import { MAX_LIST_LENGTH, SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import {
   type Comment,
-  createComment,
   getCommentsByItem,
   getUserBySessionId,
   getUsersByIds,
   type User,
 } from "@/utils/db.ts";
-import { Book, ReadingList } from "@/utils/db_interfaces.ts";
+import { Book, InitReadingList, ReadingList } from "@/utils/db_interfaces.ts";
 import { redirect } from "@/utils/http.ts";
-import { getBooksByReadingListId, getReadingListByid } from "@/utils/new-db.ts";
+import {
+  deleteList,
+  getBooksByReadingListId,
+  getReadingListByid,
+} from "@/utils/new-db.ts";
+import EditListForm from "../../islands/EditListForm.tsx";
 
 interface ListPageData extends State {
   user: User | null;
@@ -50,7 +50,6 @@ export const handler: Handlers<ListPageData, State> = {
     let user: User | null = null;
     let own = false;
     if (ctx.state.sessionId) {
-      // const sessionUser = await getUserBySessionId(ctx.state.sessionId);
       user = await getUserBySessionId(ctx.state.sessionId);
       if (user?.id === list.creatorId) {
         own = true;
@@ -66,7 +65,7 @@ export const handler: Handlers<ListPageData, State> = {
 
     return ctx.render({
       ...ctx.state,
-      own: false,
+      own,
       comments,
       books,
       list,
@@ -78,34 +77,34 @@ export const handler: Handlers<ListPageData, State> = {
 
   async POST(req, ctx) {
     if (!ctx.state.sessionId) {
-      return redirect("/login");
+      return redirect(`/login`);
     }
-
-    const form = await req.formData();
-    const text = form.get("text");
-
-    if (typeof text !== "string") {
-      return new Response(null, { status: 400 });
-    }
-
     const user = await getUserBySessionId(ctx.state.sessionId);
+    if (!user) {
+      return redirect(`/login`);
+    }
+    const params = ctx.params;
+    console.log("params: ", params);
+    console.log(params.id);
 
-    await createComment({
-      userId: user!.id,
-      itemId: ctx.params.id,
-      text,
-    });
+    const list = await getReadingListByid(params.id);
+    console.log(list);
 
-    return redirect(`/list/${ctx.params.id}`);
+    // WHEN NOT OWN
+    if (!list || user?.id !== list.creatorId) {
+      console.log("userId: ", user.id, "creator id: ", list?.creatorId);
+      console.log("failed to delete");
+
+      return redirect(`/my-lists`);
+    }
+
+    deleteList(user.id, params.id);
+
+    return redirect(`/my-lists`);
   },
 };
 
-// todo here edit or delete it
-function ManageList() {
-}
-
 export default function ListPage(props: PageProps<ListPageData>) {
-  console.log("list: ", props.data.list);
   const books = props.data.books;
   return (
     <>
@@ -113,16 +112,25 @@ export default function ListPage(props: PageProps<ListPageData>) {
       <Layout session={props.data.sessionId}>
         <div class={`${SITE_WIDTH_STYLES} flex-1 px-4 space-y-8`}>
           <div>
+            <h2>{props.data.list.title}</h2>
             <h3>here contents of this list:</h3>
           </div>
           <div id="addBooksRegion" class="m-2 p-2 bg-primary flex flex-row">
           </div>
-          {
-            props.data.own ??
-            <div>delete?
-
-            </div>
-          }
+          {props.data.own &&
+            (
+              <div id="management" className="m-2">
+                <EditListForm
+                  user={props.data.user!}
+                  startingListValues={props.data.list as InitReadingList}
+                />
+                <form method="post">
+                  <button type="submit">
+                    delete
+                  </button>
+                </form>
+              </div>
+            )}
           <ul>
             {books.map((b, i) => {
               return (

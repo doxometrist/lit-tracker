@@ -4,6 +4,8 @@ export interface InitBook {
   pages: number,
   author: string,
   description: string,
+  uploaderId:string,
+  coverUrl: string
 }
 
 export interface Book extends InitBook {
@@ -21,13 +23,16 @@ export interface InitReadingList {
 // maybe 0 for nothing, 1 want, 2 now, 3 finished 
 export interface ReadingList extends InitReadingList {
   id: string,
-  bookIds: string[],
   likedUserIds: string[],
   createdAt: Date,
 }
 
 export interface Tag {
   id: string;
-  bookIds: string[],
-  listIds: string[]
 }
+
+export interface BookToListMapping {
+  bookId: string;
+  listId: string;
+}
+

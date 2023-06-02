@@ -6,6 +6,8 @@ export interface BookCardProps {
   book: Book;
   user: User | null;
 }
+const MAX_IMAGE_HEIGHT = 80;
+const MAX_IMAGE_WIDTH = 80;
 
 export default function BookCard(props: BookCardProps) {
   return (
@@ -19,6 +21,11 @@ export default function BookCard(props: BookCardProps) {
             {props.book.title}
           </a>
         </span>
+        <img
+          src={props.book.coverUrl}
+          height={MAX_IMAGE_HEIGHT}
+          width={MAX_IMAGE_WIDTH}
+        />
       </div>
     </div>
   );

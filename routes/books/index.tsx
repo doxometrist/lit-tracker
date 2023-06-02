@@ -7,12 +7,12 @@ import { State } from "@/routes/_middleware.ts";
 import { Book } from "@/utils/db_interfaces.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
 import { getAllBooks, getAllReadingLists } from "../../utils/new-db.ts";
-import ListCard from "../../components/ListCard.tsx";
-import BookCard from "../../components/BookCard.tsx";
+import ListCard from "@/components/ListCard.tsx";
+import BookCard from "@/components/BookCard.tsx";
 
 interface BooksPageData extends State {
   books: Book[];
-  user: User;
+  user: User | null;
 }
 
 // todo add sorting by author, likes, etc
@@ -20,8 +20,12 @@ interface BooksPageData extends State {
 export const handler: Handlers<BooksPageData, State> = {
   // todo here the discovery algorithm
   async GET(_request, ctx) {
-    const user = await getUserBySessionId(ctx.state.sessionId!) as User;
-    const books = await getAllBooks();
+    let user: User | null = null;
+    let books: Book[] = [];
+    if (ctx.state.sessionId) {
+      user = await getUserBySessionId(ctx.state.sessionId);
+      books = await getAllBooks();
+    }
     return ctx.render({ ...ctx.state, user, books });
   },
 };
@@ -29,15 +33,13 @@ export const handler: Handlers<BooksPageData, State> = {
 export default function ListsPage(props: PageProps<BooksPageData>) {
   return (
     <>
-      <Head title="any" href={props.url.href} />
+      <Head title="Books" href={props.url.href} />
       <Layout session={props.data.sessionId}>
         <div class="max-w-lg m-auto w-full flex-1 p-4 flex flex-col justify-center">
-          <h1 class="text-3xl mb-4">
-            <strong>any</strong>
+          <h1 class="text-3xl m-2">
+            <strong>Books</strong>
           </h1>
-        </div>
-        <div>
-          {props.data.books.length === 0 && "sowwy,  no lists here!"}
+          {props.data.books.length === 0 && "sowwy, no books here!"}
           <ul>
             {props.data.books.map((b, i) => {
               return (

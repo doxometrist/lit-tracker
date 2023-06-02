@@ -31,15 +31,15 @@ interface NavProps extends JSX.HTMLAttributes<HTMLElement> {
 
 function Nav(props: NavProps) {
   return (
-    <nav>
+    <nav class="">
       <ul
         class={`flex gap-x-8 gap-y-2 items-center justify-between h-full ${
           props.class ?? ""
         }`}
       >
         {props.items.map((item) => (
-          <li>
-            <a href={item.href}>{item.inner}</a>
+          <li class="m-1 p-2 border-1 rounded bg-primary2  hover:border-solid border-color-secondary2">
+            <a href={item.href} class="text-bone">{item.inner}</a>
           </li>
         ))}
       </ul>
@@ -53,7 +53,7 @@ function Header(props: JSX.HTMLAttributes<HTMLElement>) {
       {...props}
       class={`p-4 justify-between ${SITE_WIDTH_STYLES} flex z-10 ${
         props.class ?? ""
-      }`}
+      } bg-primary1 rounded-xl`}
     >
       <a href="/">
         <Logo height={48} width={80} />
@@ -67,12 +67,43 @@ function Footer(props: JSX.HTMLAttributes<HTMLElement>) {
   return (
     <footer
       {...props}
-      class={`flex flex-col md:flex-row p-4 justify-between gap-y-4 ${SITE_WIDTH_STYLES} ${
+      class={`flex flex-col md:flex-row p-4 justify-between bg-primary1 gap-y-4 ${SITE_WIDTH_STYLES} ${
         props.class ?? ""
       }`}
     >
       <span>
-        <strong>{SITE_NAME}</strong>
+        <strong class="text-bone">{SITE_NAME}</strong>
+      </span>
+      <span>
+        <script
+          type="text/javascript"
+          src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+          data-name="bmc-button"
+          data-slug="doxometrist"
+          data-color="#800000"
+          data-emoji="📖"
+          data-font="Cookie"
+          data-text="Buy me a book"
+          data-outline-color="#ffffff"
+          data-font-color="#ffffff"
+          data-coffee-color="#FFDD00"
+        >
+        </script>
+      </span>
+      <span>
+        <a
+          href="https://twitter.com/doxometrist?ref_src=twsrc%5Etfw"
+          class="twitter-follow-button"
+          data-show-count="true"
+        >
+          Follow @doxometrist
+        </a>
+        <script
+          async
+          src="https://platform.twitter.com/widgets.js"
+          charSet="utf-8"
+        >
+        </script>
       </span>
       {props.children}
     </footer>
@@ -85,15 +116,7 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
-  const headerNavItems = [
-    {
-      href: "/discover",
-      inner: "Discover",
-    },
-    {
-      href: "/books",
-      inner: "Books",
-    },
+  const headerNavLoggedInItems = [
     {
       href: "/my-lists",
       inner: "My lists",
@@ -102,9 +125,25 @@ export default function Layout(props: LayoutProps) {
       href: "/new-book",
       inner: "New book",
     },
+
+    {
+      href: "/uploaded-by-me-books",
+      inner: "Manage uploaded books",
+    },
     {
       href: "/new-list",
       inner: "New list",
+    },
+  ];
+
+  const headerNavBaseItems = [
+    {
+      href: "/discover",
+      inner: "Discover lists",
+    },
+    {
+      href: "/books",
+      inner: "Books",
     },
 
     props.session
@@ -114,22 +153,14 @@ export default function Layout(props: LayoutProps) {
       }
       : {
         href: "/login",
-        inner: "Login",
+        inner: <span class={BUTTON_STYLES}>Login</span>,
       },
-    // {
-    //   href: "/submit",
-    //   inner: <span class={BUTTON_STYLES}>Submit</span>,
-    // },
-  ];
+  ].concat(props.session ? headerNavLoggedInItems : []);
 
   const footerNavItems = [
     {
       href: "/blog",
       inner: "Blog",
-    },
-    {
-      inner: "follow me on twitter!",
-      href: "https://twitter.com/doxometrist",
     },
     {
       href: "https://fresh.deno.dev",
@@ -145,10 +176,10 @@ export default function Layout(props: LayoutProps) {
   ];
 
   return (
-    <div class="flex flex-col min-h-screen">
+    <div class="flex flex-col min-h-screen bg-accent2">
       {/* <Notice /> */}
       <Header>
-        <Nav items={headerNavItems} />
+        <Nav items={headerNavBaseItems} />
       </Header>
       {props.children}
       <Footer>

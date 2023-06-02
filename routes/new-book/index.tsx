@@ -2,20 +2,15 @@
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
-import { BUTTON_STYLES, INPUT_STYLES } from "@/utils/constants.ts";
-import {
-  InitBook,
-  InitReadingList,
-  ReadingList,
-} from "../../utils/db_interfaces.ts";
-import { getUserBySessionId, User } from "../../utils/db.ts";
-import { State } from "../_middleware.ts";
+import { State } from "@/routes/_middleware.ts";
+import { BUTTON_STYLES, DEFAULT_IMG, INPUT_STYLES } from "@/utils/constants.ts";
+import { InitBook, ReadingList } from "@/utils/db_interfaces.ts";
 import {
   addBookToList,
   createBook,
-  createReadingList,
   getReadingListsByUserId,
 } from "@/utils/new-db.ts";
+import { getUserBySessionId, User } from "../../utils/db.ts";
 
 interface NewBookPageData extends State {
   user: User;
@@ -24,13 +19,20 @@ interface NewBookPageData extends State {
 
 function Form(props: { options: ReadingList[] }) {
   return (
-    <form class=" space-y-2" method="post">
+    <form class=" space-y-2 bg-primary2 m-2 p-2" method="post">
       <input
         class={INPUT_STYLES}
         type="text"
         name="title"
         required
         placeholder="Title"
+      />
+      <input
+        class={INPUT_STYLES}
+        type="text"
+        name="author"
+        required
+        placeholder="Author"
       />
       <input
         class={INPUT_STYLES}
@@ -46,7 +48,6 @@ function Form(props: { options: ReadingList[] }) {
         placeholder="200"
         name="pages"
       />
-
       <label
         class={INPUT_STYLES}
         for="cover"
@@ -72,38 +73,48 @@ function Form(props: { options: ReadingList[] }) {
 
 export const handler: Handlers<NewBookPageData, State> = {
   async GET(_request, ctx) {
+    // can do "!" as middleware excludes not logged in sessions
     const user = await getUserBySessionId(ctx.state.sessionId!) as User;
     const ownLists = await getReadingListsByUserId(user.id);
     return ctx.render({ ...ctx.state, user, ownLists });
   },
 
   async POST(req, ctx) {
+    const user = await getUserBySessionId(ctx.state.sessionId!) as User;
     const form = await req.formData();
-    const r = req.body?.getReader();
     const book: InitBook = {
+      uploaderId: user.id,
       description: form.get("description")?.toString() ?? "",
       title: form.get("title")?.toString() ?? "",
       pages: 0,
-      author: "",
+      author: form.get("author")?.toString() ?? "",
+      coverUrl: form.get("cover")?.toString() ?? DEFAULT_IMG,
     };
 
-    const file = form.get("cover");
-    console.log("file: ", file);
-    const addToListId: string = form.get("list")?.toString() ?? "";
+    const finalBookId = await createBook(book);
+    console.log("create response", finalBookId);
 
-    const createResponse = await createBook(book);
+    if (finalBookId) {
+      const addToListId: string = form.get("list")?.toString() ?? "";
+      // can do "!" as middleware excludes not logged in sessions
+      const user = await getUserBySessionId(ctx.state.sessionId!) as User;
+      const addResponse = await addBookToList(
+        finalBookId,
+        addToListId,
+        user.id,
+      );
 
-    console.log("create response", createResponse);
-    if (createResponse.id) {
-      const addResponse = await addBookToList(createResponse?.id, addToListId);
+      // Redirect user to thank you page.
+      const headers = new Headers();
+      headers.set("location", `/lists/${addToListId}`);
+      return new Response(null, {
+        status: 303, // See Other
+        headers,
+      });
     }
 
-    // Redirect user to thank you page.
-    const headers = new Headers();
-    headers.set("location", "/new-book");
     return new Response(null, {
-      status: 303, // See Other
-      headers,
+      status: 404,
     });
   },
 };

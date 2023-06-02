@@ -13,12 +13,10 @@ export async function handler(
   _req: Request,
   ctx: MiddlewareHandlerContext<AccountState>,
 ) {
-  // console.log('processing request, sessionId: ', ctx.state.sessionId);
-  const redirectResponse = redirect("/login");
+  const redirectResponse = redirect("/");
 
   if (!ctx.state.sessionId) return redirectResponse;
   const user = await getUserBySessionId(ctx.state.sessionId);
-  // console.log('user: ', user);
   if (!user) return redirectResponse;
   ctx.state.user = user;
   return await ctx.next();

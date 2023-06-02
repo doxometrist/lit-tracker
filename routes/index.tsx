@@ -1,21 +1,14 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers, PageProps } from "$fresh/server.ts";
-import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
-import Layout from "@/components/Layout.tsx";
+import Carousel from "@/components/Carousel.tsx";
+import Features from "@/components/Features.tsx";
 import Head from "@/components/Head.tsx";
+import Hero from "@/components/LandingHero.tsx";
+import Layout from "@/components/Layout.tsx";
+import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
+import { getAllItems } from "@/utils/db.ts";
+import { Book } from "@/utils/db_interfaces.ts";
 import type { State } from "./_middleware.ts";
-import ItemSummary from "@/components/ItemSummary.tsx";
-import {
-  getAllItems,
-  getUserBySessionId,
-  getUsersByIds,
-  getVotedItemIdsByUser,
-  type User,
-} from "@/utils/db.ts";
-import Hero from "../components/LandingHero.tsx";
-import Features from "../components/Features.tsx";
-import Carousel from "../components/Carousel.tsx";
-import { Book } from "../utils/db_interfaces.ts";
 
 interface HomePageData extends State {
   items: Book[];

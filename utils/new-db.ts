@@ -1,5 +1,5 @@
 import { kv } from "@/utils/db.ts";
-import { Book, InitBook, InitReadingList, ReadingList } from "./db_interfaces.ts";
+import { Book, BookToListMapping, InitBook, InitReadingList, ReadingList } from "./db_interfaces.ts";
 
 export async function getReadingListsByUserId(userId: string, options?: Deno.KvListOptions): Promise<ReadingList[]> {
   const iter = await kv.list<ReadingList>({ prefix: ["lists_by_user", userId] }, options);
@@ -16,41 +16,21 @@ export async function getAllBooks(options?: Deno.KvListOptions): Promise<Book[]>
   return items;
 }
 
-export async function getBooksByReadingListId(id: string, options?: Deno.KvListOptions): Promise<Book[]> {
-  const listIter = await kv.list<string>({ prefix: ["lists", id, 'book_ids'] }, options);
-  // const booksKey = ['books'];
-  // const bookIdsIter = await kv.getMany<string[]>([booksKey]);
+export async function getBooksByReadingListId(listId: string, options?: Deno.KvListOptions): Promise<Book[]> {
+  const bookIdsIter = await kv.list<string>({ prefix: ['list_to_book', listId] })
 
-  const books: Book[] = [];
-  for await (const res of listIter) {
-    const value: string | null = res.value;
-    if (value) {
-      const newBook: Book | null = await getBookById(value);
-      if (newBook) {
-        books.push(newBook);
-      }
-    }
-  }
-  // console.log('wanted_ones', wantedBookIds)
-  // console.log('books iter:', bookIdsIter);
-  // for await (const res of bookIdsIter) {
-  //   console.log('res: ', res);
-  //   if (wantedBookIds.includes(res.value.id)) {
-  //     books.push(res.value)
-  //   }
-  // };
-  console.log('books', books);
+  const bookIds: string[] = [];
+  for await (const res of bookIdsIter) bookIds.push(res.key[res.key.length - 1].toString());
+
+  const unfilteredBooks: (Book | null)[] = await Promise.all(bookIds.map(async id => await getBookById(id)));
+  const books: Book[] = unfilteredBooks.filter(b => b !== null) as Book[];
+
   return books;
 }
 
 export async function getReadingListByid(listId: string): Promise<ReadingList | null> {
   const res = await kv.get<ReadingList>(["lists", listId]);
   return res.value;
-
-  // const items = [];
-  // for await (const res of res) items.push(res.value);
-  // console.log('list items: ', items)
-  // return items;
 }
 
 export async function createReadingList(initList: InitReadingList) {
@@ -63,23 +43,19 @@ export async function createReadingList(initList: InitReadingList) {
       ...initList,
       id,
       createdAt: new Date(),
-      bookIds: [],
       likedUserIds: []
     };
-
     res = await kv.atomic()
       .check({ key: itemKey, versionstamp: null })
       .check({ key: itemsByUserKey, versionstamp: null })
       .set(itemKey, list)
       .set(itemsByUserKey, list)
       .commit();
-
-    return list;
   }
+  return 1;
 }
 
-
-export async function createBook(initBook: InitBook): Promise<Book> {
+export async function createBook(initBook: InitBook): Promise<string> {
   let res = { ok: false };
   while (!res.ok) {
     const id = crypto.randomUUID();
@@ -89,16 +65,13 @@ export async function createBook(initBook: InitBook): Promise<Book> {
       id,
       finishedUserIds: [],
     };
-
     res = await kv.atomic()
       .check({ key: itemKey, versionstamp: null })
       .set(itemKey, book)
       .commit();
-
-    return book;
+    return id;
   }
 }
-
 
 export async function getBookById(bookId: string): Promise<Book | null> {
   const res = await kv.get<Book>(["books", bookId]);
@@ -112,36 +85,100 @@ export async function getAllReadingLists(options?: Deno.KvListOptions): Promise<
   return items;
 }
 
-export async function addBookToList(bookId: string, listId: string) {
-  let res = { ok: false };
-  while (!res.ok) {
-    const listKey = ['lists', listId, 'book_ids', bookId];
-    res = await kv.atomic().check({ key: listKey, versionstamp: null }).set(listKey, 1).commit();
-    return 1;
+export async function addBookToList(bookId: string, listId: string, userId: string) {
+  console.log('adding book to list: ', bookId, listId, userId);
+
+  const list: ReadingList | null = await getReadingListByid(listId);
+  if (!list) {
+    throw Error(`list with id: ${listId} does not exist`)
   }
+
+  if (list.creatorId !== userId) {
+    throw Error(`list with id: ${listId} does not belong to user: ${userId}`)
+  }
+  let res: Deno.KvCommitResult | Deno.KvCommitError = { ok: false };
+  // const mapping: BookToListMapping = {
+  //   bookId,
+  //   listId
+  // };
+  while (!res.ok) {
+    const bookKey = ["book_to_list", bookId, listId];
+    const listKey = ["list_to_book", listId, bookId];
+
+    res = await kv.atomic()
+      .check({ key: bookKey, versionstamp: null })
+      .check({ key: listKey, versionstamp: null })
+      .set(bookKey, 1)
+      .set(listKey, 1)
+      .commit();
+
+    console.log('res: ', res);
+  }
+  return res;
+}
+
+export async function updateList(listId: string, newList: ReadingList, userId: string) {
+  let res: Deno.KvCommitResult | Deno.KvCommitError = { ok: false };
+  while (!res.ok) {
+    const itemKey = ["lists", listId];
+    const itemsByUserKey = ["lists_by_user", userId, listId];
+    console.log('updating the list: ', listId, 'with new list object: ', newList);
+    res = await kv.atomic()
+      .check({ key: itemKey, versionstamp: null })
+      .check({ key: itemsByUserKey, versionstamp: null })
+      .set(itemKey, newList)
+      .set(itemsByUserKey, newList)
+      .commit();
+
+    console.log('res: ', res);
+  }
+  return res;
+}
+
+export async function updateBook(bookId: string, newBook: Book, userId: string) {
+  let res: Deno.KvCommitResult | Deno.KvCommitError = { ok: false };
+  while (!res.ok) {
+    const itemKey = ["books", bookId];
+    console.log('updating the list: ', bookId, 'with new list object: ', newBook);
+    res = await kv.atomic()
+      .check({ key: itemKey, versionstamp: null })
+      .set(itemKey, newBook)
+      .commit();
+    console.log('res: ', res);
+  }
+  return res;
 }
 
 export async function removeBookFromList(bookId: string, listId: string) {
   let res = { ok: false };
   while (!res.ok) {
-    const listKey = ['lists', listId, 'book_ids', bookId];
+
+    const bookKey = ["book_to_list", bookId, listId];
+    const listKey = ["list_to_book", listId, bookId];
+
+    res = await kv.atomic()
+      .check({ key: bookKey, versionstamp: null })
+      .check({ key: listKey, versionstamp: null })
+      .delete(bookKey)
+      .delete(listKey)
+      .commit();
+
     res = await kv.atomic().check({ key: listKey, versionstamp: null }).set(listKey, 0).commit();
-    return 1;
   }
+  return 1;
 }
+
 
 export async function deleteList(userId: string, listId: string) {
   const itemKey = ["lists", listId];
   const itemsByUserKey = ["lists_by_user", userId, listId];
-
   const [
     itemRes,
-    byUserRes
+    byUserRes,
   ] = await kv.getMany<ReadingList[]>([
     itemKey,
     itemsByUserKey
   ]);
-
   const res = await kv.atomic()
     .check(itemRes)
     .check(byUserRes)
@@ -151,5 +188,47 @@ export async function deleteList(userId: string, listId: string) {
 
   if (!res.ok) {
     throw res;
+  }
+
+  const mappingKey = ["list_to_book", listId];
+  const [mappingRes] = await kv.getMany<string[]>([mappingKey]);
+  const mapping = await kv.atomic()
+    .check(mappingRes)
+    .delete(mappingKey)
+    .commit();
+
+  if (!mapping.ok) {
+    throw mapping
+  }
+}
+
+
+
+export async function deleteBook(bookId: string, userId: string) {
+  const book = await getBookById(bookId);
+  if (userId !== book?.uploaderId) {
+    throw 404
+  }
+
+  const basicKey = ["books", bookId];
+  const [itemRes] = await kv.getMany<ReadingList[]>([basicKey,]);
+  const res = await kv.atomic()
+    .check(itemRes)
+    .delete(basicKey)
+    .commit();
+
+  if (!res.ok) {
+    throw res;
+  }
+
+  const mappingKey = ["book_to_list", bookId];
+  const [mappingRes] = await kv.getMany<string[]>([mappingKey]);
+  const mapping = await kv.atomic()
+    .check(mappingRes)
+    .delete(mappingKey)
+    .commit();
+
+  if (!mapping.ok) {
+    throw mapping
   }
 }

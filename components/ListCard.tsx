@@ -16,8 +16,9 @@ export function timeAgo(time: number | Date) {
 
 export interface ListCardProps {
   list: ReadingList;
-  user: User;
+  user: User | null;
   followed: boolean;
+  booksNumber: number;
 }
 
 export default function ListCard(props: ListCardProps) {
@@ -38,8 +39,7 @@ export default function ListCard(props: ListCardProps) {
             {props.list.title}
           </a>
         </span>
-        {props.list.bookIds &&
-          <h3>Books: {props.list.bookIds.length ?? 0}</h3>}
+        <h3>Books: {props.booksNumber}</h3>
         <span>
           here url if it made sense
           {
@@ -49,7 +49,7 @@ export default function ListCard(props: ListCardProps) {
           }
         </span>
         <p>
-          {props.user.login}{" "}
+          {props.user && props.user.login}{" "}
           {props.user?.isSubscribed && <span title="Premium user">🦕{" "}
           </span>}
           {timeAgo(new Date(props.list.createdAt))} ago

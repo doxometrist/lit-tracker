@@ -2,25 +2,37 @@
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
-import { BUTTON_STYLES, NOTICE_STYLES } from "@/utils/constants.ts";
+import ListCard from "@/components/ListCard.tsx";
 import { State } from "@/routes/_middleware.ts";
-import { Book } from "@/utils/db_interfaces.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
-import { getAllReadingLists } from "../../utils/new-db.ts";
-import ListCard from "../../components/ListCard.tsx";
+import { ReadingList } from "@/utils/db_interfaces.ts";
+import {
+  getAllReadingLists,
+  getBooksByReadingListId,
+} from "@/utils/new-db.ts";
 
 interface ListsPageData extends State {
-  lists: Book[];
-  user: User;
+  lists: ReadingList[];
+  user: User | null;
+  booksNumber: number[];
 }
 // todo add sorting by author, likes, etc
 
 export const handler: Handlers<ListsPageData, State> = {
   // todo here the discovery algorithm
   async GET(_request, ctx) {
-    const user = await getUserBySessionId(ctx.state.sessionId!) as User;
-    const lists = await getAllReadingLists();
-    return ctx.render({ ...ctx.state, user, lists });
+    let user: User | null = null;
+    let lists: ReadingList[] = [];
+    if (ctx.state.sessionId) {
+      user = await getUserBySessionId(ctx.state.sessionId);
+      lists = await getAllReadingLists();
+    }
+    const booksNumber: number[] = await Promise.all(
+      lists.map(async (list) =>
+        (await getBooksByReadingListId(list.id)).length
+      ),
+    );
+    return ctx.render({ ...ctx.state, user, lists, booksNumber });
   },
 };
 
@@ -33,14 +45,17 @@ export default function ListsPage(props: PageProps<ListsPageData>) {
           <h1 class="text-3xl mb-4">
             <strong>any</strong>
           </h1>
-        </div>
-        <div>
           {props.data.lists.length === 0 && "sowwy,  no lists here!"}
           <ul>
             {props.data.lists.map((l, i) => {
               return (
                 <li>
-                  <ListCard list={l} user={props.data.user} followed={false} />
+                  <ListCard
+                    list={l}
+                    user={props.data.user}
+                    followed={false}
+                    booksNumber={props.data.booksNumber[i]}
+                  />
                 </li>
               );
             })}

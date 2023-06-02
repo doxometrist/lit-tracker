@@ -11,14 +11,18 @@ import ListCard from "../../components/ListCard.tsx";
 
 interface ListsPageData extends State {
   lists: ReadingList[];
-  user: User;
+  user: User | null;
 }
 // todo add sorting by author, likes, etc
 
 export const handler: Handlers<ListsPageData, State> = {
   // todo here the discovery algorithm
   async GET(_request, ctx) {
-    const user = await getUserBySessionId(ctx.state.sessionId!) as User;
+    
+    let user: User | null = null;
+    if (ctx.state.sessionId) {
+      user = await getUserBySessionId(ctx.state.sessionId!) as User;
+    }
     const lists = await getAllReadingLists();
     return ctx.render({ ...ctx.state, user, lists });
   },
@@ -35,7 +39,7 @@ export default function ListsPage(props: PageProps<ListsPageData>) {
           </h1>
         </div>
         <div>
-          {props.data.lists.length === 0 && 'sowwy,  no lists here!'}
+          {props.data.lists.length === 0 && "sowwy,  no lists here!"}
           <ul>
             {props.data.lists.map((l, i) => {
               return (

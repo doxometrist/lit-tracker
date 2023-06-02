@@ -4,32 +4,30 @@ import Layout from "@/components/Layout.tsx";
 import { getUserBySessionId, User } from "../../utils/db.ts";
 import { Book, ReadingList } from "../../utils/db_interfaces.ts";
 import {
+  getAllBooks,
   getBooksByReadingListId,
   getReadingListsByUserId,
 } from "../../utils/new-db.ts";
 import { State } from "../_middleware.ts";
 import ListCard from "../../components/ListCard.tsx";
+import BookCard from "../../components/BookCard.tsx";
 
-export interface MyListsPageData extends State {
+export interface OwnUploadedBooksPageData extends State {
   user: User;
-  lists: ReadingList[];
-  booksNumber: number[];
+  ownBooks: Book[];
 }
 
-export const handler: Handlers<MyListsPageData, State> = {
+export const handler: Handlers<OwnUploadedBooksPageData, State> = {
   async GET(_request, ctx) {
     const user = await getUserBySessionId(ctx.state.sessionId!) as User;
-    const lists: ReadingList[] = await getReadingListsByUserId(user.id);
-    const booksNumber: number[] = await Promise.all(
-      lists.map(async (list) =>
-        (await getBooksByReadingListId(list.id)).length
-      ),
-    );
-    return ctx.render({ ...ctx.state, lists, user, booksNumber });
+    const books: Book[] = await getAllBooks();
+    console.log("books: ", books);
+    const ownBooks = books.filter((b) => b.uploaderId === user.id);
+    return ctx.render({ ...ctx.state, ownBooks, user });
   },
 };
 
-export default function MyLists(props: PageProps<MyListsPageData>) {
+export default function OwnBooks(props: PageProps<OwnUploadedBooksPageData>) {
   return (
     <>
       <Head title="any" href={props.url.href} />
@@ -39,21 +37,14 @@ export default function MyLists(props: PageProps<MyListsPageData>) {
             <strong>any</strong>
           </h1>
           <div id="goToNewList">
-            <a href="/new-list">
-              make a new list
+            <a href="/new-book">
+              add more books
             </a>
           </div>
           <div id="test" class="bg-primary">
             <ul>
-              {props.data.lists.map((l, i) => {
-                return (
-                  <ListCard
-                    list={l}
-                    user={props.data.user}
-                    followed={false}
-                    booksNumber={props.data.booksNumber[i]}
-                  />
-                );
+              {props.data.ownBooks.map((b, i) => {
+                return <BookCard book={b} user={props.data.user} />;
               })}
             </ul>
           </div>
