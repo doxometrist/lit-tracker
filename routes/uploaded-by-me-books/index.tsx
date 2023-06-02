@@ -1,16 +1,11 @@
 import type { Handlers, PageProps } from "$fresh/server.ts";
+import BookCard from "@/components/BookCard.tsx";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
-import { getUserBySessionId, User } from "../../utils/db.ts";
-import { Book, ReadingList } from "../../utils/db_interfaces.ts";
-import {
-  getAllBooks,
-  getBooksByReadingListId,
-  getReadingListsByUserId,
-} from "../../utils/new-db.ts";
-import { State } from "../_middleware.ts";
-import ListCard from "../../components/ListCard.tsx";
-import BookCard from "../../components/BookCard.tsx";
+import { State } from "@/routes/_middleware.ts";
+import { getAllBooks } from "@/utils/new-db.ts";
+import { getUserBySessionId, User } from "@/utils/db.ts";
+import { Book } from "@/utils/db_interfaces.ts";
 
 export interface OwnUploadedBooksPageData extends State {
   user: User;
@@ -30,15 +25,15 @@ export const handler: Handlers<OwnUploadedBooksPageData, State> = {
 export default function OwnBooks(props: PageProps<OwnUploadedBooksPageData>) {
   return (
     <>
-      <Head title="any" href={props.url.href} />
+      <Head title="Own books" href={props.url.href} />
       <Layout session={props.data.sessionId}>
         <div class="max-w-lg m-auto w-full flex-1 p-4 flex flex-col justify-center">
           <h1 class="text-3xl mb-4">
-            <strong>any</strong>
+            <strong>Manage books you referenced</strong>
           </h1>
           <div id="goToNewList">
             <a href="/new-book">
-              add more books
+              Add more books
             </a>
           </div>
           <div id="test" class="bg-primary">

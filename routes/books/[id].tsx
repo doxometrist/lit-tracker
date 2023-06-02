@@ -28,7 +28,6 @@ export const handler: Handlers<BookPageData, State> = {
   async GET(_req, ctx) {
     const { id } = ctx.params;
 
-    console.log(" the request: ", _req);
     const book = await getBookById(id);
     if (book === null) {
       return ctx.renderNotFound();

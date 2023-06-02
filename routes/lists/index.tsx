@@ -31,11 +31,11 @@ export const handler: Handlers<ListsPageData, State> = {
 export default function ListsPage(props: PageProps<ListsPageData>) {
   return (
     <>
-      <Head title="any" href={props.url.href} />
+      <Head title="Lists" href={props.url.href} />
       <Layout session={props.data.sessionId}>
         <div class="max-w-lg m-auto w-full flex-1 p-4 flex flex-col justify-center">
           <h1 class="text-3xl mb-4">
-            <strong>any</strong>
+            <strong>Lists</strong>
           </h1>
         </div>
         <div>

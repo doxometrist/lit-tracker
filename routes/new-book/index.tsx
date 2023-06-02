@@ -122,11 +122,11 @@ export const handler: Handlers<NewBookPageData, State> = {
 export default function NewBook(props: PageProps<NewBookPageData>) {
   return (
     <>
-      <Head title="any" href={props.url.href} />
+      <Head title="New Book" href={props.url.href} />
       <Layout session={props.data.sessionId}>
         <div class="max-w-lg m-auto w-full flex-1 p-4 flex flex-col justify-center">
           <h1 class="text-3xl mb-4">
-            <strong>here make a new book</strong>
+            <strong>Reference a new book</strong>
           </h1>
           <Form options={props.data.ownLists} />
         </div>

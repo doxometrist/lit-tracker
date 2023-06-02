@@ -17,10 +17,12 @@ export async function getAllBooks(options?: Deno.KvListOptions): Promise<Book[]>
 }
 
 export async function getBooksByReadingListId(listId: string, options?: Deno.KvListOptions): Promise<Book[]> {
+  // console.log('list id: ', listId);
+  if (listId === undefined) return [];
   const bookIdsIter = await kv.list<string>({ prefix: ['list_to_book', listId] })
 
   const bookIds: string[] = [];
-  for await (const res of bookIdsIter) bookIds.push(res.key[res.key.length - 1].toString());
+  for await (const res of bookIdsIter) bookIds.push(res.key.at(-1).toString());
 
   const unfilteredBooks: (Book | null)[] = await Promise.all(bookIds.map(async id => await getBookById(id)));
   const books: Book[] = unfilteredBooks.filter(b => b !== null) as Book[];
