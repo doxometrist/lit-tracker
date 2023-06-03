@@ -3,10 +3,11 @@ import type { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
 import type { State } from "@/routes/_middleware.ts";
 import { createVote, deleteVote } from "@/utils/db.ts";
 import { getUserBySessionId } from "@/utils/db.ts";
+import { Book } from "../../utils/db_interfaces.ts";
 
-async function sharedHandler(
+async function sharedBookHandler(
   req: Request,
-  ctx: HandlerContext<PageProps<undefined>, State>,
+  ctx: HandlerContext<PageProps<Book>, State>,
 ) {
   if (!ctx.state.sessionId) {
     return new Response(null, { status: 401 });
@@ -40,6 +41,6 @@ async function sharedHandler(
 }
 
 export const handler: Handlers<PageProps, State> = {
-  POST: sharedHandler,
-  DELETE: sharedHandler,
+  POST: sharedBookHandler,
+  DELETE: sharedBookHandler,
 };

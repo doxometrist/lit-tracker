@@ -4,18 +4,15 @@ import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import ListCard from "@/components/ListCard.tsx";
 import { State } from "@/routes/_middleware.ts";
-import { User, getUserBySessionId } from "@/utils/db.ts";
+import { getUserBySessionId, User } from "@/utils/db.ts";
 import { ReadingList } from "@/utils/db_interfaces.ts";
 import { getAllReadingLists, getBooksByReadingListId } from "@/utils/new-db.ts";
 
-interface ListsPageData extends State {
-  lists: ReadingList[];
+interface CsvUploadPage extends State {
   user: User | null;
-  booksNumber: number[];
 }
-// todo add sorting by author, likes, etc
 
-export const handler: Handlers<ListsPageData, State> = {
+export const handler: Handlers<CsvUploadPage, State> = {
   // todo here the discovery algorithm
   async GET(_request, ctx) {
     let user: User | null = null;
@@ -28,11 +25,17 @@ export const handler: Handlers<ListsPageData, State> = {
         (await getBooksByReadingListId(list.id)).length
       ),
     );
-    return ctx.render({ ...ctx.state, user, lists, booksNumber });
+    return ctx.render({ ...ctx.state, user });
+  },
+
+  // todo that should receive all book objects
+  async POST(_req, ctx) {
+    const res = new Response({});
+    return res;
   },
 };
 
-export default function ListsPage(props: PageProps<ListsPageData>) {
+export default function ListCreationPage(props: PageProps<CsvUploadPage>) {
   return (
     <>
       <Head title="Lists" href={props.url.href} />
@@ -41,25 +44,42 @@ export default function ListsPage(props: PageProps<ListsPageData>) {
           <h1 class="text-3xl mb-4">
             <strong>Lists</strong>
           </h1>
-        </div>
-        <div>
-          {props.data.lists.length === 0 && "sowwy,  no lists here!"}
-          <ul>
-            {props.data.lists.map((l, i) => {
-              return (
-                <li>
-                  <ListCard
-                    list={l}
-                    user={props.data.user}
-                    followed={false}
-                    booksNumber={props.data.booksNumber[i]}
-                  />
-                </li>
-              );
-            })}
-          </ul>
+          <ExampleTable />
+          <form>
+            <label for="csv">Put CSV of a list here</label>
+            <input type="file" name="csv" accept=".csv" />
+            <input type="submit" />
+          </form>
         </div>
       </Layout>
     </>
+  );
+}
+
+function ExampleTable() {
+  return (
+    <div class="p-2 m-2">
+      <h3>Example of a valid CSV</h3>
+      <table>
+        <tr>
+          <th>Author</th>
+          <th>Title</th>
+          <th>Pages</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>werwearwea</td>
+          <td>werwearwea</td>
+          <td>werwearwea</td>
+          <td>werwearwea</td>
+        </tr>
+        <tr>
+          <td>werwearwea</td>
+          <td>werwearwea</td>
+          <td>werwearwea</td>
+          <td>werwearwea</td>
+        </tr>
+      </table>
+    </div>
   );
 }

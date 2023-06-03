@@ -15,6 +15,7 @@ interface ListsPageData extends State {
 }
 // todo add sorting by author, likes, etc
 
+
 export const handler: Handlers<ListsPageData, State> = {
   // todo here the discovery algorithm
   async GET(_request, ctx) {

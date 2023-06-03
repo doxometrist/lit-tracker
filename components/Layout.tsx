@@ -67,7 +67,7 @@ function Footer(props: JSX.HTMLAttributes<HTMLElement>) {
   return (
     <footer
       {...props}
-      class={`flex flex-col md:flex-row p-4 justify-between bg-primary1 gap-y-4 ${SITE_WIDTH_STYLES} ${
+      class={`flex flex-col md:flex-row p-4 rounded-lg justify-between bg-primary1 gap-y-4 ${SITE_WIDTH_STYLES} ${
         props.class ?? ""
       }`}
     >

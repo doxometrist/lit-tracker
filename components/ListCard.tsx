@@ -21,11 +21,20 @@ export interface ListCardProps {
   booksNumber: number;
 }
 
+const defaultBackgroundImage =
+  "https://image.lexica.art/full_jpg/dc405187-a365-4a8a-b76f-5743bf72e88f";
 export default function ListCard(props: ListCardProps) {
   return (
     <div class="p-2 m-2 flex gap-2 bg-primary2 text-gray-500">
       <div>
-        <img src={props.list.backgroundImageUrl} width={200} height={200} />
+        <img
+          src={props.list.backgroundImageUrl === "" ||
+              props.list.backgroundImageUrl === undefined
+            ? defaultBackgroundImage
+            : props.list.backgroundImageUrl}
+          width={200}
+          height={200}
+        />
       </div>
       <div>
         <span class="mr-2">

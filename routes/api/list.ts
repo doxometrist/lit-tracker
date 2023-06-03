@@ -4,7 +4,7 @@ import type { State } from "@/routes/_middleware.ts";
 import { createVote, deleteVote } from "@/utils/db.ts";
 import { getUserBySessionId } from "@/utils/db.ts";
 
-async function sharedHandler(
+async function sharedListHandler(
   req: Request,
   ctx: HandlerContext<PageProps<undefined>, State>,
 ) {
@@ -40,6 +40,6 @@ async function sharedHandler(
 }
 
 export const handler: Handlers<PageProps, State> = {
-  POST: sharedHandler,
-  DELETE: sharedHandler,
+  POST: sharedListHandler,
+  DELETE: sharedListHandler,
 };

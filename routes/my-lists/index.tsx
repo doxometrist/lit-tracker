@@ -9,6 +9,7 @@ import {
 } from "../../utils/new-db.ts";
 import { State } from "../_middleware.ts";
 import ListCard from "../../components/ListCard.tsx";
+import { BUTTON_STYLES } from "../../utils/constants.ts";
 
 export interface MyListsPageData extends State {
   user: User;
@@ -38,10 +39,27 @@ export default function MyLists(props: PageProps<MyListsPageData>) {
           <h1 class="text-3xl mb-4">
             <strong>Personal lists</strong>
           </h1>
-          <div id="goToNewList">
-            <a href="/new-list">
-              Make a new list
-            </a>
+          <div id="goToNewList" class="flex flex-row gap-x-2">
+            <button class={`${BUTTON_STYLES}`}>
+              <a href="/new-list">
+                Make a new list
+              </a>
+            </button>
+            <button class={`${BUTTON_STYLES}`}>
+              <a href="/uploads/structured">
+                Structured upload
+              </a>
+            </button>
+            <button class={`${BUTTON_STYLES}`}>
+              <a href="/uploads/csv">
+                CSV upload
+              </a>
+            </button>
+            <button class={`${BUTTON_STYLES}`}>
+              <a href="/uploads/files">
+                Name files upload
+              </a>
+            </button>
           </div>
           <div id="test" class="bg-primary">
             <ul>

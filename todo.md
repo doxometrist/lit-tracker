@@ -63,34 +63,30 @@ add these good things for hero, features list https://fresh.deno.dev/components#
   - [ ] update
 
 ### bug fixes
+
 - [x] why don't the books show alright if someone is a visitor?
 - [x] book card - a horizontal bar with photo and buttons
 - [x] fix the layout - hide the navigation better
 - [x] background image to a readinglist
 
 ### smooth use
-- [ ] blog post about the features
-- [ ] add default image - must download it and use the asset function from deno
+
+- [x] add default image - must download it and use the asset function from deno - in the end just linking
 - [ ] wrap delete calls to change in books status into a shared handler in the
       api folder
   - [ ] edit lists
   - [ ] edit books
 
 ### faster data addition
-- [ ] buttons to upload - from the lists index page
+
+- [ ] blog post about the features
+
+- [x] buttons to upload - from the lists index page
 - [ ] pdf upload to get names
-- [ ] table that is saveable
+- [ ] structured table that is saveable
 - [ ] upload csv
-
-### advanced uses
-
-- [ ] reading time prediction - chat described, with tensorflow
-- [ ] algorithm for discover taking into account the tags user likes
-- [ ] upload from goodreads
-
-### QoL features
-
-- [ ] throttling does not seem to quite work
+- [ ] consider a list description
+- [ ] fix the twitter follow button
 
 # add lists
 
@@ -101,6 +97,22 @@ add these good things for hero, features list https://fresh.deno.dev/components#
 - [ ] verso books one
       https://www.versobooks.com/en-gb/blogs/news/4000-10-books-every-student-should-read
 - [ ] curated blog
+
+# MVP, uploaded
+
+- [ ] write on twitter about it
+
+### advanced uses
+
+- [ ] reading time prediction - chat described, with tensorflow
+- [ ] algorithm for discover taking into account the tags user likes
+
+### QoL features
+
+- [ ] upload from goodreads
+- [ ] search feature
+- [ ] throttling does not seem to quite work
+- [ ] also download CSV
 
 ### cancelled
 

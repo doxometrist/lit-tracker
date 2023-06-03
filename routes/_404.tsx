@@ -9,10 +9,10 @@ export default function NotFoundPage(props: UnknownPageProps) {
     <>
       <Head title="Page not found" href={props.url.href} />
       <div
-        class={`h-screen flex flex-col justify-center ${SITE_WIDTH_STYLES} p-4 text-center space-y-4`}
+        class={`h-screen flex flex-col bg-accent2 justify-center ${SITE_WIDTH_STYLES} p-4 text-center space-y-4`}
       >
         <Logo />
-        <h1 class="text-4xl inline-block font-bold">Page not found</h1>
+        <h1 class="text-4xl inline-block font-bold">Lost in a liberary? Good it's not the Library of Babel</h1>
         <p class="text-xl text-blue-900">
           <a href="/">Return home</a>
         </p>

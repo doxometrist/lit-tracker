@@ -18,7 +18,6 @@ export const SITE_WIDTH_STYLES = "mx-auto max-w-7xl w-full";
 
 export const PREMIUM_LISTS_LIMIT = 10;
 export const DEFAULT_LISTS_LIMIT = 5;
-
 export const MAX_LIST_LENGTH = 20;
 
 export const DEFAULT_IMG = "https://islandpress.org/sites/default/files/default_book_cover_2015.jpg";
