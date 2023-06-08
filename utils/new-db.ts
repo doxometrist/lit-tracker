@@ -137,11 +137,12 @@ export async function updateList(listId: string, newList: ReadingList, userId: s
   return res;
 }
 
-export async function updateBook(bookId: string, newBook: Book, userId: string) {
+export async function updateBook(bookId: string, newBook: InitBook, userId: string) {
   let res: Deno.KvCommitResult | Deno.KvCommitError = { ok: false };
   while (!res.ok) {
     const itemKey = ["books", bookId];
     console.log('updating the list: ', bookId, 'with new list object: ', newBook);
+    // todo need to outline more of the CRUD operation
     res = await kv.atomic()
       .check({ key: itemKey, versionstamp: null })
       .set(itemKey, newBook)

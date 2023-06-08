@@ -3,12 +3,12 @@ import type { Handlers, PageProps } from "$fresh/server.ts";
 import BookCard from "@/components/BookCard.tsx";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
+import DeleteListButton from "@/islands/DeleteListButton.tsx";
+import EditListForm from "@/islands/EditListForm.tsx";
+import IpfsOpenButton from "@/islands/IpfsOpenButton.tsx";
+import IpfsUploadButton from "@/islands/IpfsUploadButton.tsx";
 import type { State } from "@/routes/_middleware.ts";
-import {
-  BUTTON_STYLES,
-  MAX_LIST_LENGTH,
-  SITE_WIDTH_STYLES,
-} from "@/utils/constants.ts";
+import { MAX_LIST_LENGTH, SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import {
   type Comment,
   getCommentsByItem,
@@ -17,14 +17,7 @@ import {
   type User,
 } from "@/utils/db.ts";
 import { Book, InitReadingList, ReadingList } from "@/utils/db_interfaces.ts";
-import { redirect } from "@/utils/http.ts";
-import {
-  deleteList,
-  getBooksByReadingListId,
-  getReadingListByid,
-} from "@/utils/new-db.ts";
-import EditListForm from "../../islands/EditListForm.tsx";
-import { getIpfsAddress, uploadJsonToIpfs } from "../../utils/ipfs_facade.ts";
+import { getBooksByReadingListId, getReadingListByid } from "@/utils/new-db.ts";
 
 interface ListPageData extends State {
   user: User | null;
@@ -79,46 +72,21 @@ export const handler: Handlers<ListPageData, State> = {
       commentsUsers,
     });
   },
-
-  async POST(req, ctx) {
-    if (!ctx.state.sessionId) {
-      return redirect(`/login`);
-    }
-    const user = await getUserBySessionId(ctx.state.sessionId);
-    if (!user) {
-      return redirect(`/login`);
-    }
-    const params = ctx.params;
-    console.log("params: ", params);
-    console.log(params.id);
-
-    const list = await getReadingListByid(params.id);
-    console.log(list);
-
-    // WHEN NOT OWN
-    if (!list || user?.id !== list.creatorId) {
-      console.log("userId: ", user.id, "creator id: ", list?.creatorId);
-      console.log("failed to delete");
-
-      return redirect(`/my-lists`);
-    }
-
-    deleteList(user.id, params.id);
-
-    return redirect(`/my-lists`);
-  },
 };
 
 export default function ListPage(props: PageProps<ListPageData>) {
   const books = props.data.books;
-  const url = getIpfsAddress(props.data.list.id);
   return (
     <>
       <Head title={props.data.list.title} href={props.url.href} />
       <Layout session={props.data.sessionId}>
         <div class={`${SITE_WIDTH_STYLES} flex-1 px-4 space-y-8`}>
           <div>
-            <img src={props.data.list.backgroundImageUrl} width={200} height={200} />
+            <img
+              src={props.data.list.backgroundImageUrl}
+              width={200}
+              height={200}
+            />
           </div>
           <div>
             <h2>{props.data.list.title}</h2>
@@ -128,41 +96,17 @@ export default function ListPage(props: PageProps<ListPageData>) {
             id="addBooksRegion"
             class="m-2 p-2 bg-primary flex flex-row gap-x-2"
           >
-            <button
-              class={`${BUTTON_STYLES}`}
-              onClick={() => {
-                const item = {
-                  books: props.data.books,
-                  list: props.data.list,
-                };
-                const itemJson: string = JSON.stringify(item);
-                console.log("uploaded json", itemJson);
-                uploadJsonToIpfs(itemJson);
-                // todo add local backend indication that it's backed up. also move this to api shared class
-              }}
-            >
-              Save to IPFS
-            </button>
-            <button
-              class={`${BUTTON_STYLES}`}
-            >
-              <a href={url}>
-                See it on IPFS!
-              </a>
-            </button>
+            <IpfsUploadButton list={props.data.list} books={props.data.books} />
+            <IpfsOpenButton listId={props.data.list.id} />
           </div>
           {props.data.own &&
             (
-              <div id="management" className="m-2">
+              <div id="management" className="m-2 flex flex-row justify-start">
                 <EditListForm
                   user={props.data.user!}
                   startingListValues={props.data.list as InitReadingList}
                 />
-                <form method="post">
-                  <button type="submit">
-                    delete
-                  </button>
-                </form>
+                <DeleteListButton list={props.data.list} />
               </div>
             )}
           <ul>

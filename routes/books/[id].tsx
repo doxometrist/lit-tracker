@@ -8,14 +8,14 @@ import type { State } from "@/routes/_middleware.ts";
 import { BUTTON_STYLES, SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import { getUserBySessionId, type User } from "@/utils/db.ts";
 import { Book, ReadingList } from "@/utils/db_interfaces.ts";
+import { redirect } from "@/utils/http.ts";
 import {
   addBookToList,
-  deleteBook,
   getBookById,
   getReadingListByid,
-  getReadingListsByUserId,
+  getReadingListsByUserId
 } from "@/utils/new-db.ts";
-import { redirect } from "../../utils/http.ts";
+import DeleteBookButton from "../../islands/DeleteBookButton.tsx";
 
 interface BookPageData extends State {
   user: User | null;
@@ -63,13 +63,6 @@ export const handler: Handlers<BookPageData, State> = {
     if (!user) {
       console.error("no user");
       throw Error(`No user logged in`);
-    }
-    const deleteAction: string | undefined = form.get("delete")?.toString();
-    if (deleteAction === "y") {
-      console.log("trying to delete");
-      deleteBook(id, user.id).then(() => {
-        return redirect("/uploaded-by-me-books");
-      });
     }
     if (!addToListId) {
       return redirect("/uploaded-by-me-books");
@@ -127,17 +120,8 @@ export default function BookPage(props: PageProps<BookPageData>) {
                     Add all
                   </button>
                 </form>
-                <div id="deleteBox">
-                  <form method="post">
-                    <input hidden name="delete" value="y" />
-                    <input type="submit" value="Delete" />
-                  </form>
-                </div>
-                <div id="editBox">
-                  <form method="post">
-                    <input hidden name="delete" value="y" />
-                    <input type="submit" value="Delete" />
-                  </form>
+                <div id="buttonBox">
+                  <DeleteBookButton book={props.data.book} />
                 </div>
               </div>
             )}

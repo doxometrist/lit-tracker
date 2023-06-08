@@ -39,8 +39,12 @@ import * as $32 from "./routes/uploads/csv/index.tsx";
 import * as $33 from "./routes/uploads/files/index.tsx";
 import * as $34 from "./routes/uploads/structured/index.tsx";
 import * as $$0 from "./islands/Carousel.tsx";
-import * as $$1 from "./islands/EditListForm.tsx";
-import * as $$2 from "./islands/WantToReadList.tsx";
+import * as $$1 from "./islands/DeleteBookButton.tsx";
+import * as $$2 from "./islands/DeleteListButton.tsx";
+import * as $$3 from "./islands/EditListForm.tsx";
+import * as $$4 from "./islands/IpfsOpenButton.tsx";
+import * as $$5 from "./islands/IpfsUploadButton.tsx";
+import * as $$6 from "./islands/WantToReadList.tsx";
 
 const manifest = {
   routes: {
@@ -82,8 +86,12 @@ const manifest = {
   },
   islands: {
     "./islands/Carousel.tsx": $$0,
-    "./islands/EditListForm.tsx": $$1,
-    "./islands/WantToReadList.tsx": $$2,
+    "./islands/DeleteBookButton.tsx": $$1,
+    "./islands/DeleteListButton.tsx": $$2,
+    "./islands/EditListForm.tsx": $$3,
+    "./islands/IpfsOpenButton.tsx": $$4,
+    "./islands/IpfsUploadButton.tsx": $$5,
+    "./islands/WantToReadList.tsx": $$6,
   },
   baseUrl: import.meta.url,
   config,

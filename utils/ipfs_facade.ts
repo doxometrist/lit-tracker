@@ -1,6 +1,4 @@
 
-
-
 const key = Deno.env.get('INFURA_IPFS_KEY');
 const secret = Deno.env.get('INFURA_IPFS_KEY_SECRET');
 const endpoint = Deno.env.get('INFURA_IPFS_ENDPOINT');

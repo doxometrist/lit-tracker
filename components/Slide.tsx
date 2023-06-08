@@ -22,7 +22,7 @@ export const Slide = (props: SlideProps) => {
       class={`${props.class} ${color} h-fit w-full text-center text-black p-5 rounded-xl flex flex-row`}
     >
       <img height={768} width={512} src={url} class="rounded" />
-      <h2 class="text-xl bold m-2 p-2">
+      <h2 class="text-xl bold m-2 p-2 text-bone">
         {text}
       </h2>
     </div>
