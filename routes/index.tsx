@@ -1,6 +1,5 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers, PageProps } from "$fresh/server.ts";
-import Carousel from "@/components/Carousel.tsx";
 import Features from "@/components/Features.tsx";
 import Head from "@/components/Head.tsx";
 import Hero from "@/components/LandingHero.tsx";
@@ -9,6 +8,7 @@ import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import { getAllItems } from "@/utils/db.ts";
 import { Book } from "@/utils/db_interfaces.ts";
 import type { State } from "./_middleware.ts";
+import Carousel from "../islands/Carousel.tsx";
 
 interface HomePageData extends State {
   items: Book[];
@@ -46,10 +46,10 @@ export default function HomePage(props: PageProps<HomePageData>) {
     <>
       <Head href={props.url.href} />
       <Layout session={props.data.sessionId}>
-        <div class={`${SITE_WIDTH_STYLES} flex-1 px-4 snap-proximity snap-y `}>
+        <div class={`${SITE_WIDTH_STYLES} flex-1 px-4 snap-proximity snap-y  `}>
           <Hero />
           <Features />
-          <Carousel />
+          <Carousel externalImages={[]} showNavigation />
         </div>
       </Layout>
     </>

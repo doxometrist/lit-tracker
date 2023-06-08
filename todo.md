@@ -1,12 +1,13 @@
-
 ### portability ctn'd
+
 - [ ] save to ipfs
   - [ ] save
   - [ ] read from save
   - [ ] update
 
 ### smooth use
-- [ ] cancel the carousel
+
+- [ ] sortout the carousel stuff
 - [x] add default image - must download it and use the asset function from
       deno - in the end just linking
 - [ ] wrap delete calls to change in books status into a shared handler in the
@@ -18,14 +19,16 @@
 
 - [x] buttons to upload - from the lists index page
 
-- [ ] blog post about the features
 - [ ] pdf upload to get names
 - [ ] structured table that is saveable
 - [ ] upload csv
 - [ ] consider a list description
 - [ ] fix the twitter follow button
 
+- [ ] blog post about the features
+
 # deploy
+- [ ] consider forking from saaskit directly
 
 - [ ] add environment variables
 
@@ -55,4 +58,3 @@
 - [ ] search feature
 - [ ] throttling does not seem to quite work
 - [ ] also download CSV
-

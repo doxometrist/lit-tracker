@@ -38,7 +38,7 @@ function Nav(props: NavProps) {
         }`}
       >
         {props.items.map((item) => (
-          <li class="m-1 p-2 border-1 rounded bg-primary2  hover:border-solid border-color-secondary2">
+          <li class="m-1 p-2 border-1  rounded bg-primary2  hover:border-solid border-color-secondary2">
             <a href={item.href} class="text-bone">{item.inner}</a>
           </li>
         ))}
@@ -74,37 +74,7 @@ function Footer(props: JSX.HTMLAttributes<HTMLElement>) {
       <span>
         <strong class="text-bone">{SITE_NAME}</strong>
       </span>
-      <span>
-        <script
-          type="text/javascript"
-          src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
-          data-name="bmc-button"
-          data-slug="doxometrist"
-          data-color="#800000"
-          data-emoji="📖"
-          data-font="Cookie"
-          data-text="Buy me a book"
-          data-outline-color="#ffffff"
-          data-font-color="#ffffff"
-          data-coffee-color="#FFDD00"
-        >
-        </script>
-      </span>
-      <span>
-        <a
-          href="https://twitter.com/doxometrist?ref_src=twsrc%5Etfw"
-          class="twitter-follow-button"
-          data-show-count="true"
-        >
-          Follow @doxometrist
-        </a>
-        <script
-          async
-          src="https://platform.twitter.com/widgets.js"
-          charSet="utf-8"
-        >
-        </script>
-      </span>
+
       {props.children}
     </footer>
   );
@@ -170,6 +140,48 @@ export default function Layout(props: LayoutProps) {
           src="https://fresh.deno.dev/fresh-badge.svg"
           alt="Made with Fresh"
         />
+      ),
+    },
+    {
+      href: "",
+      inner: (
+        <span>
+          <script
+            type="text/javascript"
+            src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+            data-name="bmc-button"
+            data-slug="doxometrist"
+            data-color="#800000"
+            data-emoji="📖"
+            data-font="Cookie"
+            data-text="Buy me a book"
+            data-outline-color="#ffffff"
+            data-font-color="#ffffff"
+            data-coffee-color="#FFDD00"
+          >
+          </script>
+        </span>
+      ),
+    },
+
+    {
+      href: "https://twitter.com/doxometrist?ref_src=twsrc%5Etfw",
+      inner: (
+        <span>
+          <a
+            href="https://twitter.com/doxometrist?ref_src=twsrc%5Etfw"
+            class="twitter-follow-button"
+            data-show-count="true"
+          >
+            Follow @doxometrist
+          </a>
+          <script
+            async
+            src="https://platform.twitter.com/widgets.js"
+            charSet="utf-8"
+          >
+          </script>
+        </span>
       ),
     },
   ];

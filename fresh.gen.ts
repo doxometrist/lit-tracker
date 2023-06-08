@@ -40,8 +40,8 @@ import * as $33 from "./routes/uploaded-by-me-books/index.tsx";
 import * as $34 from "./routes/uploads/csv/index.tsx";
 import * as $35 from "./routes/uploads/files/index.tsx";
 import * as $36 from "./routes/uploads/structured/index.tsx";
-import * as $$0 from "./islands/EditListForm.tsx";
-import * as $$1 from "./islands/VoteButton.tsx";
+import * as $$0 from "./islands/Carousel.tsx";
+import * as $$1 from "./islands/EditListForm.tsx";
 import * as $$2 from "./islands/WantToReadList.tsx";
 
 const manifest = {
@@ -85,8 +85,8 @@ const manifest = {
     "./routes/uploads/structured/index.tsx": $36,
   },
   islands: {
-    "./islands/EditListForm.tsx": $$0,
-    "./islands/VoteButton.tsx": $$1,
+    "./islands/Carousel.tsx": $$0,
+    "./islands/EditListForm.tsx": $$1,
     "./islands/WantToReadList.tsx": $$2,
   },
   baseUrl: import.meta.url,
