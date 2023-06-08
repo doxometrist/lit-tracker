@@ -4,8 +4,9 @@
   - [ ] save
   - [ ] read from save
   - [ ] update
-### smooth use
 
+### smooth use
+- [ ] cancel the carousel
 - [x] add default image - must download it and use the asset function from
       deno - in the end just linking
 - [ ] wrap delete calls to change in books status into a shared handler in the
@@ -15,9 +16,9 @@
 
 ### faster data addition
 
-- [ ] blog post about the features
-
 - [x] buttons to upload - from the lists index page
+
+- [ ] blog post about the features
 - [ ] pdf upload to get names
 - [ ] structured table that is saveable
 - [ ] upload csv
