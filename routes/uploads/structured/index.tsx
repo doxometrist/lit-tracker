@@ -5,10 +5,16 @@ import Layout from "@/components/Layout.tsx";
 import ListCard from "@/components/ListCard.tsx";
 import { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
-import { ReadingList } from "@/utils/db_interfaces.ts";
-import { getAllReadingLists, getBooksByReadingListId } from "@/utils/new-db.ts";
+import { InitBook, ReadingList } from "@/utils/db_interfaces.ts";
+import {
+  createBook,
+  getAllReadingLists,
+  getBooksByReadingListId,
+} from "@/utils/new-db.ts";
 import { BUTTON_STYLES, MAX_LIST_LENGTH } from "../../../utils/constants.ts";
 import { ConstructorDeclarationOverloadBase } from "https://deno.land/x/ts_morph@17.0.1/ts_morph.js";
+import BookCard from "../../../components/BookCard.tsx";
+import { redirect } from "../../../utils/http.ts";
 
 interface StructuredUploadPage extends State {
   user: User | null;
@@ -31,9 +37,41 @@ export const handler: Handlers<StructuredUploadPage, State> = {
   },
 
   // todo that should receive all book objects
-  async POST(_req, ctx) {
-    const res = new Response({});
-    return res;
+  async POST(req, ctx) {
+    // todo if all is empty should retract
+    if (!ctx.state.sessionId) {
+      await req.body?.cancel();
+      return new Response(null, { status: 401 });
+    }
+
+    const form = await req.formData();
+    const title = form.get("title");
+    const url = form.get("url");
+
+    if (typeof title !== "string" || typeof url !== "string") {
+      return new Response(null, { status: 400 });
+    }
+
+    try {
+      // Throws if an invalid URL
+      new URL(url);
+    } catch {
+      return new Response(null, { status: 400 });
+    }
+
+    const user = await getUserBySessionId(ctx.state.sessionId);
+
+    if (!user) return new Response(null, { status: 400 });
+    // todo add uploader data
+    // todo add list description fields like in the regular form, or choose to which form these are added
+
+    const initBooks: InitBook[] = [];
+    // todo move this to a separaate place, one function to parse the full object starting from the pdf upload
+    initBooks.forEach(async (book, index) => {
+      await createBook(book);
+    });
+
+    return redirect(`/lists/some-new-list-id}`);
   },
 };
 
@@ -50,7 +88,6 @@ export default function ListCreationPage(
   props: PageProps<StructuredUploadPage>,
 ) {
   const numArr = range(0, MAX_LIST_LENGTH);
-  console.log(numArr);
   return (
     <>
       <Head title="Type out a new list" href={props.url.href} />
@@ -59,7 +96,7 @@ export default function ListCreationPage(
           <h1 class="text-3xl mb-4">
             <strong>New list</strong>
           </h1>
-          <form>
+          <form method="POST">
             <label for="list-name">
               List name:
             </label>
@@ -70,6 +107,7 @@ export default function ListCreationPage(
                 <th>Author</th>
                 <th>Description</th>
                 <th>Title</th>
+                <th>Cover url link</th>
               </tr>
 
               {numArr.map((n) => {
@@ -84,6 +122,9 @@ export default function ListCreationPage(
                     </td>
                     <td>
                       <input type="text" name={`title-${n}`} />
+                    </td>
+                    <td>
+                      <input type="link" name={`link-${n}`} />
                     </td>
                   </tr>
                 );

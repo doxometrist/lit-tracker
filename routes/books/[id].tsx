@@ -13,9 +13,10 @@ import {
   addBookToList,
   getBookById,
   getReadingListByid,
-  getReadingListsByUserId
+  getReadingListsByUserId,
 } from "@/utils/new-db.ts";
 import DeleteBookButton from "../../islands/DeleteBookButton.tsx";
+import EditBookForm from "../../islands/EditBookForm.tsx";
 
 interface BookPageData extends State {
   user: User | null;
@@ -121,6 +122,10 @@ export default function BookPage(props: PageProps<BookPageData>) {
                   </button>
                 </form>
                 <div id="buttonBox">
+                  <EditBookForm
+                    user={props.data.user!}
+                    startingBookValues={props.data.book}
+                  />
                   <DeleteBookButton book={props.data.book} />
                 </div>
               </div>

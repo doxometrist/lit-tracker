@@ -2,16 +2,17 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 import { BUTTON_STYLES } from "@/utils/constants.ts";
 import type { User } from "@/utils/db.ts";
 import { useSignal } from "@preact/signals";
-import { InitReadingList, ReadingList } from "@/utils/db_interfaces.ts";
+import { InitBook, InitReadingList } from "../utils/db_interfaces.ts";
 import IconEdit from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/edit.tsx";
 
-export interface EditListFormProps {
-  list: ReadingList;
+export interface EditBookFormProps {
+  user: User;
+  startingBookValues: InitBook;
 }
 
-export default function EditListForm(props: EditListFormProps) {
+export default function EditBookForm(props: EditBookFormProps) {
   const open = useSignal(false);
-  function onOuterButtonClick(event: MouseEvent) {
+  function onClick(event: MouseEvent) {
     console.log("clicked button to open a form");
     if (event.detail === 1) {
       open.value = !open.value;
@@ -26,28 +27,10 @@ export default function EditListForm(props: EditListFormProps) {
     }
   }
 
-  const submitHandler = async () => {
-    console.log("clicked");
-    const listId = props.list.id;
-    const url = `/api/list?list_id=${listId}`;
-    const method = "PATCH";
-    const response = await fetch(url, { method, credentials: "same-origin" });
-    console.log(`sending request to upload to ipfs the list: ${listId}`);
-
-    if (response.status === 401) {
-      window.location.href = "/login";
-      return;
-    }
-    if (response.status === 204) {
-      window.location.href = `/lists/${listId}`;
-      return;
-    }
-  };
-
   return (
     <div>
       <button
-        onClick={onOuterButtonClick}
+        onClick={onClick}
         class={BUTTON_STYLES}
       >
         <p>
@@ -56,28 +39,48 @@ export default function EditListForm(props: EditListFormProps) {
       </button>
       <dialog id="edit-list-dialog">
         <form
-          // method="patch"
+          method="patch"
           class="bg-red-400 w-40 h-40"
-          // formAction={"/api/list"}
-          onSubmit={submitHandler}
+          action={"/api/book"}
         >
           <input
             type="text"
             name="name"
-            value={props.list.title}
+            value={props.startingBookValues.title}
           />
-          <label for="name">Input name</label>
+          <label for="name">Input title</label>
+
+          <input
+            type="text"
+            name="author"
+            value={props.startingBookValues.author}
+          />
+          <label for="author">Input author</label>
+
+          <input
+            type="number"
+            name="pages"
+            value={props.startingBookValues.pages}
+          />
+          <label for="pages">Input pages</label>
 
           <input
             type="text"
             name="description"
-            value={props.list.description}
+            value={props.startingBookValues.description}
           />
           <label for="description">Input description</label>
 
+          <input
+            type="link"
+            name="coverUrl"
+            value={props.startingBookValues.coverUrl}
+          />
+          <label for="coverUrl">Input cover URL</label>
+
           <button
             class={`${BUTTON_STYLES}  text-center mt-8`}
-            type="cancel"
+            type="submit"
             formMethod="dialog"
           >
             Cancel

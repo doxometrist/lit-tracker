@@ -6,7 +6,6 @@ import Layout from "@/components/Layout.tsx";
 import DeleteListButton from "@/islands/DeleteListButton.tsx";
 import EditListForm from "@/islands/EditListForm.tsx";
 import IpfsOpenButton from "@/islands/IpfsOpenButton.tsx";
-import IpfsUploadButton from "@/islands/IpfsUploadButton.tsx";
 import type { State } from "@/routes/_middleware.ts";
 import { MAX_LIST_LENGTH, SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import {
@@ -18,6 +17,7 @@ import {
 } from "@/utils/db.ts";
 import { Book, InitReadingList, ReadingList } from "@/utils/db_interfaces.ts";
 import { getBooksByReadingListId, getReadingListByid } from "@/utils/new-db.ts";
+import ListIpfsUploadButton from "../../islands/ListIpfsUploadButton.tsx";
 
 interface ListPageData extends State {
   user: User | null;
@@ -96,7 +96,7 @@ export default function ListPage(props: PageProps<ListPageData>) {
             id="addBooksRegion"
             class="m-2 p-2 bg-primary flex flex-row gap-x-2"
           >
-            <IpfsUploadButton list={props.data.list} books={props.data.books} />
+            <ListIpfsUploadButton listId={props.data.list.id} />
             <IpfsOpenButton listId={props.data.list.id} />
           </div>
           {props.data.own &&
@@ -104,7 +104,7 @@ export default function ListPage(props: PageProps<ListPageData>) {
               <div id="management" className="m-2 flex flex-row justify-start">
                 <EditListForm
                   user={props.data.user!}
-                  startingListValues={props.data.list as InitReadingList}
+                  list={props.data.list as InitReadingList}
                 />
                 <DeleteListButton list={props.data.list} />
               </div>

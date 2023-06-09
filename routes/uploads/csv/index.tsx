@@ -7,6 +7,7 @@ import { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
 import { ReadingList } from "@/utils/db_interfaces.ts";
 import { getAllReadingLists, getBooksByReadingListId } from "@/utils/new-db.ts";
+import { BUTTON_STYLES } from "../../../utils/constants.ts";
 
 interface CsvUploadPage extends State {
   user: User | null;
@@ -48,7 +49,7 @@ export default function ListCreationPage(props: PageProps<CsvUploadPage>) {
           <form>
             <label for="csv">Put CSV of a list here</label>
             <input type="file" name="csv" accept=".csv" />
-            <input type="submit" />
+            <input class={BUTTON_STYLES} type="submit" />
           </form>
         </div>
       </Layout>
@@ -66,18 +67,21 @@ function ExampleTable() {
           <th>Title</th>
           <th>Pages</th>
           <th>Description</th>
+          <th>Link</th>
         </tr>
         <tr>
           <td>werwearwea</td>
           <td>werwearwea</td>
           <td>werwearwea</td>
           <td>werwearwea</td>
+          <td>https://werwearwea</td>
         </tr>
         <tr>
           <td>werwearwea</td>
           <td>werwearwea</td>
           <td>werwearwea</td>
           <td>werwearwea</td>
+          <td>https://werwearwea</td>
         </tr>
       </table>
     </div>

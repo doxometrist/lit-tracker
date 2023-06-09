@@ -2,7 +2,8 @@
 import type { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
 import type { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId } from "@/utils/db.ts";
-import { deleteList, updateList } from "../../utils/new-db.ts";
+import { deleteList, getBooksByReadingListId, getReadingListByid, updateList } from "../../utils/new-db.ts";
+import { uploadJsonToIpfs } from "../../utils/ipfs_facade.ts";
 
 async function sharedListHandler(
   req: Request,
@@ -12,13 +13,15 @@ async function sharedListHandler(
     return new Response(null, { status: 401 });
   }
 
-  const listId = new URL(req.url).searchParams.get("list_id");
+  const searchParams = new URL(req.url).searchParams;
+  const listId = searchParams.get("list_id");
 
   if (!listId) {
     return new Response(null, { status: 400 });
   }
 
   const user = await getUserBySessionId(ctx.state.sessionId);
+  const action = searchParams.get('action');
 
   if (!user) return new Response(null, { status: 400 });
   let status;
@@ -29,7 +32,27 @@ async function sharedListHandler(
       break;
     case "PATCH":
       status = 204;
+      console.log('got a patch request for list');
       await updateList(user.id, listId);
+      break;
+    case "POST":
+      console.log('got a post request for list');
+      if (action === 'ipfs-upload') {
+        console.log("clicked button to upload to ipfs");
+        const books = getBooksByReadingListId(listId);
+        const list = getReadingListByid(listId);
+        const item = {
+          books,
+          list,
+        };
+        const itemJson: string = JSON.stringify(item);
+        console.log("uploaded json", itemJson);
+        await uploadJsonToIpfs(itemJson);
+        status = 204;
+
+      } else {
+        console.log('not supported');
+      }
       break;
     default:
       return new Response(null, { status: 400 });
@@ -39,6 +62,7 @@ async function sharedListHandler(
 }
 
 export const handler: Handlers<PageProps, State> = {
+  POST: sharedListHandler,
   DELETE: sharedListHandler,
   PATCH: sharedListHandler
 };

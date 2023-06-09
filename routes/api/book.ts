@@ -2,8 +2,8 @@
 import type { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
 import type { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId } from "@/utils/db.ts";
-import { Book, InitBook } from "../../utils/db_interfaces.ts";
-import { deleteBook, getBookById, updateBook } from "../../utils/new-db.ts";
+import { Book, InitBook } from "@/utils/db_interfaces.ts";
+import { deleteBook, getBookById, updateBook } from "@/utils/new-db.ts";
 
 async function sharedBookHandler(
   req: Request,
@@ -13,15 +13,15 @@ async function sharedBookHandler(
     return new Response(null, { status: 401 });
   }
 
-  const bookId = new URL(req.url).searchParams.get("book_id");
+  const params = new URL(req.url).searchParams;
+  console.log('params for the book request', params);
 
-  if (!bookId) {
-    return new Response(null, { status: 400 });
-  }
+  const bookId = params.get("book_id");
+  if (!bookId) return new Response(null, { status: 400 });
 
   const user = await getUserBySessionId(ctx.state.sessionId);
-
   if (!user) return new Response(null, { status: 400 });
+
   let status;
   switch (req.method) {
     case "DELETE":
@@ -34,7 +34,6 @@ async function sharedBookHandler(
       console.log('got a patch request')
       const previousBook = await getBookById(bookId);
       if (!previousBook) return new Response('cannot update book that does not exist', { status: 400 })
-      const params = new URL(req.url).searchParams;
 
       const newBook: InitBook = {
         title: params.get('title') ?? previousBook.title,
@@ -55,7 +54,6 @@ async function sharedBookHandler(
 }
 
 export const handler: Handlers<PageProps, State> = {
-  POST: sharedBookHandler,
   DELETE: sharedBookHandler,
   PATCH: sharedBookHandler,
 };

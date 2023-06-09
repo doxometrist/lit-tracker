@@ -235,3 +235,14 @@ export async function deleteBook(bookId: string, userId: string) {
     throw mapping
   }
 }
+
+export async function massUpload(initList: InitReadingList, books: InitBook[], userId: string) {
+  createReadingList(initList);
+  const listId = "1";
+  // todo need to have the right id from that
+  books.forEach(async (book, index) => {
+    const id = await createBook(book)
+    addBookToList(id, listId, userId)
+  });
+  return 1;
+}

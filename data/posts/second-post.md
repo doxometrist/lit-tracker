@@ -1,23 +1,16 @@
 ---
-title: Second post
-published_at: 2022-03-20
-summary: This is the second post.
+title: Future features
+published_at: 2022-06-09
+summary: How the future of this might look like.
 ---
 
-It was popularised in the 1960s with the release of Letraset sheets containing
-Lorem Ipsum passages, and more recently with desktop publishing software like
-Aldus PageMaker including versions of Lorem Ipsum.
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-unknown printer took a galley of type and scrambled it to make a type specimen
-book. It has survived not only five centuries, but also the leap into electronic
-typesetting, remaining essentially unchanged. It was popularised in the 1960s
-with the release of Letraset sheets containing Lorem Ipsum passages, and more
-recently with desktop publishing software like Aldus PageMaker including
-versions of Lorem Ipsum.
+1. Tag system for easier discoverty
+1. Connetion to existing book spaces like Goodreads
+1. Search feature
+1. Download as CSV
+1. Personalized time tracking and prediction how long will take it for you to read something
 
-## Usage
 
 ```js
 import blog from "https://deno.land/x/blog/blog.tsx";

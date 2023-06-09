@@ -10,29 +10,22 @@
 - [x] sortout the carousel stuff
 - [x] add default image - must download it and use the asset function from
       deno - in the end just linking
-- [ ] wrap delete calls to change in books status into a shared handler in the
+- [x] fix the twitter follow button
+- [x] wrap delete calls to change in books status into a shared handler in the
       api folder
-  - [ ] edit lists
-  - [ ] edit books
+  - [ ] edit lists - make them use the API, not the regular post request
+  - [ ] edit books - make them use the API, not the regular post request
+  - [ ] fix the error with forms closing but not submitting
 
 ### faster data addition
 
 - [x] buttons to upload - from the lists index page
-
-- [ ] pdf upload to get names
+- [x] list description field
+- [x] add the space for link for image
+- [ ] pdf upload to get names - possibly only as pre-seeding for the structured
+      one
 - [ ] structured table that is saveable
 - [ ] upload csv
-- [ ] consider a list description
-
-- [ ] fix the twitter follow button
-
-- [ ] blog post about the features
-- [ ] blog post about the changing it into an open protocol
-
-# deploy
-- [ ] consider forking from saaskit directly
-
-- [ ] add environment variables
 
 # add lists
 
@@ -43,77 +36,31 @@
       https://www.goodreads.com/list/show/89892._pol_recommended_reading
 - [ ] verso books one
       https://www.versobooks.com/en-gb/blogs/news/4000-10-books-every-student-should-read
-- [ ] curated blog
+
+# deploy
+
+- [x] consider forking from saaskit directly - nevermind, it got generated
+- [x] pull stuff into cultspace first
+- [ ] add environment variables
 
 # MVP, uploaded
+
+- [ ] blog post about the features
+- [ ] blog post about the changing it into an open protocol
 
 - [ ] write on twitter about it
 
 ### advanced uses
 
+- [ ] transfer ownership functionality?
 - [ ] reading time prediction - chat described, with tensorflow
 - [ ] algorithm for discover taking into account the tags user likes
 
 ### QoL features
 
+- [ ] tag system
 - [ ] upload from goodreads
 - [ ] search feature
 - [ ] throttling does not seem to quite work
 - [ ] also download CSV
-
-
-# old rust variant
-caches implementation from here
-https://matklad.github.io/2022/06/11/caches-in-rust.html
-
-1 functionality 1 screen, later fancy tricks can be done later
-- add link 
-- import links en masse
-- full text search over local stuff
-- read as vault, add tags - mapping of name to.
-
-- create a project or  
-
-# extra features
-- bookclub? it is a curated list after all why not shareable?
-- automatic tracking the reading of each?
-- reading list?
-- read number of pages
-
-
-# strategy
-## MVP description
-
-- I can add links
-- I can import links from some bookmarks
-- full text search over the data
-- in-memory database
-
-- reads a given directory as a vault of sorts and adds tags on top of it
-- multiple levels view, not like the usual one
-- can have 1 flat directory and just structure here
-
-### read paths in a given location
-
-Rust filesysttem API
-https://doc.rust-lang.org/std/fs/
-
-
-
-# dev ntoes
-
-## db choice
-db could be skipped for now and all contained in a local json file
-I also could grab data from js and then pass it to Rust
-
-here some agree, or sqlite
-
-https://www.reddit.com/r/dotnetcore/comments/g2xsc5/whats_the_best_and_smallest_database_i_use_for/
-
-
-this sounds good
-https://memgraph.com/pricing
-
-this too, especially with the types
-https://www.edgedb.com/showcase/data-modeling
-https://docs.rs/edgedb-tokio/latest/edgedb_tokio/
+- [ ] feature lists on the landing page
