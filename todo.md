@@ -31,16 +31,18 @@
 
 - [x] wrap delete calls to change in books status into a shared handler in the
       api folder
-  - [ ] edit lists - make them use the API, not the regular post request
-  - [ ] edit books - make them use the API, not the regular post request
+  - [ ] edit lists
+  - [ ] edit books
   - [ ] fix the error with forms closing but not submitting
+- [ ] uploader id for init book is incoherent wrt how it's handled in the list
 
 ### faster data addition
 
 - [ ] pdf upload to get names - possibly only as pre-seeding for the structured
       one
 - [ ] structured table that is saveable
-- [ ] upload csv
+- [ ] upload csv - 
+  - [ ] solve the `\n` signs causing errors and reviews containing that are corrupted
 
 # deploy
 

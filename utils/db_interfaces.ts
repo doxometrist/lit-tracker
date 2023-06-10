@@ -4,8 +4,8 @@ export interface InitBook {
   pages: number,
   author: string,
   description: string,
-  uploaderId: string,
   coverUrl: string
+  uploaderId: string,
 }
 
 export interface Book extends InitBook {
