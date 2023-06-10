@@ -5,26 +5,17 @@ summary: How the future of this might look like.
 ---
 
 
+
 1. Tag system for easier discoverty
 1. Connetion to existing book spaces like Goodreads
 1. Search feature
 1. Download as CSV
 1. Personalized time tracking and prediction how long will take it for you to read something
+1. Make it an open protocol
 
 
-```js
-import blog from "https://deno.land/x/blog/blog.tsx";
+Might use the following guides
+https://www.khanacademy.org/computing/computers-and-internet/xcae6f4a7ff015e7d:the-internet/xcae6f4a7ff015e7d:developing-open-protocols/a/open-standards-and-protocols
 
-blog({
-  author: "Dino",
-  title: "My Blog",
-  description: "The blog description.",
-  avatar: "https://deno-avatar.deno.dev/avatar/blog.svg",
-  avatarClass: "rounded-full",
-  links: [
-    { title: "Email", url: "mailto:bot@deno.com" },
-    { title: "GitHub", url: "https://github.com/denobot" },
-    { title: "Twitter", url: "https://twitter.com/denobot" },
-  ],
-});
-```
+https://graymirror.substack.com/p/how-to-regulate-the-tech-platforms
+https://www.ncsc.gov.uk/whitepaper/protocol-design-principles
