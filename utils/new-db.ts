@@ -1,5 +1,6 @@
 import { kv } from "@/utils/db.ts";
-import { Book, BookToListMapping, InitBook, InitReadingList, ReadingList } from "./db_interfaces.ts";
+import { Book, BookToListMapping, InitBook, InitReadingList, ReadingList, TmpBook } from "./db_interfaces.ts";
+import { DEFAULT_AUTHOR, DEFAULT_IMG } from "./constants.ts";
 
 export async function getReadingListsByUserId(userId: string, options?: Deno.KvListOptions): Promise<ReadingList[]> {
   const iter = await kv.list<ReadingList>({ prefix: ["lists_by_user", userId] }, options);
@@ -64,6 +65,8 @@ export async function createBook(initBook: InitBook): Promise<string> {
     const itemKey = ["books", id];
     const book: Book = {
       ...initBook,
+      author: initBook.author === "" ? DEFAULT_AUTHOR : initBook.author,
+      coverUrl: initBook.coverUrl === "" ? DEFAULT_IMG : initBook.coverUrl,
       id,
       finishedUserIds: [],
     };
@@ -245,4 +248,40 @@ export async function massUpload(initList: InitReadingList, books: InitBook[], u
     addBookToList(id, listId, userId)
   });
   return 1;
+}
+
+export async function saveTmpBook(shortform: TmpBook, userId: string): Promise<string> {
+  let res = { ok: false };
+  while (!res.ok) {
+    const id = crypto.randomUUID();
+    const itemKey = ["tmp_book", userId];
+    shortform.id = id;
+    console.log(`thing: ${shortform.name}, key: ${itemKey}`)
+    res = await kv.atomic()
+      .check({ key: itemKey, versionstamp: null })
+      .set(itemKey, shortform)
+      .commit();
+    return id;
+  }
+}
+
+
+export async function resetTmpBooksByUserId(userId: string): Promise<string> {
+  let res = { ok: false };
+  while (!res.ok) {
+    const itemKey = ["tmp_book", userId];
+    res = await kv.atomic()
+      .check({ key: itemKey, versionstamp: null })
+      .delete(itemKey)
+      .commit();
+    return id;
+  }
+}
+
+export async function getTmpBooksById(userId: string, options?: Deno.KvListOptions): Promise<TmpBook[]> {
+  const iter = await kv.list<TmpBook>({ prefix: ["tmp_book", userId] }, options);
+  const items = [];
+  for await (const res of iter) items.push(res.value);
+  console.log('list items from by user: ', items);
+  return items;
 }

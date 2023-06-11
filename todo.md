@@ -29,20 +29,21 @@
 
 ### smooth use
 
+- [x] uploader id for init book is incoherent wrt how it's handled in the list
 - [x] wrap delete calls to change in books status into a shared handler in the
       api folder
   - [ ] edit lists
   - [ ] edit books
   - [ ] fix the error with forms closing but not submitting
-- [ ] uploader id for init book is incoherent wrt how it's handled in the list
 
 ### faster data addition
 
 - [ ] pdf upload to get names - possibly only as pre-seeding for the structured
       one
+      - [ ] solve the passage of props issue
 - [ ] structured table that is saveable
-- [ ] upload csv - 
-  - [ ] solve the `\n` signs causing errors and reviews containing that are corrupted
+- [x] upload csv - 
+  - [x] solve the `\n` signs causing errors and reviews containing that are corrupted
 
 # deploy
 
@@ -55,11 +56,19 @@
 
 - [ ] write on twitter about it
 
+### refactorings
+- [ ] refactor new book index form and the [id] variant form 
+- [ ] add a modal confirmation for every delete action
+- [ ] add middleware for all 401 actions
+
 ### advanced uses
 
 - [ ] transfer ownership functionality?
 - [ ] reading time prediction - chat described, with tensorflow
 - [ ] algorithm for discover taking into account the tags user likes
+- [ ] kv: 'reads/userid/bookid/profile' where % read and status of it
+- [ ] tags 'tagname/bookIds'
+- [ ] add row reset button for uploads
 
 ### QoL features
 

@@ -88,7 +88,7 @@ export const handler: Handlers<NewBookPageData, State> = {
       title: form.get("title")?.toString() ?? "",
       pages: 0,
       author: form.get("author")?.toString() ?? "",
-      coverUrl: form.get("cover")?.toString() ?? DEFAULT_IMG,
+      coverUrl: form.get("cover")?.toString() ?? "",
     };
 
     const finalBookId = await createBook(book);

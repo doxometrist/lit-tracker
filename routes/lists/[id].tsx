@@ -103,8 +103,8 @@ export default function ListPage(props: PageProps<ListPageData>) {
             (
               <div id="management" className="m-2 flex flex-row justify-start">
                 <EditListForm
-                  user={props.data.user!}
-                  list={props.data.list as InitReadingList}
+                  changeableProps={props.data.list}
+                  id={props.data.list.id}
                 />
                 <DeleteListButton list={props.data.list} />
               </div>
