@@ -21,7 +21,7 @@ export async function uploadJsonToIpfs(object: string) {
 }
 
 // https://docs.infura.io/infura/networks/ipfs/http-api-methods/get
-export async function downloadItemFromIpfs(listId: string) {
+export async function downloadItemFromIpfs(listId: string): Promise<JSON> {
   const url = getIpfsAddress(listId)
   const response = await fetch(url, {
     method: 'POST',
@@ -30,11 +30,15 @@ export async function downloadItemFromIpfs(listId: string) {
       'Authorization': `Basic ${auth}`,
     },
   });
+  console.log(response);
 
   const data = await response.json();
   console.log(data);
+  return data;
 }
 
-export function getIpfsAddress(listId: string) {
-  return `${endpoint}/api/v0/get?arg=${listId}`;
+export function getIpfsAddress(listId: string): string {
+  return `${endpoint}/api/v0/get?arg=${listId}`
+  // const url = new URL(`${endpoint}/api/v0/get? arg = ${listId}`);
+  // return url
 }

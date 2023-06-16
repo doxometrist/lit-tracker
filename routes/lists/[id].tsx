@@ -18,6 +18,7 @@ import {
 import { Book, InitReadingList, ReadingList } from "@/utils/db_interfaces.ts";
 import { getBooksByReadingListId, getReadingListByid } from "@/utils/new-db.ts";
 import ListIpfsUploadButton from "../../islands/ListIpfsUploadButton.tsx";
+import { getIpfsAddress } from "../../utils/ipfs_facade.ts";
 
 interface ListPageData extends State {
   user: User | null;
@@ -27,8 +28,10 @@ interface ListPageData extends State {
   commentsUsers: User[];
   suggestions: Book[];
   own: boolean;
+  ipfsUrl: string;
 }
 
+// todo need to add fetching for the json item? or only on opening?
 export const handler: Handlers<ListPageData, State> = {
   async GET(_req, ctx) {
     const { id } = ctx.params;
@@ -61,6 +64,7 @@ export const handler: Handlers<ListPageData, State> = {
       // todo need a tag system
     }
 
+    const ipfsUrl = getIpfsAddress(list.id);
     return ctx.render({
       ...ctx.state,
       own,
@@ -70,6 +74,7 @@ export const handler: Handlers<ListPageData, State> = {
       user,
       suggestions,
       commentsUsers,
+      ipfsUrl,
     });
   },
 };
@@ -96,8 +101,11 @@ export default function ListPage(props: PageProps<ListPageData>) {
             id="addBooksRegion"
             class="m-2 p-2 bg-primary flex flex-row gap-x-2"
           >
-            <ListIpfsUploadButton listId={props.data.list.id} />
-            <IpfsOpenButton listId={props.data.list.id} />
+            <h5>Here might be buttons for more functionality in the future</h5>
+            {
+              /* <ListIpfsUploadButton listId={props.data.list.id} />
+            <IpfsOpenButton url={props.data.ipfsUrl} /> */
+            }
           </div>
           {props.data.own &&
             (

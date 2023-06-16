@@ -1,3 +1,18 @@
+### portability ctn'd
+
+DISCARDED - tbf a dedicated gateway would be required anyway. couldn't open it
+just plainly, and chrome browser is the most important
+
+- [ ] save to ipfs
+  - [ ] save
+  - [ ] read from save
+  - [ ] update
+
+- [ ] solve the passage of props issue
+- [ ] pdf upload to get names - - [ ] possibly only as pre-seeding for the
+      structured
+- [ ] structured table that is saveable - [ ] join on the same page as upload
+
 # add lists
 
 - [x] prepare all these into csv format first
@@ -20,13 +35,6 @@
       deno - in the end just linking
 - [x] fix the twitter follow button
 
-### portability ctn'd
-
-- [ ] save to ipfs
-  - [ ] save
-  - [ ] read from save
-  - [ ] update
-
 ### smooth use
 
 - [x] uploader id for init book is incoherent wrt how it's handled in the list
@@ -36,14 +44,14 @@
   - [ ] edit books
   - [ ] fix the error with forms closing but not submitting
 
-### faster data addition
+### faster data IO
 
-- [ ] pdf upload to get names - possibly only as pre-seeding for the structured
-      one
-      - [ ] solve the passage of props issue
-- [ ] structured table that is saveable
-- [x] upload csv - 
-  - [x] solve the `\n` signs causing errors and reviews containing that are corrupted
+- [x] upload csv -
+  - [x] solve the `\n` signs causing errors and reviews containing that are
+        corrupted
+- [ ] just one page with structured table, can preseed with pdf OR with csv
+- [ ] maybe export as markdown? or as html? markdown would be easier and with
+      jamstack equally easy to deploy
 
 # deploy
 
@@ -57,7 +65,8 @@
 - [ ] write on twitter about it
 
 ### refactorings
-- [ ] refactor new book index form and the [id] variant form 
+
+- [ ] refactor new book index form and the [id] variant form
 - [ ] add a modal confirmation for every delete action
 - [ ] add middleware for all 401 actions
 
