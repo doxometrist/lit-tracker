@@ -25,23 +25,44 @@ export default function EditListForm(props: EditListFormProps) {
     }
   }
 
-  // const submitHandler = async () => {
-  //   console.log("clicked");
-  //   const listId = props.id;
-  //   const url = `/api/list?list_id=${listId}`;
-  //   const method = "PATCH";
-  //   const response = await fetch(url, { method, credentials: "same-origin" });
-  //   console.log(`sending request to upload to ipfs the list: ${listId}`);
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    console.log("clicked");
+    let formData = new FormData(e.target); // e.target is the form itself
+    let jsonObject = {};
 
-  //   if (response.status === 401) {
-  //     window.location.href = "/login";
-  //     return;
-  //   }
-  //   if (response.status === 204) {
-  //     window.location.href = `/lists/${listId}`;
-  //     return;
-  //   }
-  // };
+    for (const [key, value] of formData.entries()) {
+      jsonObject[key] = value;
+    }
+    console.log(jsonObject);
+
+    const listId = props.id;
+    const url = `/api/list?list_id=${listId}?action=edit`;
+    const payload = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(jsonObject),
+      // todo add here official types got from the form
+      credentials: "same-origin",
+    };
+    const response = await fetch(url, payload);
+    console.log(`sending request to upload to ipfs the list: ${listId}`);
+
+    if (response.status === 401) {
+      window.location.href = "/login";
+      return;
+    }
+    if (response.status === 204) {
+      window.location.href = `/lists/${listId}`;
+      return;
+    }
+    const dialog = document.getElementById(
+      "edit-list-dialog",
+    ) as HTMLDialogElement;
+    dialog.close();
+  };
 
   return (
     <div>
@@ -55,10 +76,8 @@ export default function EditListForm(props: EditListFormProps) {
       </button>
       <dialog id="edit-list-dialog">
         <form
-          // method="patch"
           class="bg-red-400 w-40 h-40"
-          // formAction={"/api/list"}
-          // onSubmit={submitHandler}
+          onSubmit={submitHandler}
         >
           <input
             type="text"
@@ -84,7 +103,7 @@ export default function EditListForm(props: EditListFormProps) {
           <button
             class={`${BUTTON_STYLES} text-center mt-8`}
             type="submit"
-            formMethod="dialog"
+            // formMethod="dialog"
           >
             Submit
           </button>

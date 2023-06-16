@@ -124,10 +124,10 @@ export async function addBookToList(bookId: string, listId: string, userId: stri
 
 export async function updateList(listId: string, newList: ReadingList, userId: string) {
   let res: Deno.KvCommitResult | Deno.KvCommitError = { ok: false };
+  console.log('updating the list: ', listId, 'with new list object: ', newList);
   while (!res.ok) {
     const itemKey = ["lists", listId];
     const itemsByUserKey = ["lists_by_user", userId, listId];
-    console.log('updating the list: ', listId, 'with new list object: ', newList);
     res = await kv.atomic()
       .check({ key: itemKey, versionstamp: null })
       .check({ key: itemsByUserKey, versionstamp: null })
@@ -135,7 +135,7 @@ export async function updateList(listId: string, newList: ReadingList, userId: s
       .set(itemsByUserKey, newList)
       .commit();
 
-    console.log('res: ', res);
+    // console.log('res: ', res);
   }
   return res;
 }

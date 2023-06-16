@@ -40,17 +40,18 @@ just plainly, and chrome browser is the most important
 - [x] uploader id for init book is incoherent wrt how it's handled in the list
 - [x] wrap delete calls to change in books status into a shared handler in the
       api folder
+  - [x] fix the error with forms closing but not submitting
   - [ ] edit lists
+  - [ ] make the POST requests use JSON not query parameters. remember about params for action
   - [ ] edit books
-  - [ ] fix the error with forms closing but not submitting
 
 ### faster data IO
 
 - [x] upload csv -
   - [x] solve the `\n` signs causing errors and reviews containing that are
         corrupted
-- [ ] just one page with structured table, can preseed with pdf OR with csv
-- [ ] maybe export as markdown? or as html? markdown would be easier and with
+- [ ] one page with structured table, can preseed with pdf OR with csv
+- [ ] export as markdown? or as html? markdown would be easier and with
       jamstack equally easy to deploy
 
 # deploy

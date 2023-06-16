@@ -32,11 +32,13 @@ async function sharedListHandler(
       break;
     case "PATCH":
       status = 204;
-      console.log('got a patch request for list');
-      await updateList(user.id, listId);
+      console.log('got a patch request for list', req);
+      console.log('params: ', searchParams);
+        await updateList(listId, searchParams, user.id);
       break;
     case "POST":
       console.log('got a post request for list');
+      console.log('params: ', searchParams);
       if (action === 'ipfs-upload') {
         console.log("clicked button to upload to ipfs");
         const books = getBooksByReadingListId(listId);
@@ -49,7 +51,10 @@ async function sharedListHandler(
         console.log("uploaded json", itemJson);
         await uploadJsonToIpfs(itemJson);
         status = 204;
-
+      } else if (action == 'edit') {
+        console.log('got a patch request for list', req);
+        console.log('params: ', searchParams);
+          await updateList(listId, searchParams, user.id);
       } else {
         console.log('not supported');
       }
