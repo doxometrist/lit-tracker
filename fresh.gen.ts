@@ -35,9 +35,11 @@ import * as $28 from "./routes/new-list/index.tsx";
 import * as $29 from "./routes/submit.tsx";
 import * as $30 from "./routes/tracking/index.tsx";
 import * as $31 from "./routes/uploaded-by-me-books/index.tsx";
-import * as $32 from "./routes/uploads/csv/index.tsx";
-import * as $33 from "./routes/uploads/files/index.tsx";
-import * as $34 from "./routes/uploads/structured/index.tsx";
+import * as $32 from "./routes/uploads/ExampleTable.tsx";
+import * as $33 from "./routes/uploads/ListCreationTableForm.tsx";
+import * as $34 from "./routes/uploads/PreseedListWithCsvForm.tsx";
+import * as $35 from "./routes/uploads/PreseedListWithPdfsForm.tsx";
+import * as $36 from "./routes/uploads/index.tsx";
 import * as $$0 from "./islands/Carousel.tsx";
 import * as $$1 from "./islands/DeleteBookButton.tsx";
 import * as $$2 from "./islands/DeleteListButton.tsx";
@@ -81,9 +83,11 @@ const manifest = {
     "./routes/submit.tsx": $29,
     "./routes/tracking/index.tsx": $30,
     "./routes/uploaded-by-me-books/index.tsx": $31,
-    "./routes/uploads/csv/index.tsx": $32,
-    "./routes/uploads/files/index.tsx": $33,
-    "./routes/uploads/structured/index.tsx": $34,
+    "./routes/uploads/ExampleTable.tsx": $32,
+    "./routes/uploads/ListCreationTableForm.tsx": $33,
+    "./routes/uploads/PreseedListWithCsvForm.tsx": $34,
+    "./routes/uploads/PreseedListWithPdfsForm.tsx": $35,
+    "./routes/uploads/index.tsx": $36,
   },
   islands: {
     "./islands/Carousel.tsx": $$0,

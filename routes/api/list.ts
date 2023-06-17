@@ -71,3 +71,4 @@ export const handler: Handlers<PageProps, State> = {
   DELETE: sharedListHandler,
   PATCH: sharedListHandler
 };
+

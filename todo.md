@@ -50,9 +50,12 @@ just plainly, and chrome browser is the most important
 - [x] upload csv -
   - [x] solve the `\n` signs causing errors and reviews containing that are
         corrupted
+- [ ] need to structure it with a dialog element
+- [ ] must add the JSON api also for creation
 - [ ] one page with structured table, can preseed with pdf OR with csv
 - [ ] export as markdown? or as html? markdown would be easier and with
-      jamstack equally easy to deploy
+      jamstack equally easy to deploy 
+- [ ] integrate this library https://github.com/denoland/deno-gfm
 
 # deploy
 
