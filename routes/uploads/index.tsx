@@ -3,15 +3,15 @@ import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
-import { ReadingList } from "@/utils/db_interfaces.ts";
-import { getReadingListsByUserId } from "@/utils/new-db.ts";
+import { InitBook, ReadingList } from "@/utils/db_interfaces.ts";
+import { createBook, getReadingListsByUserId } from "@/utils/new-db.ts";
 import UploadWrapper from "../../islands/Wrapper.tsx";
+import { redirect } from "../../utils/http.ts";
 
 export interface ListCreationPage extends State {
   user: User | null;
   filenames: string[];
   ownLists: ReadingList[];
-  // temporary: TmpBook[];
 }
 
 export const handler: Handlers<ListCreationPage, State> = {
@@ -34,20 +34,43 @@ export const handler: Handlers<ListCreationPage, State> = {
     // return ctx.render({ ...ctx.state, user, filenames, ownLists, temporary });
     return ctx.render({ ...ctx.state, user, filenames, ownLists });
   },
-  // async POST(req, ctx) {
-  //   // from here on there is the thing
-  //   const listId = m?.fields["list"];
-  //   const books: InitBook[] = [];
-  //   if (!listId) {
-  //     await req.body?.cancel();
-  //     return new Response(null, { status: 406 });
-  //   }
-  //   books.forEach(async (b) => {
-  //     const id = await createBook(b);
-  //     await addBookToList(id, listId, user!.id);
-  //   });
-  //   return redirect("/uploads");
-  // },
+
+  async POST(req, ctx) {
+    // todo need to differentiate between new list and addition to old.
+    if (!ctx.state.sessionId) {
+      await req.body?.cancel();
+      return new Response(null, { status: 401 });
+    }
+
+    const form = await req.formData();
+    const title = form.get("title");
+    const url = form.get("url");
+
+    if (typeof title !== "string" || typeof url !== "string") {
+      return new Response(null, { status: 400 });
+    }
+
+    try {
+      // Throws if an invalid URL
+      new URL(url);
+    } catch {
+      return new Response(null, { status: 400 });
+    }
+
+    const user = await getUserBySessionId(ctx.state.sessionId);
+
+    if (!user) return new Response(null, { status: 400 });
+    // todo add uploader data
+    // todo add list description fields like in the regular form, or choose to which form these are added
+
+    const initBooks: InitBook[] = [];
+    // todo move this to a separaate place, one function to parse the full object starting from the pdf upload
+    initBooks.forEach(async (book, index) => {
+      await createBook(book);
+    });
+
+    return redirect(`/lists/some-new-list-id}`);
+  },
 };
 
 export default function ListCreationPage(props: PageProps<ListCreationPage>) {

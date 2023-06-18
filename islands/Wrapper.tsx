@@ -15,6 +15,7 @@ import {
 import IconBookUpload from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/book-upload.tsx";
 import { ExampleTable } from "@/routes/uploads/ExampleTable.tsx";
 import { useSignal } from "@preact/signals";
+import { TableRow } from "./TableRow.tsx";
 
 function range(start: number, end: number, step = 1) {
   const arr = [];
@@ -24,53 +25,18 @@ function range(start: number, end: number, step = 1) {
   return arr;
 }
 
-async function readForm(req, ctx) {
-  if (!ctx.state.sessionId) {
-    await req.body?.cancel();
-    return new Response(null, { status: 401 });
-  }
-
-  const form = await req.formData();
-  const title = form.get("title");
-  const url = form.get("url");
-
-  if (typeof title !== "string" || typeof url !== "string") {
-    return new Response(null, { status: 400 });
-  }
-
-  try {
-    // Throws if an invalid URL
-    new URL(url);
-  } catch {
-    return new Response(null, { status: 400 });
-  }
-
-  const user = await getUserBySessionId(ctx.state.sessionId);
-
-  if (!user) return new Response(null, { status: 400 });
-  // todo add uploader data
-  // todo add list description fields like in the regular form, or choose to which form these are added
-
-  const initBooks: InitBook[] = [];
-  // todo move this to a separaate place, one function to parse the full object starting from the pdf upload
-  initBooks.forEach(async (book, index) => {
-    await createBook(book);
-  });
-
-  return redirect(`/lists/some-new-list-id}`);
-}
-
 interface UploadWrapperProps {
   ownLists: ReadingList[];
 }
 
-async function parseCsv(oldFile) {
+async function parseCsv(oldFile): Promise<InitBook[]> {
+  console.log("oldfile:", oldFile);
   const m = await multiParser(oldFile);
   console.log("parsing the csv", m);
   const files: Record<string, FormFile | FormFile[]> | undefined = m?.files;
   if (!files) {
     await oldFile.body?.cancel();
-    return new Response(null, { status: 401 });
+    return [];
   }
   console.log(files);
   if (typeof files === "string") {
@@ -92,54 +58,42 @@ async function parseCsv(oldFile) {
 }
 
 export default function UploadWrapper(props: UploadWrapperProps) {
-  const things = useSignal<string[]>([]);
-  const openCsv = useSignal(false);
+  const things = useSignal<InitBook[]>([]);
 
   const numArr = range(0, MAX_LIST_LENGTH);
-  const onSubmit = (e) => {
-    // todo read the stuffs
-    // todo run them with the callback
+  const pdfHandler = (e) => {
+    e.preventDefault();
+    console.log(e);
     const names: string[] = [];
   };
 
-  const submitHandler = (e) => {
-    console.log(e);
+  const csvHandler = async (e) => {
     e.preventDefault();
+    console.log(e);
     const file = e.target.elements.csv.files[0];
-    const books: InitBook[] = parseCsv(file);
-
-
-    const dialog = document.querySelector(
-      "dialog",
-    ) as HTMLDialogElement;
-    if (!dialog) {
-      console.error("no dialog");
-      return;
-    }
-    dialog.close(); // Opens a non-modal dialog
+    const books: InitBook[] = await parseCsv(file);
+    things.value = books;
   };
 
   return (
     <div>
-      <form onSubmit={submitHandler} encType="multipart/form-data">
-        <label for="list">here select to which list does it belong</label>
-        <select id="list" name="list" required multiple>
-          {props.ownLists && props.ownLists.map((list, i) => {
-            return (
-              <option key={`option-${i}`} value={list.id}>
-                {list.title}
-              </option>
-            );
-          })}
-        </select>
+      <form
+        onSubmit={csvHandler}
+        encType="multipart/form-data"
+        class="m-2 p-2 border border-solid border-2 flex flex-row"
+      >
         <label for="csv">Put CSV of a list here</label>
         <input type="file" name="csv" accept=".csv" />
         <input class={BUTTON_STYLES} type="submit" />
       </form>
 
-      <form onSubmit={onSubmit} encType="multipart/form-data">
-        <label for="files">Upload files, we'll read the name</label>
-        <input type="file" name="files" multiple />
+      <form
+        onSubmit={pdfHandler}
+        encType="multipart/form-data"
+        class="m-2 p-2 border border-solid border-2 flex flex-row"
+      >
+        <label for="files">Upload pdf files, we'll read the names</label>
+        <input type="file" name="files" multiple accept=".pdf" />
         <button class={BUTTON_STYLES}>
           <input type="submit" />
         </button>
@@ -147,16 +101,18 @@ export default function UploadWrapper(props: UploadWrapperProps) {
       <ExampleTable />
 
       <form method="POST">
-        <label for="list">here select to which list does it belong</label>
-        <select id="list" name="list" required multiple>
-          {props.ownLists.map((list, i) => {
-            return (
-              <option key={`option-${i}`} value={list.id}>
-                {list.title}
-              </option>
-            );
-          })}
-        </select>
+        <div class="m-2 p-2 border border-solid border-2 flex flex-row">
+          <label for="list">Select to which list does it belong</label>
+          <select id="list" name="list" required multiple class="m-2">
+            {props.ownLists && props.ownLists.map((list, i) => {
+              return (
+                <option key={`option-${i}`} value={list.id}>
+                  {list.title}
+                </option>
+              );
+            })}
+          </select>
+        </div>
         <table>
           <tr>
             <th>Number</th>
@@ -165,30 +121,7 @@ export default function UploadWrapper(props: UploadWrapperProps) {
             <th>Title</th>
             <th>Cover url link</th>
           </tr>
-
-          {numArr.map((n) => {
-            return (
-              <tr>
-                <td>{n + 1}</td>
-                <td>
-                  <input type="text" name={`author-${n}`} />
-                </td>
-                <td>
-                  <input type="text" name={`description-${n}`} />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    name={`title-${n}`}
-                    value={n < things.value.length ? things.value[n] : ""}
-                  />
-                </td>
-                <td>
-                  <input type="link" name={`link-${n}`} />
-                </td>
-              </tr>
-            );
-          })}
+          {numArr.map((n) => <TableRow n={n} things={things} />)}
           <button class={` m-2 p-2 ${BUTTON_STYLES}`}>
             <input type="submit" />
           </button>
