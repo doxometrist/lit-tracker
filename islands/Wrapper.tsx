@@ -1,23 +1,15 @@
+import TableRow from "@/islands/TableRow.tsx";
+import { ExampleTable } from "@/routes/uploads/ExampleTable.tsx";
 import { BUTTON_STYLES, MAX_LIST_LENGTH } from "@/utils/constants.ts";
 import {
   CsvListRepresentation,
   objectIntoRepresentation,
   smartUint8ArrayToCSV,
 } from "@/utils/csv_utils.ts";
-import { getUserBySessionId } from "@/utils/db.ts";
-import { Book, InitBook, ReadingList } from "@/utils/db_interfaces.ts";
-import { redirect } from "@/utils/http.ts";
-import { createBook } from "@/utils/new-db.ts";
-import {
-  FormFile,
-  multiParser,
-} from "https://deno.land/x/multiparser@0.114.0/mod.ts";
-import IconBookUpload from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/book-upload.tsx";
-import { ExampleTable } from "@/routes/uploads/ExampleTable.tsx";
+import { InitBook, ReadingList } from "@/utils/db_interfaces.ts";
 import { useSignal } from "@preact/signals";
-import { TableRow } from "./TableRow.tsx";
 
-function range(start: number, end: number, step = 1) {
+function range(start: number, end: number, step = 1): number[] {
   const arr = [];
   for (let i = start; i < end; i += step) {
     arr.push(i);
@@ -29,25 +21,12 @@ interface UploadWrapperProps {
   ownLists: ReadingList[];
 }
 
-async function parseCsv(oldFile): Promise<InitBook[]> {
-  console.log("oldfile:", oldFile);
-  const m = await multiParser(oldFile);
-  console.log("parsing the csv", m);
-  const files: Record<string, FormFile | FormFile[]> | undefined = m?.files;
-  if (!files) {
-    await oldFile.body?.cancel();
-    return [];
-  }
-  console.log(files);
-  if (typeof files === "string") {
-    // todo possibly throw an error
-  } else if (typeof files === "object") {
-    console.log("filtered", files);
-  }
-  const file: FormFile = files["csv"] as unknown as FormFile;
-  const content = file.content;
-  console.log("content:", content);
-  const parsed = smartUint8ArrayToCSV(content);
+async function parseCsv(file: File): Promise<InitBook[]> {
+  console.log("oldfile:", file);
+  const buffer = await file.arrayBuffer();
+  console.log("content:", buffer);
+  const view = new Uint8Array(buffer);
+  const parsed = smartUint8ArrayToCSV(view);
   console.log("paresed: ", parsed);
   const TMP_EMPTY_ID = "";
   const final: CsvListRepresentation = objectIntoRepresentation(
@@ -61,24 +40,21 @@ export default function UploadWrapper(props: UploadWrapperProps) {
   const things = useSignal<InitBook[]>([]);
 
   const numArr = range(0, MAX_LIST_LENGTH);
-  const pdfHandler = (e) => {
-    e.preventDefault();
-    console.log(e);
-    const names: string[] = [];
-  };
 
-  const csvHandler = async (e) => {
-    e.preventDefault();
-    console.log(e);
-    const file = e.target.elements.csv.files[0];
-    const books: InitBook[] = await parseCsv(file);
-    things.value = books;
+  const csvHandler = async (e: SubmitEvent) => {
   };
 
   return (
     <div>
       <form
-        onSubmit={csvHandler}
+        onSubmit={async (e) => {
+          e.preventDefault();
+          console.log(e);
+          if (!e.target) return;
+          const file = e.target.elements.csv.files[0];
+          const books: InitBook[] = await parseCsv(file);
+          things.value = books;
+        }}
         encType="multipart/form-data"
         class="m-2 p-2 border border-solid border-2 flex flex-row"
       >
@@ -88,16 +64,42 @@ export default function UploadWrapper(props: UploadWrapperProps) {
       </form>
 
       <form
-        onSubmit={pdfHandler}
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log(e);
+          if (!e.target) return;
+          const files: FileList = e.target.elements.pdfs.files;
+          const names = [];
+          // Loop through each file and push the name into the names array
+          const EXTENSION_LENGTH = 4;
+          for (let i = 0; i < files.length; i++) {
+            const name = files[i].name;
+            names.push(name.substring(0, name.length - EXTENSION_LENGTH));
+          }
+          console.log(names);
+          const books: InitBook[] = names.map((n) => {
+            const b: InitBook = {
+              title: n,
+              pages: 0,
+              author: "",
+              description: "",
+              coverUrl: "",
+              uploaderId: "",
+            };
+            return b;
+          });
+          things.value = books;
+        }}
         encType="multipart/form-data"
         class="m-2 p-2 border border-solid border-2 flex flex-row"
       >
-        <label for="files">Upload pdf files, we'll read the names</label>
-        <input type="file" name="files" multiple accept=".pdf" />
+        <label for="pdfs">Upload pdf files, we'll read the names</label>
+        <input type="file" name="pdfs" multiple accept=".pdf" />
         <button class={BUTTON_STYLES}>
           <input type="submit" />
         </button>
       </form>
+
       <ExampleTable />
 
       <form method="POST">
@@ -113,7 +115,7 @@ export default function UploadWrapper(props: UploadWrapperProps) {
             })}
           </select>
         </div>
-        <table>
+        <table class="overflow-scroll">
           <tr>
             <th>Number</th>
             <th>Author</th>

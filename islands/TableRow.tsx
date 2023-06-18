@@ -5,7 +5,8 @@ interface RowProps {
   n: number;
   things: Signal<InitBook[]>;
 }
-export function TableRow({ n, things }: RowProps) {
+
+export default function TableRow({ n, things }: RowProps) {
   return (
     <tr>
       <td>{n + 1}</td>
