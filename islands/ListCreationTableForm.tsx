@@ -1,9 +1,9 @@
 import type { PageProps } from "$fresh/server.ts";
+import { BUTTON_STYLES, MAX_LIST_LENGTH } from "@/utils/constants.ts";
+import { getUserBySessionId } from "@/utils/db.ts";
 import { InitBook, TmpBook } from "@/utils/db_interfaces.ts";
-import { BUTTON_STYLES, MAX_LIST_LENGTH } from "../../../utils/constants.ts";
-import { getUserBySessionId } from "../../utils/db.ts";
-import { redirect } from "../../utils/http.ts";
-import { createBook } from "../../utils/new-db.ts";
+import { redirect } from "@/utils/http.ts";
+import { createBook } from "@/utils/new-db.ts";
 
 function range(start: number, end: number, step = 1) {
   const arr = [];
@@ -13,7 +13,7 @@ function range(start: number, end: number, step = 1) {
   return arr;
 }
 
-function readForm(req, ctx) {
+async function readForm(req, ctx) {
   if (!ctx.state.sessionId) {
     await req.body?.cancel();
     return new Response(null, { status: 401 });
@@ -49,19 +49,17 @@ function readForm(req, ctx) {
   return redirect(`/lists/some-new-list-id}`);
 }
 
-export function ListCreationTableForm(
-  props: PageProps<StructuredUploadPage>,
-  numArr: number[],
-  tmp: TmpBook[],
+export default function ListCreationTableForm(
+  props: { temporary: any; ownLists: any[] },
 ) {
   const numArr = range(0, MAX_LIST_LENGTH);
-  const tmp = props.data.temporary;
+  const tmp = props.temporary;
   console.log("tmp:", tmp);
   return (
     <form method="POST">
       <label for="list">here select to which list does it belong</label>
       <select id="list" name="list" required multiple>
-        {props.data.ownLists.map((list, i) => {
+        {props.ownLists.map((list, i) => {
           return (
             <option key={`option-${i}`} value={list.id}>
               {list.title}
@@ -81,7 +79,7 @@ export function ListCreationTableForm(
         {numArr.map((n) => {
           return (
             <tr>
-              <td>{n}</td>
+              <td>{n+1}</td>
               <td>
                 <input type="text" name={`author-${n}`} />
               </td>

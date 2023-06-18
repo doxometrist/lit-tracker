@@ -3,25 +3,28 @@ import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
-import { ReadingList } from "@/utils/db_interfaces.ts";
-import { getReadingListsByUserId, getTmpBooksById } from "@/utils/new-db.ts";
-
-import { TmpBook } from "@/utils/db_interfaces.ts";
-import { PreseedListWithCsvForm } from "./PreseedListWithCsvForm.tsx";
-import { ListCreationTableForm } from "./ListCreationTableForm.tsx";
+import { InitBook, ReadingList, TmpBook } from "@/utils/db_interfaces.ts";
+import {
+  addBookToList,
+  createBook,
+  getReadingListsByUserId,
+} from "@/utils/new-db.ts";
+import UploadWrapper from "@/islands/Wrapper.tsx";
+import { redirect } from "@/utils/http.ts";
 
 export interface ListCreationPage extends State {
   user: User | null;
   filenames: string[];
   ownLists: ReadingList[];
-  temporary: TmpBook[];
+  // temporary: TmpBook[];
 }
 
 export const handler: Handlers<ListCreationPage, State> = {
   async GET(req, ctx) {
     console.log("context in uploads:", ctx);
-    const readFiles = ctx.params.files;
-    console.log(readFiles);
+    // const readFiles = ctx.params.files;
+    // console.log(readFiles);
+
     let user: User | null = null;
     if (ctx.state.sessionId) {
       user = await getUserBySessionId(ctx.state.sessionId!) as User;
@@ -32,9 +35,24 @@ export const handler: Handlers<ListCreationPage, State> = {
     }
     const filenames: string[] = [];
     const ownLists = await getReadingListsByUserId(user.id);
-    const temporary = await getTmpBooksById(user.id);
-    return ctx.render({ ...ctx.state, user, filenames, ownLists, temporary });
+    // const temporary = await getTmpBooksById(user.id);
+    // return ctx.render({ ...ctx.state, user, filenames, ownLists, temporary });
+    return ctx.render({ ...ctx.state, user, filenames, ownLists });
   },
+  // async POST(req, ctx) {
+  //   // from here on there is the thing
+  //   const listId = m?.fields["list"];
+  //   const books: InitBook[] = [];
+  //   if (!listId) {
+  //     await req.body?.cancel();
+  //     return new Response(null, { status: 406 });
+  //   }
+  //   books.forEach(async (b) => {
+  //     const id = await createBook(b);
+  //     await addBookToList(id, listId, user!.id);
+  //   });
+  //   return redirect("/uploads");
+  // },
 };
 
 export default function ListCreationPage(props: PageProps<ListCreationPage>) {
@@ -45,13 +63,8 @@ export default function ListCreationPage(props: PageProps<ListCreationPage>) {
         <div class="max-w-lg m-auto w-full flex-1 p-4 flex flex-col justify-center">
           <h1 class="text-3xl mb-4">
             <strong>Create a new list</strong>
-            {/* here the button to upload csv */}
-            <PreseedListWithCsvForm />
-            {/* here the button to upload pdf */}
-            <PreseedListWithPdfsForm />
-            {/* here the main table */}
-            <ListCreationTableForm />
           </h1>
+          {/* <UploadWrapper ownLists={props.data.ownLists} /> */}
         </div>
       </Layout>
     </>

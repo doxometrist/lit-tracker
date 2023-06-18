@@ -278,10 +278,10 @@ export async function resetTmpBooksByUserId(userId: string): Promise<string> {
   }
 }
 
-export async function getTmpBooksById(userId: string, options?: Deno.KvListOptions): Promise<TmpBook[]> {
-  const iter = await kv.list<TmpBook>({ prefix: ["tmp_book", userId] }, options);
-  const items = [];
-  for await (const res of iter) items.push(res.value);
-  console.log('list items from by user: ', items);
-  return items;
-}
+// export async function getTmpBooksById(userId: string, options?: Deno.KvListOptions): Promise<TmpBook[]> {
+//   const iter = await kv.list<TmpBook>({ prefix: ["tmp_book", userId] }, options);
+//   const items = [];
+//   for await (const res of iter) items.push(res.value);
+//   console.log('list items from by user: ', items);
+//   return items;
+// }

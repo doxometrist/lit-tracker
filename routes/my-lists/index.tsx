@@ -46,18 +46,8 @@ export default function MyLists(props: PageProps<MyListsPageData>) {
               </a>
             </button>
             <button class={`${BUTTON_STYLES}`}>
-              <a href="/uploads/structured">
-                Structured upload
-              </a>
-            </button>
-            <button class={`${BUTTON_STYLES}`}>
-              <a href="/uploads/csv">
-                CSV upload
-              </a>
-            </button>
-            <button class={`${BUTTON_STYLES}`}>
-              <a href="/uploads/files">
-                Name files upload
+              <a href="/uploads">
+                Make a preseeded list
               </a>
             </button>
           </div>
