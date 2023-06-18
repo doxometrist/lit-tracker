@@ -5,6 +5,7 @@ import { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
 import { ReadingList } from "@/utils/db_interfaces.ts";
 import { getReadingListsByUserId } from "@/utils/new-db.ts";
+import UploadWrapper from "../../islands/Wrapper.tsx";
 
 export interface ListCreationPage extends State {
   user: User | null;
@@ -58,7 +59,7 @@ export default function ListCreationPage(props: PageProps<ListCreationPage>) {
           <h1 class="text-3xl mb-4">
             <strong>Create a new list</strong>
           </h1>
-          {/* <UploadWrapper ownLists={props.data.ownLists} /> */}
+          <UploadWrapper ownLists={props.data.ownLists} />
         </div>
       </Layout>
     </>

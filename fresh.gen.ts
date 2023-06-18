@@ -44,8 +44,7 @@ import * as $$3 from "./islands/EditBookForm.tsx";
 import * as $$4 from "./islands/EditListForm.tsx";
 import * as $$5 from "./islands/IpfsOpenButton.tsx";
 import * as $$6 from "./islands/ListIpfsUploadButton.tsx";
-import * as $$7 from "./islands/WantToReadList.tsx";
-import * as $$8 from "./islands/Wrapper.tsx";
+import * as $$7 from "./islands/Wrapper.tsx";
 
 const manifest = {
   routes: {
@@ -92,8 +91,7 @@ const manifest = {
     "./islands/EditListForm.tsx": $$4,
     "./islands/IpfsOpenButton.tsx": $$5,
     "./islands/ListIpfsUploadButton.tsx": $$6,
-    "./islands/WantToReadList.tsx": $$7,
-    "./islands/Wrapper.tsx": $$8,
+    "./islands/Wrapper.tsx": $$7,
   },
   baseUrl: import.meta.url,
   config,

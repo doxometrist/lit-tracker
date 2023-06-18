@@ -4,10 +4,11 @@
       1 island? wait none of them
 - [ ] make the POST requests use JSON not query parameters. remember about
       params for action
-- [ ] edit books
 - [ ] need to structure it with a dialog element
 - [ ] must add the JSON api also for creation
 - [ ] one page with structured table, can preseed with pdf OR with csv
+
+- [ ] edit books
 
 # deploy
 

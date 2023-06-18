@@ -13,7 +13,8 @@ import {
   multiParser,
 } from "https://deno.land/x/multiparser@0.114.0/mod.ts";
 import IconBookUpload from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/book-upload.tsx";
-import { useSignal } from "https://esm.sh/v122/@preact/signals@1.1.3/X-ZS8q/dist/signals.js";
+import { ExampleTable } from "@/routes/uploads/ExampleTable.tsx";
+import { useSignal } from "@preact/signals";
 
 function range(start: number, end: number, step = 1) {
   const arr = [];
@@ -91,10 +92,8 @@ async function parseCsv(oldFile) {
 }
 
 export default function UploadWrapper(props: UploadWrapperProps) {
-  // const things = useSignal<InitBook[]>([]);
-  // const callback = (newThings: InitBook[]) => {
-  //   things.value = newThings;
-  // };
+  const things = useSignal<string[]>([]);
+  const openCsv = useSignal(false);
 
   const numArr = range(0, MAX_LIST_LENGTH);
   const onSubmit = (e) => {
@@ -103,33 +102,12 @@ export default function UploadWrapper(props: UploadWrapperProps) {
     const names: string[] = [];
   };
 
-  const finalSubmit = () => {
-    // here needs to upload initbooks and thing to the API
-  };
-
-  // const openCsv = useSignal(false);
-
-  function csvClickHandler(event: MouseEvent) {
-    console.log("clicked button to open a form");
-    if (event.detail === 1) {
-      // openCsv.value = !openCsv.value;
-      const dialog = document.querySelector(
-        "dialog",
-      ) as HTMLDialogElement;
-      if (!dialog) {
-        console.error("no dialog");
-        return;
-      }
-      dialog.showModal(); // Opens a non-modal dialog
-    }
-  }
-
   const submitHandler = (e) => {
     console.log(e);
     e.preventDefault();
     const file = e.target.elements.csv.files[0];
-    const books: Book[] = parseCsv(file);
-    props.callback(books);
+    const books: InitBook[] = parseCsv(file);
+
 
     const dialog = document.querySelector(
       "dialog",
@@ -143,35 +121,22 @@ export default function UploadWrapper(props: UploadWrapperProps) {
 
   return (
     <div>
-      <button
-        onClick={csvClickHandler}
-        class={BUTTON_STYLES}
-      >
-        <p>
-          Upload <IconBookUpload />
-        </p>
-      </button>
-      <dialog id="edit-list-dialog">
-        <form onSubmit={submitHandler} encType="multipart/form-data">
-          <label for="list">here select to which list does it belong</label>
-          <select id="list" name="list" required multiple>
-            {props.ownLists && props.ownLists.map((list, i) => {
-              return (
-                <option key={`option-${i}`} value={list.id}>
-                  {list.title}
-                </option>
-              );
-            })}
-          </select>
-          <label for="csv">Put CSV of a list here</label>
-          <input type="file" name="csv" accept=".csv" />
-          <input class={BUTTON_STYLES} type="submit" />
-        </form>
-      </dialog>
-      {/* here the button to upload csv */}
-      {/* <PreseedListWithCsvForm callback={callback} ownLists={props.ownLists} /> */}
-      {/* here the button to upload pdf */}
-      {/* <PreseedListWithPdfsForm ownLists={props.data.ownLists} /> */}
+      <form onSubmit={submitHandler} encType="multipart/form-data">
+        <label for="list">here select to which list does it belong</label>
+        <select id="list" name="list" required multiple>
+          {props.ownLists && props.ownLists.map((list, i) => {
+            return (
+              <option key={`option-${i}`} value={list.id}>
+                {list.title}
+              </option>
+            );
+          })}
+        </select>
+        <label for="csv">Put CSV of a list here</label>
+        <input type="file" name="csv" accept=".csv" />
+        <input class={BUTTON_STYLES} type="submit" />
+      </form>
+
       <form onSubmit={onSubmit} encType="multipart/form-data">
         <label for="files">Upload files, we'll read the name</label>
         <input type="file" name="files" multiple />
@@ -179,15 +144,7 @@ export default function UploadWrapper(props: UploadWrapperProps) {
           <input type="submit" />
         </button>
       </form>
-      {/* <ExampleTable /> */}
-      {/* here the main table */}
-      {
-        /* <ListCreationTableForm
-        ownLists={props.ownLists}
-        // temporary={things}
-        temporary={[]}
-      /> */
-      }
+      <ExampleTable />
 
       <form method="POST">
         <label for="list">here select to which list does it belong</label>
@@ -223,7 +180,7 @@ export default function UploadWrapper(props: UploadWrapperProps) {
                   <input
                     type="text"
                     name={`title-${n}`}
-                    value={n < tmp.length ? tmp[n].name : ""}
+                    value={n < things.value.length ? things.value[n] : ""}
                   />
                 </td>
                 <td>
