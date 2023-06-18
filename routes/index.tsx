@@ -1,4 +1,5 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
+import { CSS, render } from "https://deno.land/x/gfm@0.2.3/mod.ts";
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import Features from "@/components/Features.tsx";
 import Head from "@/components/Head.tsx";

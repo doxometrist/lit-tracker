@@ -1,61 +1,13 @@
-### portability ctn'd
+### full edit window feature
 
-DISCARDED - tbf a dedicated gateway would be required anyway. couldn't open it
-just plainly, and chrome browser is the most important
-
-- [ ] save to ipfs
-  - [ ] save
-  - [ ] read from save
-  - [ ] update
-
-- [ ] solve the passage of props issue
-- [ ] pdf upload to get names - - [ ] possibly only as pre-seeding for the
-      structured
-- [ ] structured table that is saveable - [ ] join on the same page as upload
-
-# add lists
-
-- [x] prepare all these into csv format first
-- [x] from pol
-      https://www.google.com/search?q=pol+reading+list&sxsrf=APwXEde4TFb8OKWrQEvkmZeR3XnsaY55Uw:1685392401241&source=lnms&tbm=isch&sa=X&ved=2ahUKEwik94f7r5v_AhUZhFwKHVWTBRwQ_AUoAXoECAEQAw&biw=1536&bih=792&dpr=1.25
-- [x] from pol 2015, split into parts
-      https://www.goodreads.com/list/show/89892._pol_recommended_reading
-- [x] verso books one
-      https://www.versobooks.com/en-gb/blogs/news/4000-10-books-every-student-should-read
-
-### Small changes
-
-- [x] buttons to upload - from the lists index page
-- [x] list description field
-- [x] add the space for link for image
-- [x] consider forking from saaskit directly - nevermind, it got generated
-- [x] pull stuff into cultspace first
-- [x] sortout the carousel stuff
-- [x] add default image - must download it and use the asset function from
-      deno - in the end just linking
-- [x] fix the twitter follow button
-
-### smooth use
-
-- [x] uploader id for init book is incoherent wrt how it's handled in the list
-- [x] wrap delete calls to change in books status into a shared handler in the
-      api folder
-  - [x] fix the error with forms closing but not submitting
-  - [ ] edit lists
-  - [ ] make the POST requests use JSON not query parameters. remember about params for action
-  - [ ] edit books
-
-### faster data IO
-
-- [x] upload csv -
-  - [x] solve the `\n` signs causing errors and reviews containing that are
-        corrupted
+- [ ] edit lists ah it's about the islands that accept a callback! maybe all as
+      1 island? wait none of them
+- [ ] make the POST requests use JSON not query parameters. remember about
+      params for action
+- [ ] edit books
 - [ ] need to structure it with a dialog element
 - [ ] must add the JSON api also for creation
 - [ ] one page with structured table, can preseed with pdf OR with csv
-- [ ] export as markdown? or as html? markdown would be easier and with
-      jamstack equally easy to deploy 
-- [ ] integrate this library https://github.com/denoland/deno-gfm
 
 # deploy
 
@@ -82,6 +34,33 @@ just plainly, and chrome browser is the most important
 - [ ] kv: 'reads/userid/bookid/profile' where % read and status of it
 - [ ] tags 'tagname/bookIds'
 - [ ] add row reset button for uploads
+
+### IPFS
+
+- [ ] save to ipfs
+  - [ ] save
+  - [ ] read from save
+  - [ ] update
+
+### Export
+
+export stuff
+
+- [ ] export as markdown? or as html? markdown would be easier and with jamstack
+      equally easy to deploy
+- [ ] integrate this library https://github.com/denoland/deno-gfm
+
+const markdown = `
+
+# Hello, world!
+
+| Type | Value |
+| ---- | ----- |
+| x    | 42    |
+
+\`\`\`js console.log("Hello, world!"); \`\`\` `;
+
+const markd = render(markdown, { baseUrl: "https://example.com", });
 
 ### QoL features
 

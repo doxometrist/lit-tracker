@@ -3,14 +3,8 @@ import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
-import { InitBook, ReadingList, TmpBook } from "@/utils/db_interfaces.ts";
-import {
-  addBookToList,
-  createBook,
-  getReadingListsByUserId,
-} from "@/utils/new-db.ts";
-import UploadWrapper from "@/islands/Wrapper.tsx";
-import { redirect } from "@/utils/http.ts";
+import { ReadingList } from "@/utils/db_interfaces.ts";
+import { getReadingListsByUserId } from "@/utils/new-db.ts";
 
 export interface ListCreationPage extends State {
   user: User | null;
