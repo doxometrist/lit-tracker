@@ -122,7 +122,7 @@ export default function BookPage(props: PageProps<BookPageData>) {
                     Add all
                   </button>
                 </form>
-                <div id="buttonBox">
+                <div id="buttonBox" class="flex flex-row justify-between w-40 m-2">
                   <EditBookForm
                     user={props.data.user!}
                     startingBookValues={props.data.book}

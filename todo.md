@@ -8,7 +8,6 @@
 - [ ] must add the JSON api also for creation
 
 - [ ] edit books
-- [ ] a field for checking many books on a list and removing them - would need an island with static internal component and a reference to a post request
 
 # deploy
 
@@ -82,3 +81,4 @@ const markd = render(markdown, { baseUrl: "https://example.com", });
 - [ ] throttling does not seem to quite work
 - [ ] also download CSV
 - [ ] feature lists on the landing page
+- [ ] a field for checking many books on a list and removing them - would need an island with static internal component and a reference to a post request

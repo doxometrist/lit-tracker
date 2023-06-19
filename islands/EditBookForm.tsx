@@ -29,9 +29,8 @@ export default function EditBookForm(props: EditBookFormProps) {
 
   function submitHandler() {
     // todo make a patch request here to the API, not to the post page, I think
-
     const dialog = document.querySelector(
-      "dialog",
+      "#edit-book-dialog",
     ) as HTMLDialogElement;
     if (!dialog) {
       console.error("no dialog");
@@ -50,7 +49,7 @@ export default function EditBookForm(props: EditBookFormProps) {
           Edit <IconEdit />
         </p>
       </button>
-      <dialog id="edit-list-dialog">
+      <dialog id="edit-book-dialog">
         <form
           method="post"
           class="bg-red-400 w-40 h-40"
