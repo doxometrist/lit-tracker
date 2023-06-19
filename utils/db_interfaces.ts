@@ -10,8 +10,8 @@ export interface InitBook {
 
 export interface Book extends InitBook {
   id: string,
-  finishedUserIds: string[], // there'll be 0 or 1 whether like
 }
+// finishedUserIds: string[], // there'll be 0 or 1 whether like
 
 export interface InitReadingList {
   creatorId: string,
