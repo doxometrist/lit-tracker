@@ -8,10 +8,10 @@ import EditListForm from "@/islands/EditListForm.tsx";
 import type { State } from "@/routes/_middleware.ts";
 import { MAX_LIST_LENGTH, SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import {
+  type Comment,
   getCommentsByItem,
   getUserBySessionId,
   getUsersByIds,
-  type Comment,
   type User,
 } from "@/utils/db.ts";
 import { Book, ReadingList } from "@/utils/db_interfaces.ts";
@@ -101,11 +101,10 @@ export default function ListPage(props: PageProps<ListPageData>) {
             class="m-2 p-2 bg-primary flex flex-row gap-x-2"
           >
             <h5>Here might be buttons for more functionality in the future</h5>
-            <DownloadCsvButton books={props.data.books} filename={props.data.list.title} />
-            {
-              /* <ListIpfsUploadButton listId={props.data.list.id} />
-            <IpfsOpenButton url={props.data.ipfsUrl} /> */
-            }
+            <DownloadCsvButton
+              books={props.data.books}
+              filename={props.data.list.title}
+            />
           </div>
           {props.data.own &&
             (

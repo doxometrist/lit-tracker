@@ -54,6 +54,7 @@ export const handler: Handlers<BookPageData, State> = {
     });
   },
 
+  // todo here need to add edit options
   async POST(req, ctx) {
     const form = await req.formData();
     console.log("form: ", form);

@@ -2,7 +2,6 @@ import IconChevronRight from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/che
 import IconCompass from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/compass.tsx";
 import IconListNumbers from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/list-numbers.tsx";
 import IconSkull from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/skull.tsx";
-
 import IconCalendarStats from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/calendar-stats.tsx";
 
 interface FeatureItem {
@@ -43,13 +42,13 @@ export default function Features() {
       link: "/discover",
     },
     {
-      icon: IconCalendarStats,
+      icon: IconListNumbers,
       description: "See books ",
       link: "/books",
     },
     {
-      icon: IconListNumbers,
-      description: "Track your reads.",
+      icon: IconCalendarStats,
+      description: "Track your reads. [in development]",
       link: "/lists",
     },
     {

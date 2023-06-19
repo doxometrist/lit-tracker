@@ -1,12 +1,18 @@
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
+import UploadWrapper from "@/islands/Wrapper.tsx";
 import { State } from "@/routes/_middleware.ts";
+import { DEFAULT_IMG, MAX_LIST_LENGTH } from "@/utils/constants.ts";
 import { getUserBySessionId, User } from "@/utils/db.ts";
 import { InitBook, ReadingList } from "@/utils/db_interfaces.ts";
-import { createBook, getReadingListsByUserId } from "@/utils/new-db.ts";
-import UploadWrapper from "../../islands/Wrapper.tsx";
-import { redirect } from "../../utils/http.ts";
+import { redirect } from "@/utils/http.ts";
+import {
+  addBookToList,
+  createBook,
+  getReadingListsByUserId,
+} from "@/utils/new-db.ts";
+import { range } from "@/utils/range.ts";
 
 export interface ListCreationPage extends State {
   user: User | null;
@@ -17,8 +23,6 @@ export interface ListCreationPage extends State {
 export const handler: Handlers<ListCreationPage, State> = {
   async GET(req, ctx) {
     console.log("context in uploads:", ctx);
-    // const readFiles = ctx.params.files;
-    // console.log(readFiles);
 
     let user: User | null = null;
     if (ctx.state.sessionId) {
@@ -30,46 +34,46 @@ export const handler: Handlers<ListCreationPage, State> = {
     }
     const filenames: string[] = [];
     const ownLists = await getReadingListsByUserId(user.id);
-    // const temporary = await getTmpBooksById(user.id);
-    // return ctx.render({ ...ctx.state, user, filenames, ownLists, temporary });
     return ctx.render({ ...ctx.state, user, filenames, ownLists });
   },
 
   async POST(req, ctx) {
-    // todo need to differentiate between new list and addition to old.
     if (!ctx.state.sessionId) {
       await req.body?.cancel();
+      console.log("returning 401");
       return new Response(null, { status: 401 });
     }
 
     const form = await req.formData();
-    const title = form.get("title");
-    const url = form.get("url");
+    const listId: FormDataEntryValue | null = form.get("list");
 
-    if (typeof title !== "string" || typeof url !== "string") {
-      return new Response(null, { status: 400 });
-    }
-
-    try {
-      // Throws if an invalid URL
-      new URL(url);
-    } catch {
+    console.log("form:", form);
+    if (typeof listId !== "string") {
       return new Response(null, { status: 400 });
     }
 
     const user = await getUserBySessionId(ctx.state.sessionId);
 
     if (!user) return new Response(null, { status: 400 });
-    // todo add uploader data
-    // todo add list description fields like in the regular form, or choose to which form these are added
-
-    const initBooks: InitBook[] = [];
-    // todo move this to a separaate place, one function to parse the full object starting from the pdf upload
-    initBooks.forEach(async (book, index) => {
-      await createBook(book);
+    const numArr = range(0, MAX_LIST_LENGTH);
+    numArr.forEach(async (n) => {
+      const pages = form.get(`pages-${n}`);
+      const title = form.get(`title-${n}`) as string;
+      if (title && title !== "") {
+        const newBook: InitBook = {
+          title,
+          pages: pages ? parseInt(pages as string) : 0,
+          author: form.get(`author-${n}`) as string ?? "",
+          description: form.get(`description-${n}`) as string ?? "",
+          coverUrl: form.get(`coverUrl-${n}`) as string ?? DEFAULT_IMG,
+          uploaderId: user.id,
+        };
+        const id = await createBook(newBook);
+        addBookToList(id, listId, user.id);
+      }
     });
 
-    return redirect(`/lists/some-new-list-id}`);
+    return redirect(`/lists/${listId}`);
   },
 };
 

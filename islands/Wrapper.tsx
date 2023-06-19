@@ -8,14 +8,7 @@ import {
 } from "@/utils/csv_utils.ts";
 import { InitBook, ReadingList } from "@/utils/db_interfaces.ts";
 import { useSignal } from "@preact/signals";
-
-function range(start: number, end: number, step = 1): number[] {
-  const arr = [];
-  for (let i = start; i < end; i += step) {
-    arr.push(i);
-  }
-  return arr;
-}
+import { range } from "../utils/range.ts";
 
 interface UploadWrapperProps {
   ownLists: ReadingList[];
@@ -38,11 +31,7 @@ async function parseCsv(file: File): Promise<InitBook[]> {
 
 export default function UploadWrapper(props: UploadWrapperProps) {
   const things = useSignal<InitBook[]>([]);
-
   const numArr = range(0, MAX_LIST_LENGTH);
-
-  const csvHandler = async (e: SubmitEvent) => {
-  };
 
   return (
     <div>
