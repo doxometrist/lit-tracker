@@ -1,9 +1,8 @@
-import { IS_BROWSER } from "$fresh/runtime.ts";
 import { BUTTON_STYLES } from "@/utils/constants.ts";
 import type { User } from "@/utils/db.ts";
 import { useSignal } from "@preact/signals";
-import { InitBook, InitReadingList } from "../utils/db_interfaces.ts";
 import IconEdit from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/edit.tsx";
+import { InitBook } from "../utils/db_interfaces.ts";
 
 export interface EditBookFormProps {
   user: User;
@@ -12,6 +11,7 @@ export interface EditBookFormProps {
 
 export default function EditBookForm(props: EditBookFormProps) {
   const open = useSignal(false);
+
   function onClick(event: MouseEvent) {
     console.log("clicked button to open a form");
     if (event.detail === 1) {
@@ -27,6 +27,19 @@ export default function EditBookForm(props: EditBookFormProps) {
     }
   }
 
+  function submitHandler() {
+    // todo make a patch request here to the API, not to the post page, I think
+
+    const dialog = document.querySelector(
+      "dialog",
+    ) as HTMLDialogElement;
+    if (!dialog) {
+      console.error("no dialog");
+      return;
+    }
+    dialog.close(); // Opens a non-modal dialog
+  }
+
   return (
     <div>
       <button
@@ -39,9 +52,9 @@ export default function EditBookForm(props: EditBookFormProps) {
       </button>
       <dialog id="edit-list-dialog">
         <form
-          method="patch"
+          method="post"
           class="bg-red-400 w-40 h-40"
-          action={"/api/book"}
+          onSubmit={submitHandler}
         >
           <input
             type="text"
@@ -88,7 +101,6 @@ export default function EditBookForm(props: EditBookFormProps) {
           <button
             class={`${BUTTON_STYLES} text-center mt-8`}
             type="submit"
-            formMethod="dialog"
           >
             Submit
           </button>

@@ -8,7 +8,7 @@
 - [ ] must add the JSON api also for creation
 
 - [ ] edit books
-- [ ] a field for checking many books on a list and removing them
+- [ ] a field for checking many books on a list and removing them - would need an island with static internal component and a reference to a post request
 
 # deploy
 
