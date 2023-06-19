@@ -1,22 +1,16 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import BookCard from "@/components/BookCard.tsx";
 import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import type { State } from "@/routes/_middleware.ts";
-import { BUTTON_STYLES, SITE_WIDTH_STYLES } from "@/utils/constants.ts";
+import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import { getUserBySessionId, type User } from "@/utils/db.ts";
 import { Book, ReadingList } from "@/utils/db_interfaces.ts";
-import { redirect } from "@/utils/http.ts";
-import {
-  addBookToList,
-  getBookById,
-  getReadingListByid,
-  getReadingListsByUserId,
-} from "@/utils/new-db.ts";
-import DeleteBookButton from "../../islands/DeleteBookButton.tsx";
-import EditBookForm from "../../islands/EditBookForm.tsx";
+import { getBookById, getReadingListsByUserId } from "@/utils/new-db.ts";
+import DeleteBookButton from "@/islands/DeleteBookButton.tsx";
+import EditBookForm from "@/islands/EditBookForm.tsx";
+import { AddBookToListForm } from "@/routes/books/AddBookToListForm.tsx";
 
 interface BookPageData extends State {
   user: User | null;
@@ -30,9 +24,7 @@ export const handler: Handlers<BookPageData, State> = {
     const { id } = ctx.params;
 
     const book = await getBookById(id);
-    if (book === null) {
-      return ctx.renderNotFound();
-    }
+    if (book === null) return ctx.renderNotFound();
 
     let ownLists: ReadingList[] = [];
     let user: User | null = null;
@@ -53,46 +45,9 @@ export const handler: Handlers<BookPageData, State> = {
       own,
     });
   },
-
-  // todo here need to add edit options
-  async POST(req, ctx) {
-    const form = await req.formData();
-    console.log("form: ", form);
-    const addToListId: string | undefined = form.get("list")?.toString();
-
-    const { id } = ctx.params;
-    const user: User | null = await getUserBySessionId(ctx.state.sessionId!);
-    if (!user) {
-      console.error("no user");
-      throw Error(`No user logged in`);
-    }
-    if (!addToListId) {
-      return redirect("/uploaded-by-me-books");
-    }
-    const list = await getReadingListByid(addToListId);
-    if (user.id !== list?.creatorId) {
-      throw Error(`wrong user`);
-    }
-    if (user.id !== list?.creatorId) {
-      throw Error(`wrong user`);
-    }
-    console.log("adding a new book:", id, "to list: ", addToListId);
-    const addResponse = await addBookToList(id, addToListId, user.id);
-    console.log("add response: ", addResponse);
-
-    // Redirect user to thank you page.
-    const headers = new Headers();
-    headers.set("location", `/lists/${addToListId}`);
-    console.log("new headers: ", headers);
-    return new Response(null, {
-      status: 303, // See Other
-      headers,
-    });
-  },
 };
 
 export default function BookPage(props: PageProps<BookPageData>) {
-  const user = props.data.user;
   return (
     <>
       <Head title={props.data.book.title} href={props.url.href} />
@@ -102,30 +57,17 @@ export default function BookPage(props: PageProps<BookPageData>) {
           {props.data.own &&
             (
               <div id="addToListForm" class="m-2 p-2 bg-secondary">
-                <form method="post">
-                  <label for="list">
-                    here select to which list does it belong
-                  </label>
-                  <select id="list" name="list" required multiple>
-                    {props.data.ownLists.map((list, i) => {
-                      return (
-                        <option key={`option-${i}`} value={list.id}>
-                          {list.title}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <button
-                    class={`${BUTTON_STYLES} block w-full`}
-                    type="submit"
-                  >
-                    Add all
-                  </button>
-                </form>
-                <div id="buttonBox" class="flex flex-row justify-between w-40 m-2">
+                <div
+                  id="buttonBox"
+                  class="flex flex-row justify-between w-40 m-2"
+                >
+                  <AddBookToListForm
+                    ownLists={props.data.ownLists}
+                    book={props.data.book}
+                  />
                   <EditBookForm
                     user={props.data.user!}
-                    startingBookValues={props.data.book}
+                    book={props.data.book}
                   />
                   <DeleteBookButton book={props.data.book} />
                 </div>

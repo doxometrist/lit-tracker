@@ -6,7 +6,6 @@
 - [x] make the POST requests use JSON not query parameters. remember about
       params for action
 - [ ] must add the JSON api also for creation
-
 - [ ] edit books
 
 # deploy

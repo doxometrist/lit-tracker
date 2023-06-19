@@ -2,14 +2,16 @@ import { BUTTON_STYLES } from "@/utils/constants.ts";
 import type { User } from "@/utils/db.ts";
 import { useSignal } from "@preact/signals";
 import IconEdit from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/edit.tsx";
-import { InitBook } from "../utils/db_interfaces.ts";
+import { Book, InitBook } from "../utils/db_interfaces.ts";
 
 export interface EditBookFormProps {
   user: User;
-  startingBookValues: InitBook;
+  book: Book;
 }
 
-export default function EditBookForm(props: EditBookFormProps) {
+export default function EditBookForm(
+  { user, book }: EditBookFormProps,
+) {
   const open = useSignal(false);
 
   function onClick(event: MouseEvent) {
@@ -27,8 +29,32 @@ export default function EditBookForm(props: EditBookFormProps) {
     }
   }
 
-  function submitHandler() {
-    // todo make a patch request here to the API, not to the post page, I think
+  async function sendToApi() {
+    const url = `/api/book?book_id=${book.id}`;
+    const method = "PATCH";
+    const response = await fetch(url, {
+      method,
+      credentials: "same-origin",
+    });
+
+    if (response.status === 401) {
+      window.location.href = "/login";
+      return;
+    }
+    if (response.status === 204) {
+      window.location.href = "/uploaded-by-me-books";
+      return;
+    }
+  }
+
+  function submitHandler(e) {
+    e.preventDefault();
+    console.log("clicked");
+    const formData = new FormData(e.target); // e.target is the form itself
+    console.log(formData);
+    // todo here get new initbook from the previous formdata
+
+    sendToApi();
     const dialog = document.querySelector(
       "#edit-book-dialog",
     ) as HTMLDialogElement;
@@ -58,35 +84,35 @@ export default function EditBookForm(props: EditBookFormProps) {
           <input
             type="text"
             name="name"
-            value={props.startingBookValues.title}
+            value={book.title}
           />
           <label for="name">Input title</label>
 
           <input
             type="text"
             name="author"
-            value={props.startingBookValues.author}
+            value={book.author}
           />
           <label for="author">Input author</label>
 
           <input
             type="number"
             name="pages"
-            value={props.startingBookValues.pages}
+            value={book.pages}
           />
           <label for="pages">Input pages</label>
 
           <input
             type="text"
             name="description"
-            value={props.startingBookValues.description}
+            value={book.description}
           />
           <label for="description">Input description</label>
 
           <input
             type="link"
             name="coverUrl"
-            value={props.startingBookValues.coverUrl}
+            value={book.coverUrl}
           />
           <label for="coverUrl">Input cover URL</label>
 
