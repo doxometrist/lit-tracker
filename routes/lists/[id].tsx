@@ -5,7 +5,6 @@ import Head from "@/components/Head.tsx";
 import Layout from "@/components/Layout.tsx";
 import DeleteListButton from "@/islands/DeleteListButton.tsx";
 import EditListForm from "@/islands/EditListForm.tsx";
-import DownloadCsvButton from "@/islands/MarkdownElement.tsx";
 import type { State } from "@/routes/_middleware.ts";
 import { MAX_LIST_LENGTH, SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import {
@@ -18,6 +17,7 @@ import {
 import { Book, ReadingList } from "@/utils/db_interfaces.ts";
 import { getIpfsAddress } from "@/utils/ipfs_facade.ts";
 import { getBooksByReadingListId, getReadingListByid } from "@/utils/new-db.ts";
+import DownloadCsvButton from "../../islands/DownloadCsvButton.tsx";
 
 interface ListPageData extends State {
   user: User | null;

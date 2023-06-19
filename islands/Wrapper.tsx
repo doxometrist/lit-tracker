@@ -62,6 +62,7 @@ export default function UploadWrapper(props: UploadWrapperProps) {
         <input type="file" name="csv" accept=".csv" />
         <input class={BUTTON_STYLES} type="submit" />
       </form>
+      <ExampleTable />
 
       <form
         onSubmit={(e) => {
@@ -99,8 +100,6 @@ export default function UploadWrapper(props: UploadWrapperProps) {
           <input type="submit" />
         </button>
       </form>
-
-      <ExampleTable />
 
       <form method="POST">
         <div class="m-2 p-2 border border-solid border-2 flex flex-row">

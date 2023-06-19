@@ -43,11 +43,10 @@ import * as $$2 from "./islands/DeleteListButton.tsx";
 import * as $$3 from "./islands/DownloadCsvButton.tsx";
 import * as $$4 from "./islands/EditBookForm.tsx";
 import * as $$5 from "./islands/EditListForm.tsx";
-import * as $$6 from "./islands/GetMarkdownButton.tsx";
-import * as $$7 from "./islands/IpfsOpenButton.tsx";
-import * as $$8 from "./islands/ListIpfsUploadButton.tsx";
-import * as $$9 from "./islands/TableRow.tsx";
-import * as $$10 from "./islands/Wrapper.tsx";
+import * as $$6 from "./islands/IpfsOpenButton.tsx";
+import * as $$7 from "./islands/ListIpfsUploadButton.tsx";
+import * as $$8 from "./islands/TableRow.tsx";
+import * as $$9 from "./islands/Wrapper.tsx";
 
 const manifest = {
   routes: {
@@ -93,11 +92,10 @@ const manifest = {
     "./islands/DownloadCsvButton.tsx": $$3,
     "./islands/EditBookForm.tsx": $$4,
     "./islands/EditListForm.tsx": $$5,
-    "./islands/GetMarkdownButton.tsx": $$6,
-    "./islands/IpfsOpenButton.tsx": $$7,
-    "./islands/ListIpfsUploadButton.tsx": $$8,
-    "./islands/TableRow.tsx": $$9,
-    "./islands/Wrapper.tsx": $$10,
+    "./islands/IpfsOpenButton.tsx": $$6,
+    "./islands/ListIpfsUploadButton.tsx": $$7,
+    "./islands/TableRow.tsx": $$8,
+    "./islands/Wrapper.tsx": $$9,
   },
   baseUrl: import.meta.url,
   config,

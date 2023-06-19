@@ -1,12 +1,11 @@
 ### full edit window feature
 
-- [ ] edit lists ah it's about the islands that accept a callback! maybe all as
-      1 island? wait none of them
+- [x] edit lists ah it's about the islands that accept a callback! maybe all as
+      1 island? wait none of them (it was a bout a wrong import)
+- [x] one page with structured table, can preseed with pdf OR with csv
 - [ ] make the POST requests use JSON not query parameters. remember about
       params for action
-- [ ] need to structure it with a dialog element
 - [ ] must add the JSON api also for creation
-- [ ] one page with structured table, can preseed with pdf OR with csv
 
 - [ ] edit books
 
@@ -20,6 +19,14 @@
 - [ ] blog post about the future features
 
 - [ ] write on twitter about it
+- [ ] complete features listed on the landing page
+- [ ] add a roadmap page
+- [ ] add liked projects page?
+
+### Money focus
+
+- [ ] premium tier with longer reading lists
+- [ ] ads maybe?
 
 ### refactorings
 
@@ -42,6 +49,9 @@
   - [ ] save
   - [ ] read from save
   - [ ] update
+  https://github.com/ipfs/helia
+  or this
+  https://github.com/deno-libs/ipfs , but for this the upstream js implementation was deprectaed and changed into helia
 
 ### Export
 
@@ -49,7 +59,8 @@ export stuff
 
 - [ ] export as markdown? or as html? markdown would be easier and with jamstack
       equally easy to deploy
-- [ ] integrate this library https://github.com/denoland/deno-gfm
+- [ ] integrate this library https://github.com/denoland/deno-gfm - issues as
+      not in Fresh
 
 const markdown = `
 
