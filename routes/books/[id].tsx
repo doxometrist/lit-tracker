@@ -54,6 +54,10 @@ export default function BookPage(props: PageProps<BookPageData>) {
       <Layout session={props.data.sessionId}>
         <div class={`${SITE_WIDTH_STYLES} flex-1 px-4 space-y-8`}>
           <BookCard user={props.data.user} book={props.data.book} />
+          <div class="bg-primary2 rounded-xl p-2 min-h-20">
+            <h3>Description</h3>
+            <p>{props.data.book.description}</p>
+          </div>
           {props.data.own &&
             (
               <div id="addToListForm" class="m-2 p-2 bg-secondary">

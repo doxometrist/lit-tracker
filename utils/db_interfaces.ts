@@ -23,7 +23,6 @@ export interface InitReadingList {
 // maybe 0 for nothing, 1 want, 2 now, 3 finished 
 export interface ReadingList extends InitReadingList {
   id: string,
-  likedUserIds: string[],
   createdAt: Date,
 }
 

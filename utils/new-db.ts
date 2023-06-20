@@ -46,7 +46,6 @@ export async function createReadingList(initList: InitReadingList) {
       ...initList,
       id,
       createdAt: new Date(),
-      likedUserIds: []
     };
     res = await kv.atomic()
       .check({ key: itemKey, versionstamp: null })
@@ -102,10 +101,7 @@ export async function addBookToList(bookId: string, listId: string, userId: stri
     throw Error(`list with id: ${listId} does not belong to user: ${userId}`)
   }
   let res: Deno.KvCommitResult | Deno.KvCommitError = { ok: false };
-  // const mapping: BookToListMapping = {
-  //   bookId,
-  //   listId
-  // };
+
   while (!res.ok) {
     const bookKey = ["book_to_list", bookId, listId];
     const listKey = ["list_to_book", listId, bookId];
@@ -122,21 +118,31 @@ export async function addBookToList(bookId: string, listId: string, userId: stri
   return res;
 }
 
-export async function updateList(listId: string, newList: ReadingList, userId: string) {
-  let res: Deno.KvCommitResult | Deno.KvCommitError = { ok: false };
-  console.log('updating the list: ', listId, 'with new list object: ', newList);
-  while (!res.ok) {
-    const itemKey = ["lists", listId];
-    const itemsByUserKey = ["lists_by_user", userId, listId];
-    res = await kv.atomic()
-      .check({ key: itemKey, versionstamp: null })
-      .check({ key: itemsByUserKey, versionstamp: null })
-      .set(itemKey, newList)
-      .set(itemsByUserKey, newList)
-      .commit();
+export async function updateList(id: string, newList: InitReadingList, userId: string) {
+  const previousList = await getReadingListByid(id);
+  if (!previousList) return;
 
-    // console.log('res: ', res);
-  }
+  const list: ReadingList = {
+    ...newList,
+    id,
+    createdAt: previousList?.createdAt,
+  };
+
+  console.log('previous list', previousList)
+  console.log('updating the list: ', id, 'with new list object: ', list);
+  const itemKey = ["lists", id];
+  const itemsByUserKey = ["lists_by_user", userId, id];
+
+  const res: Deno.KvCommitResult | Deno.KvCommitError = await kv.atomic()
+    .check({ key: itemKey, versionstamp: null })
+    .check({ key: itemsByUserKey, versionstamp: null })
+    .set(itemKey, list)
+    .set(itemsByUserKey, list)
+    .commit();
+
+  console.log('res: ', res);
+  if (!res.ok) throw new Error(`Failed to update list: ${newList}`);
+
   return res;
 }
 
@@ -144,7 +150,7 @@ export async function updateBook(bookId: string, newBook: InitBook, userId: stri
   let res: Deno.KvCommitResult | Deno.KvCommitError = { ok: false };
   while (!res.ok) {
     const itemKey = ["books", bookId];
-    console.log('updating the list: ', bookId, 'with new list object: ', newBook);
+    console.log('updating theb book: ', bookId, 'with new book object: ', newBook);
     // todo need to outline more of the CRUD operation
     res = await kv.atomic()
       .check({ key: itemKey, versionstamp: null })

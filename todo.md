@@ -14,7 +14,7 @@
 - [x] bookcard display author
 - [x] display of list - photo should be to the side wrt description
 - [x] display book cards as a grid
-- [ ] edit books and lists
+- [ ] edit books and lists - maybe simply through a POST request will be the simplest?! as parsing the body doesn't seem too easy
 
 # deploy
 

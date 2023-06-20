@@ -3,7 +3,7 @@ import type { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
 import type { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId } from "@/utils/db.ts";
 import { uploadJsonToIpfs } from "@/utils/ipfs_facade.ts";
-import { deleteList, getBooksByReadingListId, getReadingListByid } from "@/utils/new-db.ts";
+import { deleteList, getBooksByReadingListId, getReadingListByid, updateList } from "@/utils/new-db.ts";
 
 async function sharedListHandler(
   req: Request,
@@ -20,9 +20,14 @@ async function sharedListHandler(
     return new Response(null, { status: 400 });
   }
 
+  const h = req.headers;
   const user = await getUserBySessionId(ctx.state.sessionId);
   const action = searchParams.get('action');
 
+  // const body = req.body;
+  // console.log(body);
+  // const initList = JSON.parse(body);
+  // console.log(initList);
   if (!user) return new Response(null, { status: 400 });
   let status;
   switch (req.method) {
@@ -30,12 +35,14 @@ async function sharedListHandler(
       status = 204;
       await deleteList(user.id, listId);
       break;
-    case "PATCH":
-      status = 204;
-      console.log('got a patch request for list', req);
-      console.log('params: ', searchParams);
-      // await updateList(listId, searchParams, user.id);
-      break;
+    // case "PATCH":
+    //   status = 204;
+    //   console.log('got a patch request for list', req);
+    //   console.log('params: ', searchParams);
+    //   if (h.get('Content-Type') !== "application/json") return;
+    //   console.log(body);
+    //   await updateList(listId, initList, user.id);
+    //   break;
     case "POST":
       console.log('got a post request for list');
       console.log('params: ', searchParams);

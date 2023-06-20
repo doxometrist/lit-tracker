@@ -1,4 +1,4 @@
-import { BUTTON_STYLES } from "@/utils/constants.ts";
+import { BUTTON_STYLES, INPUT_STYLES } from "@/utils/constants.ts";
 import { InitReadingList } from "@/utils/db_interfaces.ts";
 import { useSignal } from "@preact/signals";
 import IconEdit from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/edit.tsx";
@@ -26,38 +26,38 @@ export default function EditListForm(props: EditListFormProps) {
   }
 
   const submitHandler = async (e) => {
-    e.preventDefault();
-    console.log("clicked");
-    let formData = new FormData(e.target); // e.target is the form itself
-    let jsonObject = {};
+    // e.preventDefault();
+    // console.log("clicked");
+    // let formData = new FormData(e.target); // e.target is the form itself
+    // let jsonObject: InitReadingList = {};
 
-    for (const [key, value] of formData.entries()) {
-      jsonObject[key] = value;
-    }
-    console.log(jsonObject);
+    // for (const [key, value] of formData.entries()) {
+    //   jsonObject[key] = value;
+    // }
+    // console.log(jsonObject);
 
-    const listId = props.id;
-    const url = `/api/list?list_id=${listId}?action=edit`;
-    const payload = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(jsonObject),
-      // todo add here official types got from the form
-      credentials: "same-origin",
-    };
-    const response = await fetch(url, payload);
-    console.log(`sending request to upload to ipfs the list: ${listId}`);
+    // const listId = props.id;
+    // const url = `/api/list?list_id=${listId}?action=edit`;
+    // const payload = {
+    //   method: "PATCH",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(jsonObject),
+    //   // todo add here official types got from the form
+    //   credentials: "same-origin",
+    // };
+    // const response = await fetch(url, payload);
+    // console.log(`sending request to upload to ipfs the list: ${listId}`);
 
-    if (response.status === 401) {
-      window.location.href = "/login";
-      return;
-    }
-    if (response.status === 204) {
-      window.location.href = `/lists/${listId}`;
-      return;
-    }
+    // if (response.status === 401) {
+    //   window.location.href = "/login";
+    //   return;
+    // }
+    // if (response.status === 204) {
+    //   window.location.href = `/lists/${listId}`;
+    //   return;
+    // }
     const dialog = document.getElementById(
       "edit-list-dialog",
     ) as HTMLDialogElement;
@@ -78,13 +78,14 @@ export default function EditListForm(props: EditListFormProps) {
         <form
           class="bg-red-400 w-40 h-40"
           onSubmit={submitHandler}
+          method="post"
         >
           <input
             type="text"
-            name="name"
+            name="title"
             value={props.changeableProps.title}
           />
-          <label for="name">Input name</label>
+          <label for="title">Input title</label>
 
           <input
             type="text"
@@ -93,8 +94,15 @@ export default function EditListForm(props: EditListFormProps) {
           />
           <label for="description">Input description</label>
 
+          <label for="background_url">Input background URL</label>
+          <input
+            class={INPUT_STYLES}
+            type="url"
+            name="background_url"
+            placeholder="Paste background url link"
+          />
           <button
-            class={`${BUTTON_STYLES}  text-center mt-8`}
+            class={`${BUTTON_STYLES} text-center mt-8`}
             type="cancel"
             formMethod="dialog"
           >
@@ -103,7 +111,6 @@ export default function EditListForm(props: EditListFormProps) {
           <button
             class={`${BUTTON_STYLES} text-center mt-8`}
             type="submit"
-            // formMethod="dialog"
           >
             Submit
           </button>

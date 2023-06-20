@@ -14,9 +14,13 @@ import {
   getUsersByIds,
   type User,
 } from "@/utils/db.ts";
-import { Book, ReadingList } from "@/utils/db_interfaces.ts";
+import { Book, InitReadingList, ReadingList } from "@/utils/db_interfaces.ts";
 import { getIpfsAddress } from "@/utils/ipfs_facade.ts";
-import { getBooksByReadingListId, getReadingListByid } from "@/utils/new-db.ts";
+import {
+  getBooksByReadingListId,
+  getReadingListByid,
+  updateList,
+} from "@/utils/new-db.ts";
 import DownloadCsvButton from "../../islands/DownloadCsvButton.tsx";
 
 interface ListPageData extends State {
@@ -74,6 +78,32 @@ export const handler: Handlers<ListPageData, State> = {
       suggestions,
       commentsUsers,
       ipfsUrl,
+    });
+  },
+
+  // THIS IS FOR THE EDIT FUNCTIONALITY, the rest goes through the API
+  async POST(req, ctx) {
+    const { id } = ctx.params;
+    const form = await req.formData();
+    const user = await getUserBySessionId(ctx.state.sessionId!);
+    if (!user) return new Response(null, { status: 401 });
+    const newList: InitReadingList = {
+      creatorId: user!.id,
+      description: form.get("description")?.toString() ?? "",
+      title: form.get("title")?.toString() ?? "",
+      backgroundImageUrl: form.get("background_url")?.toString() ?? "",
+    };
+
+    // Add email to list.
+
+    const updateResponse = await updateList(id, newList, user.id);
+
+    // Redirect user to thank you page.
+    const headers = new Headers();
+    headers.set("location", "/my-lists");
+    return new Response(null, {
+      status: 303, // See Other
+      headers,
     });
   },
 };

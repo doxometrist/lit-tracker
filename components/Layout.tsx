@@ -140,10 +140,6 @@ export default function Layout(props: LayoutProps) {
       inner: "About",
     },
     {
-      href: "/inspiring-projects",
-      inner: "Projects that inspired this undertaking",
-    },
-    {
       href: "https://fresh.deno.dev",
       inner: (
         <img

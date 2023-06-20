@@ -11,6 +11,34 @@ import type { State } from "@/routes/_middleware.ts";
 interface AboutPageData extends State {
 }
 
+
+interface Link {
+  url: string;
+  description: string;
+}
+
+const links: Link[] = [
+  {
+    url: "https://www.fellowshipofthelink.org/",
+    description:
+      "A group working on collaborative memory and information commons",
+  },
+  {
+    url: "https://anagora.org/index",
+    description: "Digital resource pooling platform",
+  },
+];
+
+function LinkCard(props: { link: Link }) {
+  return (
+    <div>
+      <span>
+        <a class="underline" href={props.link.url}>{props.link.url}</a> -{" "}
+        {props.link.description}
+      </span>
+    </div>
+  );
+}
 export const handler: Handlers<AboutPageData, State> = {
   async GET(_req, ctx) {
     return ctx.render({ ...ctx.state });
@@ -59,10 +87,15 @@ export default function AboutPage(props: PageProps<AboutPageData>) {
                 href="https://www.goodreads.com/list"
                 class="text-black underline"
               >
-                Listopia on Goodreads  
-              </a> does not bring the same vibe - comments, stars present lots of
+                Listopia on Goodreads
+              </a>{" "}
+              does not bring the same vibe - comments, stars present lots of
               distraction
             </p>
+          </div>
+          <h1 class="text-5xl font-bold">Inspiring projects</h1>
+          <div class="mt-8">
+            {links.map((l) => <LinkCard link={l} />)}
           </div>
         </main>
       </Layout>
