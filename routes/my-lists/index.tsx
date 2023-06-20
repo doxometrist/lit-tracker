@@ -47,7 +47,7 @@ export default function MyLists(props: PageProps<MyListsPageData>) {
             </button>
             <button class={`${BUTTON_STYLES}`}>
               <a href="/uploads">
-                Make a preseeded list
+                Add many books to an existing list
               </a>
             </button>
           </div>

@@ -26,6 +26,13 @@ export default function TableRow({ n, things }: RowProps) {
       </td>
       <td>
         <input
+          type="number"
+          name={`pages-${n}`}
+          value={n < things.value.length ? things.value[n].pages : 0}
+        />
+      </td>
+      <td>
+        <input
           type="text"
           name={`title-${n}`}
           value={n < things.value.length ? things.value[n].title : ""}

@@ -5,30 +5,29 @@ import { getReadingListByid } from "../../utils/new-db.ts";
 
 interface AddBookToListFormProps {
   ownLists: ReadingList[];
-  book:Book
+  book: Book;
 }
 
 export function AddBookToListForm({ ownLists, book }: AddBookToListFormProps) {
   async function sendToApi() {
-    const url = `/api/book-list?book_id=${book.id}?list_id=${}`;
+    const url = `/api/book-list?book_id=${book.id}?list_id=${""}`;
     const method = "POST";
     const response = await fetch(url, {
       method,
       credentials: "same-origin",
     });
 
-    if(response.status === 401) {
+    if (response.status === 401) {
       window.location.href = "/login";
       return;
     }
-    if(response.status === 204) {
+    if (response.status === 204) {
       window.location.href = "/uploaded-by-me-books";
       return;
     }
   }
 
   const submitHandler = (e) => {
-
     e.preventDefault();
     console.log("clicked");
     const formData = new FormData(e.target); // e.target is the form itself
@@ -44,9 +43,9 @@ export function AddBookToListForm({ ownLists, book }: AddBookToListFormProps) {
     // todo here get new initbook from the previous formdata
     sendToApi();
     const dialog = document.querySelector(
-      "#edit-book-dialog"
+      "#edit-book-dialog",
     ) as HTMLDialogElement;
-    if(!dialog) {
+    if (!dialog) {
       console.error("no dialog");
       return;
     }

@@ -33,17 +33,49 @@ export default function UploadWrapper(props: UploadWrapperProps) {
   const things = useSignal<InitBook[]>([]);
   const numArr = range(0, MAX_LIST_LENGTH);
 
+  const pdfHandler = (e): void => {
+    e.preventDefault();
+    console.log(e);
+    if (!e.target) {
+      return;
+    }
+    const files: FileList = e.target.elements.pdfs.files;
+    const names = [];
+    // Loop through each file and push the name into the names array
+    const EXTENSION_LENGTH = 4;
+    for (let i = 0; i < files.length; i++) {
+      const name = files[i].name;
+      names.push(name.substring(0, name.length - EXTENSION_LENGTH));
+    }
+    console.log(names);
+    const books: InitBook[] = names.map((n) => {
+      const b: InitBook = {
+        title: n,
+        pages: 0,
+        author: "",
+        description: "",
+        coverUrl: "",
+        uploaderId: "",
+      };
+      return b;
+    });
+    things.value = books;
+  };
+  const csvHandler = async (e): Promise<void> => {
+    e.preventDefault();
+    console.log(e);
+    if (!e.target) {
+      return;
+    }
+    const file = e.target.elements.csv.files[0];
+    const books: InitBook[] = await parseCsv(file);
+    things.value = books;
+  };
+
   return (
     <div>
       <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          console.log(e);
-          if (!e.target) return;
-          const file = e.target.elements.csv.files[0];
-          const books: InitBook[] = await parseCsv(file);
-          things.value = books;
-        }}
+        onSubmit={csvHandler}
         encType="multipart/form-data"
         class="m-2 p-2 border border-solid border-2 flex flex-row"
       >
@@ -54,32 +86,7 @@ export default function UploadWrapper(props: UploadWrapperProps) {
       <ExampleTable />
 
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log(e);
-          if (!e.target) return;
-          const files: FileList = e.target.elements.pdfs.files;
-          const names = [];
-          // Loop through each file and push the name into the names array
-          const EXTENSION_LENGTH = 4;
-          for (let i = 0; i < files.length; i++) {
-            const name = files[i].name;
-            names.push(name.substring(0, name.length - EXTENSION_LENGTH));
-          }
-          console.log(names);
-          const books: InitBook[] = names.map((n) => {
-            const b: InitBook = {
-              title: n,
-              pages: 0,
-              author: "",
-              description: "",
-              coverUrl: "",
-              uploaderId: "",
-            };
-            return b;
-          });
-          things.value = books;
-        }}
+        onSubmit={pdfHandler}
         encType="multipart/form-data"
         class="m-2 p-2 border border-solid border-2 flex flex-row"
       >
@@ -108,6 +115,7 @@ export default function UploadWrapper(props: UploadWrapperProps) {
             <th>Number</th>
             <th>Author</th>
             <th>Description</th>
+            <th>Pages</th>
             <th>Title</th>
             <th>Cover url link</th>
           </tr>

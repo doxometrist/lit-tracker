@@ -80,6 +80,7 @@ export const handler: Handlers<ListPageData, State> = {
 
 export default function ListPage(props: PageProps<ListPageData>) {
   const books = props.data.books;
+  const text = "Thinking of going through this reading list...";
   return (
     <>
       <Head title={props.data.list.title} href={props.url.href} />
@@ -96,11 +97,20 @@ export default function ListPage(props: PageProps<ListPageData>) {
             <h2>{props.data.list.title}</h2>
             <h3>here contents of this list:</h3>
           </div>
+          <div>
+            <h3>Description:</h3>
+            <p>{props.data.list.description}</p>
+          </div>
           <div
             id="addBooksRegion"
-            class="m-2 p-2 bg-primary flex flex-row gap-x-2"
+            class="m-2 p-2 bg-primary flex flex-row gap-x-2 border border-4 border-solid"
           >
-            <h5>Here might be buttons for more functionality in the future</h5>
+            <a
+              class="twitter-share-button"
+              href={`https://twitter.com/intent/tweet?text=${text}`}
+            >
+              Tweet this!
+            </a>
             <DownloadCsvButton
               books={props.data.books}
               filename={props.data.list.title}
@@ -108,7 +118,11 @@ export default function ListPage(props: PageProps<ListPageData>) {
           </div>
           {props.data.own &&
             (
-              <div id="management" className="m-2 flex flex-row justify-start">
+              <div
+                id="management"
+                className="m-2 border border-1 border-solid flex flex-row justify-start min-w-40"
+              >
+                <h2 class="m-2 text-xl p-2">Manage list</h2>
                 <EditListForm
                   changeableProps={props.data.list}
                   id={props.data.list.id}

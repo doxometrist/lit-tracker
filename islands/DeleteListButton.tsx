@@ -9,7 +9,7 @@ export interface DeleteListProps {
 }
 
 export default function DeleteListButton(props: DeleteListProps) {
-  async function onClick(event: MouseEvent) {
+  async function deleteList(event: MouseEvent) {
     if (event.detail === 1) {
       const url = `/api/list?list_id=${props.list.id}`;
       const method = "DELETE";
@@ -29,7 +29,7 @@ export default function DeleteListButton(props: DeleteListProps) {
   return (
     <button
       class={`text-inherit ${BUTTON_STYLES}`}
-      onClick={onClick}
+      onClick={deleteList}
     >
       <span class="text-bone">
         Delete <IconTrashXFilled />

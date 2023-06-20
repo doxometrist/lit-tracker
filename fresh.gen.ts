@@ -12,32 +12,34 @@ import * as $5 from "./routes/account/manage.ts";
 import * as $6 from "./routes/account/upgrade.ts";
 import * as $7 from "./routes/admin/_middleware.ts";
 import * as $8 from "./routes/admin/index.tsx";
-import * as $9 from "./routes/api/book.ts";
-import * as $10 from "./routes/api/list.ts";
-import * as $11 from "./routes/blog/[slug].tsx";
-import * as $12 from "./routes/blog/index.tsx";
-import * as $13 from "./routes/books/[id].tsx";
-import * as $14 from "./routes/books/index.tsx";
-import * as $15 from "./routes/callback.ts";
-import * as $16 from "./routes/discover/index.tsx";
-import * as $17 from "./routes/feed.ts";
-import * as $18 from "./routes/index.tsx";
-import * as $19 from "./routes/inspiring-projects/index.tsx";
-import * as $20 from "./routes/lists/[id].tsx";
-import * as $21 from "./routes/lists/index.tsx";
-import * as $22 from "./routes/login.ts";
-import * as $23 from "./routes/logout.ts";
-import * as $24 from "./routes/my-lists/_middleware.ts";
-import * as $25 from "./routes/my-lists/index.tsx";
-import * as $26 from "./routes/new-book/_middleware.ts";
-import * as $27 from "./routes/new-book/index.tsx";
-import * as $28 from "./routes/new-list/_middleware.ts";
-import * as $29 from "./routes/new-list/index.tsx";
-import * as $30 from "./routes/submit.tsx";
-import * as $31 from "./routes/tracking/index.tsx";
-import * as $32 from "./routes/uploaded-by-me-books/index.tsx";
-import * as $33 from "./routes/uploads/ExampleTable.tsx";
-import * as $34 from "./routes/uploads/index.tsx";
+import * as $9 from "./routes/api/book-list.ts";
+import * as $10 from "./routes/api/book.ts";
+import * as $11 from "./routes/api/list.ts";
+import * as $12 from "./routes/blog/[slug].tsx";
+import * as $13 from "./routes/blog/index.tsx";
+import * as $14 from "./routes/books/AddBookToListForm.tsx";
+import * as $15 from "./routes/books/[id].tsx";
+import * as $16 from "./routes/books/index.tsx";
+import * as $17 from "./routes/callback.ts";
+import * as $18 from "./routes/discover/index.tsx";
+import * as $19 from "./routes/feed.ts";
+import * as $20 from "./routes/index.tsx";
+import * as $21 from "./routes/inspiring-projects/index.tsx";
+import * as $22 from "./routes/lists/[id].tsx";
+import * as $23 from "./routes/lists/index.tsx";
+import * as $24 from "./routes/login.ts";
+import * as $25 from "./routes/logout.ts";
+import * as $26 from "./routes/my-lists/_middleware.ts";
+import * as $27 from "./routes/my-lists/index.tsx";
+import * as $28 from "./routes/new-book/_middleware.ts";
+import * as $29 from "./routes/new-book/index.tsx";
+import * as $30 from "./routes/new-list/_middleware.ts";
+import * as $31 from "./routes/new-list/index.tsx";
+import * as $32 from "./routes/submit.tsx";
+import * as $33 from "./routes/tracking/index.tsx";
+import * as $34 from "./routes/uploaded-by-me-books/index.tsx";
+import * as $35 from "./routes/uploads/ExampleTable.tsx";
+import * as $36 from "./routes/uploads/index.tsx";
 import * as $$0 from "./islands/Carousel.tsx";
 import * as $$1 from "./islands/DeleteBookButton.tsx";
 import * as $$2 from "./islands/DeleteListButton.tsx";
@@ -60,32 +62,34 @@ const manifest = {
     "./routes/account/upgrade.ts": $6,
     "./routes/admin/_middleware.ts": $7,
     "./routes/admin/index.tsx": $8,
-    "./routes/api/book.ts": $9,
-    "./routes/api/list.ts": $10,
-    "./routes/blog/[slug].tsx": $11,
-    "./routes/blog/index.tsx": $12,
-    "./routes/books/[id].tsx": $13,
-    "./routes/books/index.tsx": $14,
-    "./routes/callback.ts": $15,
-    "./routes/discover/index.tsx": $16,
-    "./routes/feed.ts": $17,
-    "./routes/index.tsx": $18,
-    "./routes/inspiring-projects/index.tsx": $19,
-    "./routes/lists/[id].tsx": $20,
-    "./routes/lists/index.tsx": $21,
-    "./routes/login.ts": $22,
-    "./routes/logout.ts": $23,
-    "./routes/my-lists/_middleware.ts": $24,
-    "./routes/my-lists/index.tsx": $25,
-    "./routes/new-book/_middleware.ts": $26,
-    "./routes/new-book/index.tsx": $27,
-    "./routes/new-list/_middleware.ts": $28,
-    "./routes/new-list/index.tsx": $29,
-    "./routes/submit.tsx": $30,
-    "./routes/tracking/index.tsx": $31,
-    "./routes/uploaded-by-me-books/index.tsx": $32,
-    "./routes/uploads/ExampleTable.tsx": $33,
-    "./routes/uploads/index.tsx": $34,
+    "./routes/api/book-list.ts": $9,
+    "./routes/api/book.ts": $10,
+    "./routes/api/list.ts": $11,
+    "./routes/blog/[slug].tsx": $12,
+    "./routes/blog/index.tsx": $13,
+    "./routes/books/AddBookToListForm.tsx": $14,
+    "./routes/books/[id].tsx": $15,
+    "./routes/books/index.tsx": $16,
+    "./routes/callback.ts": $17,
+    "./routes/discover/index.tsx": $18,
+    "./routes/feed.ts": $19,
+    "./routes/index.tsx": $20,
+    "./routes/inspiring-projects/index.tsx": $21,
+    "./routes/lists/[id].tsx": $22,
+    "./routes/lists/index.tsx": $23,
+    "./routes/login.ts": $24,
+    "./routes/logout.ts": $25,
+    "./routes/my-lists/_middleware.ts": $26,
+    "./routes/my-lists/index.tsx": $27,
+    "./routes/new-book/_middleware.ts": $28,
+    "./routes/new-book/index.tsx": $29,
+    "./routes/new-list/_middleware.ts": $30,
+    "./routes/new-list/index.tsx": $31,
+    "./routes/submit.tsx": $32,
+    "./routes/tracking/index.tsx": $33,
+    "./routes/uploaded-by-me-books/index.tsx": $34,
+    "./routes/uploads/ExampleTable.tsx": $35,
+    "./routes/uploads/index.tsx": $36,
   },
   islands: {
     "./islands/Carousel.tsx": $$0,

@@ -45,15 +45,7 @@ export default function ListCard(props: ListCardProps) {
             {props.list.title}
           </a>
         </span>
-        <h3>Books: {props.booksNumber}</h3>
-        <span>
-          here url if it made sense
-          {
-            /* <a class="hover:underline" href={props.list.url} target="_blank">
-            {new URL(props.list.url).host} ↗
-          </a> */
-          }
-        </span>
+        <h3>Books number: {props.booksNumber}</h3>
         <p>
           {props.user && props.user.login}{" "}
           {props.user?.isSubscribed && <span title="Premium user">🦕{" "}

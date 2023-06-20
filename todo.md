@@ -8,6 +8,13 @@
 - [ ] must add the JSON api also for creation
 - [ ] edit books
 
+### quick fixes
+- [ ] display of list - photo should be to the side wrt description
+- [ ] delete list - button with a dialog
+- [x] ensure pages prepopulation works
+- [ ] bookcard display author
+- [ ] display book cards as a grid
+
 # deploy
 
 - [ ] add environment variables

@@ -61,9 +61,9 @@ export function objectIntoRepresentation(
   const books: InitBook[] = [];
   object.data.forEach((row: any[]) => {
     const b: InitBook = {
+      author: row[0],
       title: row[1],
       pages: row[2],
-      author: row[0],
       description: row[3],
       coverUrl: row[4],
       uploaderId: userId,

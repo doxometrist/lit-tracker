@@ -34,7 +34,7 @@ async function sharedListHandler(
       status = 204;
       console.log('got a patch request for list', req);
       console.log('params: ', searchParams);
-        await updateList(listId, searchParams, user.id);
+      // await updateList(listId, searchParams, user.id);
       break;
     case "POST":
       console.log('got a post request for list');
@@ -54,7 +54,7 @@ async function sharedListHandler(
       } else if (action == 'edit') {
         console.log('got a patch request for list', req);
         console.log('params: ', searchParams);
-          await updateList(listId, searchParams, user.id);
+        // await updateList(listId, searchParams, user.id);
       } else {
         console.log('not supported');
       }
