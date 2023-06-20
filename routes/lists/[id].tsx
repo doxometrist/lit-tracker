@@ -130,7 +130,11 @@ export default function ListPage(props: PageProps<ListPageData>) {
                 <DeleteListButton list={props.data.list} />
               </div>
             )}
-          <ul>
+          <div id="bookcard-container" class="grid grid-cols-3">
+            {books.map((b) => <BookCard book={b} user={props.data.user} />)}
+          </div>
+          {
+            /* <ul>
             {books.map((b, i) => {
               return (
                 <li>
@@ -138,7 +142,8 @@ export default function ListPage(props: PageProps<ListPageData>) {
                 </li>
               );
             })}
-          </ul>
+          </ul> */
+          }
         </div>
       </Layout>
     </>

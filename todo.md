@@ -5,15 +5,16 @@
 - [x] one page with structured table, can preseed with pdf OR with csv
 - [x] make the POST requests use JSON not query parameters. remember about
       params for action
-- [ ] must add the JSON api also for creation
-- [ ] edit books
+- [x] must add the JSON api also for creation
 
 ### quick fixes
-- [ ] display of list - photo should be to the side wrt description
-- [ ] delete list - button with a dialog
+
 - [x] ensure pages prepopulation works
-- [ ] bookcard display author
-- [ ] display book cards as a grid
+- [x] delete list - button with a dialog
+- [x] bookcard display author
+- [x] display of list - photo should be to the side wrt description
+- [x] display book cards as a grid
+- [ ] edit books and lists
 
 # deploy
 
@@ -87,4 +88,5 @@ const markd = render(markdown, { baseUrl: "https://example.com", });
 - [ ] throttling does not seem to quite work
 - [ ] also download CSV
 - [ ] feature lists on the landing page
-- [ ] a field for checking many books on a list and removing them - would need an island with static internal component and a reference to a post request
+- [ ] a field for checking many books on a list and removing them - would need
+      an island with static internal component and a reference to a post request

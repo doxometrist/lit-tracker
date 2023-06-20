@@ -1,6 +1,6 @@
+import { DEFAULT_AUTHOR, DEFAULT_IMG } from "@/utils/constants.ts";
 import { kv } from "@/utils/db.ts";
-import { Book, BookToListMapping, InitBook, InitReadingList, ReadingList, TmpBook } from "./db_interfaces.ts";
-import { DEFAULT_AUTHOR, DEFAULT_IMG } from "./constants.ts";
+import { Book, InitBook, InitReadingList, ReadingList, TmpBook } from "@/utils/db_interfaces.ts";
 
 export async function getReadingListsByUserId(userId: string, options?: Deno.KvListOptions): Promise<ReadingList[]> {
   const iter = await kv.list<ReadingList>({ prefix: ["lists_by_user", userId] }, options);
@@ -208,8 +208,6 @@ export async function deleteList(userId: string, listId: string) {
   }
 }
 
-
-
 export async function deleteBook(bookId: string, userId: string) {
   const book = await getBookById(bookId);
   if (userId !== book?.uploaderId) {
@@ -238,50 +236,3 @@ export async function deleteBook(bookId: string, userId: string) {
     throw mapping
   }
 }
-
-export async function massUpload(initList: InitReadingList, books: InitBook[], userId: string) {
-  createReadingList(initList);
-  const listId = "1";
-  // todo need to have the right id from that
-  books.forEach(async (book, index) => {
-    const id = await createBook(book)
-    addBookToList(id, listId, userId)
-  });
-  return 1;
-}
-
-export async function saveTmpBook(shortform: TmpBook, userId: string): Promise<string> {
-  let res = { ok: false };
-  while (!res.ok) {
-    const id = crypto.randomUUID();
-    const itemKey = ["tmp_book", userId];
-    shortform.id = id;
-    console.log(`thing: ${shortform.name}, key: ${itemKey}`)
-    res = await kv.atomic()
-      .check({ key: itemKey, versionstamp: null })
-      .set(itemKey, shortform)
-      .commit();
-    return id;
-  }
-}
-
-
-export async function resetTmpBooksByUserId(userId: string): Promise<string> {
-  let res = { ok: false };
-  while (!res.ok) {
-    const itemKey = ["tmp_book", userId];
-    res = await kv.atomic()
-      .check({ key: itemKey, versionstamp: null })
-      .delete(itemKey)
-      .commit();
-    return id;
-  }
-}
-
-// export async function getTmpBooksById(userId: string, options?: Deno.KvListOptions): Promise<TmpBook[]> {
-//   const iter = await kv.list<TmpBook>({ prefix: ["tmp_book", userId] }, options);
-//   const items = [];
-//   for await (const res of iter) items.push(res.value);
-//   console.log('list items from by user: ', items);
-//   return items;
-// }

@@ -2,8 +2,8 @@
 import type { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
 import type { State } from "@/routes/_middleware.ts";
 import { getUserBySessionId } from "@/utils/db.ts";
-import { deleteList, getBooksByReadingListId, getReadingListByid, updateList } from "../../utils/new-db.ts";
-import { uploadJsonToIpfs } from "../../utils/ipfs_facade.ts";
+import { uploadJsonToIpfs } from "@/utils/ipfs_facade.ts";
+import { deleteList, getBooksByReadingListId, getReadingListByid } from "@/utils/new-db.ts";
 
 async function sharedListHandler(
   req: Request,

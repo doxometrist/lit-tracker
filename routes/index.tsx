@@ -42,6 +42,7 @@ export const handler: Handlers<HomePageData, State> = {
   },
 };
 
+
 export default function HomePage(props: PageProps<HomePageData>) {
   return (
     <>

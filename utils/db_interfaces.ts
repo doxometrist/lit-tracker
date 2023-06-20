@@ -41,3 +41,8 @@ export interface TmpBook {
   size: number,
   id?: string
 }
+
+export interface BookReadData {
+  start: Date,
+  finish: Date | null
+}

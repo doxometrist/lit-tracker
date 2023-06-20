@@ -10,6 +10,8 @@ export const REDIRECT_PATH_AFTER_LOGIN = "/";
  */
 export const BUTTON_STYLES =
   "px-4 py-2 bg-secondary1 hover:bg-secondary1_button text-bone  text-lg rounded-lg  border-pink-700 hover:text-dark_bone transition duration-300 disabled:(opacity-50 cursor-not-allowed)";
+export const SMALL_BUTTON_STYLES =
+  "px-4 py-2 bg-secondary1 hover:bg-secondary1_button text-bone rounded-lg  border-pink-700 hover:text-dark_bone transition duration-300 disabled:(opacity-50 cursor-not-allowed)";
 export const INPUT_STYLES =
   "px-4 py-2 bg-accent2 rounded rounded-lg outline-none w-full border-1 border-gray-300 hover:border-black transition duration-300 disabled:(opacity-50 cursor-not-allowed)";
 export const NOTICE_STYLES =

@@ -120,6 +120,10 @@ export default function Layout(props: LayoutProps) {
       href: "/books",
       inner: "Books",
     },
+    {
+      href: "/about",
+      inner: "About",
+    },
   ];
 
   const headerNavItems: NavItem[] = headerNavBaseItems.concat(
@@ -130,6 +134,10 @@ export default function Layout(props: LayoutProps) {
     {
       href: "/blog",
       inner: "Blog",
+    },
+    {
+      href: "/about",
+      inner: "About",
     },
     {
       href: "/inspiring-projects",
