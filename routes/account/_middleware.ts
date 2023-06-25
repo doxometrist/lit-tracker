@@ -1,8 +1,8 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import { State } from "@/routes/_middleware.ts";
 import { MiddlewareHandlerContext } from "$fresh/server.ts";
-import { redirect } from "@/utils/http.ts";
-import { getUserBySessionId, User } from "@/utils/db.ts";
+import { getUserBySession, User } from "@/utils/db.ts";
+import { redirectToLogin } from "@/utils/redirect.ts";
 
 export interface AccountState extends State {
   sessionId: string;
@@ -10,15 +10,12 @@ export interface AccountState extends State {
 }
 
 export async function handler(
-  _req: Request,
+  req: Request,
   ctx: MiddlewareHandlerContext<AccountState>,
 ) {
-  // console.log('processing request, sessionId: ', ctx.state.sessionId);
-  const redirectResponse = redirect("/login");
-
+  const redirectResponse = redirectToLogin(req.url);
   if (!ctx.state.sessionId) return redirectResponse;
-  const user = await getUserBySessionId(ctx.state.sessionId);
-  // console.log('user: ', user);
+  const user = await getUserBySession(ctx.state.sessionId);
   if (!user) return redirectResponse;
   ctx.state.user = user;
   return await ctx.next();

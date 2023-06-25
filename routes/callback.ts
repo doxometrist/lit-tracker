@@ -1,17 +1,22 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers } from "$fresh/server.ts";
-import { redirect } from "@/utils/http.ts";
 import {
   createUser,
-  getUserById,
-  InitUser,
-  setUserSession,
+  deleteUserBySession,
+  getUser,
+  incrementAnalyticsMetricPerDay,
+  newUserProps,
+  updateUser,
   type User,
 } from "@/utils/db.ts";
 import { stripe } from "@/utils/payments.ts";
 import { State } from "./_middleware.ts";
-import { getAccessToken, setCallbackHeaders } from "@/utils/deno_kv_oauth.ts";
+import { handleCallback } from "kv_oauth";
 import { oauth2Client } from "@/utils/oauth2_client.ts";
+import {
+  deleteRedirectUrlCookie,
+  getRedirectUrlCookie,
+} from "@/utils/redirect.ts";
 
 interface GitHubUser {
   id: number;
@@ -20,7 +25,7 @@ interface GitHubUser {
   email: string;
 }
 
-async function getUser(accessToken: string): Promise<GitHubUser> {
+async function getGitHubUser(accessToken: string): Promise<GitHubUser> {
   const response = await fetch("https://api.github.com/user", {
     headers: { authorization: `Bearer ${accessToken}` },
   });
@@ -34,29 +39,35 @@ async function getUser(accessToken: string): Promise<GitHubUser> {
 // deno-lint-ignore no-explicit-any
 export const handler: Handlers<any, State> = {
   async GET(req) {
-    const accessToken = await getAccessToken(req, oauth2Client);
-    const githubUser = await getUser(accessToken);
-    const sessionId = crypto.randomUUID();
+    const { response, accessToken, sessionId } = await handleCallback(
+      req,
+      oauth2Client,
+      getRedirectUrlCookie(req.headers),
+    );
 
-    const user = await getUserById(githubUser.id.toString());
+    deleteRedirectUrlCookie(response.headers);
+
+    const githubUser = await getGitHubUser(accessToken);
+
+    const user = await getUser(githubUser.id.toString());
     if (!user) {
-      // const customer = await stripe.customers.create({
-      //   email: githubUser.email,
-      // });
-      const userInit: Omit<InitUser, "isSubscribed"> = {
+      const customer = await stripe.customers.create({
+        email: githubUser.email,
+      });
+      const user: User = {
         id: githubUser.id.toString(),
         login: githubUser.login,
         avatarUrl: githubUser.avatar_url,
-        // stripeCustomerId: customer.id,
+        stripeCustomerId: customer.id,
         sessionId,
+        ...newUserProps(),
       };
-      await createUser(userInit);
+      await createUser(user);
+      await incrementAnalyticsMetricPerDay("users_count", new Date());
     } else {
-      await setUserSession(user, sessionId);
+      await deleteUserBySession(sessionId);
+      await updateUser({ ...user, sessionId });
     }
-
-    const response = redirect("/");
-    setCallbackHeaders(response.headers, sessionId);
     return response;
   },
 };

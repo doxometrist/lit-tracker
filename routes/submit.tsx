@@ -1,15 +1,23 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import Head from "@/components/Head.tsx";
-import Layout from "@/components/Layout.tsx";
 import { BUTTON_STYLES, INPUT_STYLES } from "@/utils/constants.ts";
 import type { State } from "@/routes/_middleware.ts";
-import { createItem, getUserBySessionId } from "@/utils/db.ts";
-import { redirect } from "@/utils/http.ts";
+import {
+  createItem,
+  getUserBySession,
+  incrementAnalyticsMetricPerDay,
+  type Item,
+  newItemProps,
+} from "@/utils/db.ts";
+import { redirect } from "@/utils/redirect.ts";
+import { redirectToLogin } from "@/utils/redirect.ts";
 
 export const handler: Handlers<State, State> = {
-  GET(_req, ctx) {
-    return ctx.state.sessionId ? ctx.render(ctx.state) : redirect("/login");
+  GET(req, ctx) {
+    return ctx.state.sessionId
+      ? ctx.render(ctx.state)
+      : redirectToLogin(req.url);
   },
   async POST(req, ctx) {
     if (!ctx.state.sessionId) {
@@ -32,15 +40,18 @@ export const handler: Handlers<State, State> = {
       return new Response(null, { status: 400 });
     }
 
-    const user = await getUserBySessionId(ctx.state.sessionId);
+    const user = await getUserBySession(ctx.state.sessionId);
 
     if (!user) return new Response(null, { status: 400 });
 
-    const item = await createItem({
+    const item: Item = {
       userId: user.id,
       title,
       url,
-    });
+      ...newItemProps(),
+    };
+    await createItem(item);
+    await incrementAnalyticsMetricPerDay("items_count", new Date());
 
     return redirect(`/item/${item!.id}`);
   },
@@ -48,7 +59,7 @@ export const handler: Handlers<State, State> = {
 
 function Form() {
   return (
-    <form class=" space-y-2" method="post">
+    <form class="space-y-2" method="post">
       <input
         class={INPUT_STYLES}
         type="text"
@@ -74,12 +85,10 @@ export default function SubmitPage(props: PageProps<State>) {
   return (
     <>
       <Head title="Submit" href={props.url.href} />
-      <Layout session={props.data.sessionId}>
-        <div class="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full space-y-8">
-          <h1 class="text-center text-2xl font-bold">Share your project</h1>
-          <Form />
-        </div>
-      </Layout>
+      <div class="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full space-y-8">
+        <h1 class="text-center text-2xl font-bold">Share your project</h1>
+        <Form />
+      </div>
     </>
   );
 }

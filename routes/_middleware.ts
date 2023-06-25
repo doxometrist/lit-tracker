@@ -1,7 +1,8 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import { MiddlewareHandlerContext } from "$fresh/server.ts";
 import { walk } from "std/fs/walk.ts";
-import { getSessionId } from "@/utils/deno_kv_oauth.ts";
+import { getSessionId } from "kv_oauth";
+import { setRedirectUrlCookie } from "@/utils/redirect.ts";
 
 export interface State {
   sessionId?: string;
@@ -23,7 +24,13 @@ export async function handler(
     return await ctx.next();
   }
 
-  ctx.state.sessionId = getSessionId(req.headers);
+  ctx.state.sessionId = await getSessionId(req);
 
-  return await ctx.next();
+  const res = await ctx.next();
+
+  if (ctx.destination === "route" && pathname === "/signin") {
+    setRedirectUrlCookie(req, res);
+  }
+
+  return res;
 }

@@ -1,9 +1,8 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import Head from "@/components/Head.tsx";
-import Layout from "@/components/Layout.tsx";
 import type { AccountState } from "./_middleware.ts";
-import { BUTTON_STYLES, NOTICE_STYLES } from "@/utils/constants.ts";
+import { BUTTON_STYLES } from "@/utils/constants.ts";
 import { ComponentChild } from "preact";
 
 export const handler: Handlers<AccountState, AccountState> = {
@@ -39,6 +38,7 @@ export default function AccountPage(props: PageProps<AccountState>) {
   const hasResetPassword = new URL(props.url).searchParams.get(
     "has_reset_password",
   );
+  const action = props.data.user.isSubscribed ? "Manage" : "Upgrade";
 
   return (
     <>
@@ -62,12 +62,12 @@ export default function AccountPage(props: PageProps<AccountState>) {
               title="Subscription"
               text={props.data.user.isSubscribed ? "Premium 🦕" : "Free"}
             >
-              {/* <a
-                class="underline"
-                href={`/account/${action.toLowerCase()}`}
-              >
-                {action}
-              </a> */}
+        <a
+              class="underline"
+              href={`/account/${action.toLowerCase()}`}
+            >
+              {action}
+            </a>
               Unavailable in the present
             </Row>
           </ul>

@@ -1,368 +1,456 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-import { Book } from "./db_interfaces.ts";
 
-export const kv = await Deno.openKv();
+const KV_PATH_KEY = "KV_PATH";
+let path = undefined;
+if (
+  (await Deno.permissions.query({ name: "env", variable: KV_PATH_KEY }))
+    .state === "granted"
+) {
+  path = Deno.env.get(KV_PATH_KEY);
+}
+export const kv = await Deno.openKv(path);
 
-interface InitItem {
+// Helpers
+async function getValue<T>(
+  key: Deno.KvKey,
+  options?: { consistency?: Deno.KvConsistencyLevel },
+) {
+  const res = await kv.get<T>(key, options);
+  return res.value;
+}
+
+async function getValues<T>(
+  selector: Deno.KvListSelector,
+  options?: Deno.KvListOptions,
+) {
+  const values = [];
+  const iter = kv.list<T>(selector, options);
+  for await (const { value } of iter) values.push(value);
+  return values;
+}
+
+// Item
+export interface Item {
   userId: string;
   title: string;
   url: string;
+  // The below properties can be automatically generated upon item creation
+  id: string;
+  createdAt: Date;
+  score: number;
 }
 
-export async function createItem(initItem: InitItem) {
-  let res = { ok: false };
-  while (!res.ok) {
-    const id = crypto.randomUUID();
-    const itemKey = ["items", id];
-    const itemsByUserKey = ["items_by_user", initItem.userId, id];
-    const item: Book = {
-      ...initItem,
-      id,
-      finishedUserIds: [],
-      pages: 0,
-      author: "",
-      description: "",
-      creatorId: ""
-    };
-
-    res = await kv.atomic()
-      .check({ key: itemKey, versionstamp: null })
-      .check({ key: itemsByUserKey, versionstamp: null })
-      .set(itemKey, item)
-      .set(itemsByUserKey, item)
-      .commit();
-
-    return item;
-  }
+export function newItemProps(): Pick<Item, "id" | "score" | "createdAt"> {
+  return {
+    id: crypto.randomUUID(),
+    score: 0,
+    createdAt: new Date(),
+  };
 }
 
-export async function getAllItems(options?: Deno.KvListOptions) {
-  const iter = await kv.list<Book>({ prefix: ["items"] }, options);
-  const items = [];
-  for await (const res of iter) items.push(res.value);
-  return items;
+/**
+ * Creates a new item in KV. Throws if the item already exists in one of the indexes.
+ *
+ * @example New item creation
+ * ```ts
+ * import { newItemProps, createItem, incrementAnalyticsMetricPerDay } from "@/utils/db.ts";
+ *
+ * const item: Item = {
+ *   userId: "example-user-id",
+ *   title: "example-title",
+ *   url: "https://example.com"
+ *   ..newItemProps(),
+ * };
+ *
+ * await createItem(item);
+ * await incrementAnalyticsMetricPerDay("items_count", item.createdAt);
+ * ```
+ */
+export async function createItem(item: Item) {
+  const itemsKey = ["items", item.id];
+  const itemsByTimeKey = ["items_by_time", item.createdAt.getTime(), item.id];
+  const itemsByUserKey = ["items_by_user", item.userId, item.id];
+
+  const res = await kv.atomic()
+    .check({ key: itemsKey, versionstamp: null })
+    .check({ key: itemsByTimeKey, versionstamp: null })
+    .check({ key: itemsByUserKey, versionstamp: null })
+    .set(itemsKey, item)
+    .set(itemsByTimeKey, item)
+    .set(itemsByUserKey, item)
+    .commit();
+
+  if (!res.ok) throw new Error(`Failed to create item: ${item}`);
 }
 
-export async function getItemById(id: string) {
-  const res = await kv.get<Book>(["items", id]);
-  return res.value;
+export async function getItem(id: string) {
+  return await getValue<Item>(["items", id]);
 }
 
-export async function getItemByUser(userId: string, itemId: string) {
-  const res = await kv.get<Book>(["items_by_users", userId, itemId]);
-  return res.value;
+export async function getItemsByUser(userId: string) {
+  return await getValues<Item>({ prefix: ["items_by_user", userId] });
 }
 
-// COMMENT STUFF
-interface InitComment {
+export async function getAllItems() {
+  return await getValues<Item>({ prefix: ["items"] });
+}
+
+/**
+ * Gets all items since a given number of milliseconds ago from KV.
+ *
+ * @example Since a week ago
+ * ```ts
+ * import { WEEK } from "std/datetime/constants.ts";
+ * import { getItemsSince } from "@/utils/db.ts";
+ *
+ * const itemsSinceAllTime = await getItemsSince(WEEK);
+ * ```
+ *
+ * @example Since a month ago
+ * ```ts
+ * import { DAY } from "std/datetime/constants.ts";
+ * import { getItemsSince } from "@/utils/db.ts";
+ *
+ * const itemsSinceAllTime = await getItemsSince(DAY * 30);
+ * ```
+ */
+export async function getItemsSince(msAgo: number) {
+  return await getValues<Item>({
+    prefix: ["items_by_time"],
+    start: ["items_by_time", Date.now() - msAgo],
+  });
+}
+
+// Comment
+export interface Comment {
   userId: string;
   itemId: string;
   text: string;
-}
-
-export interface Comment extends InitComment {
+  // The below properties can be automatically generated upon comment creation
   id: string;
   createdAt: Date;
 }
 
-export async function createComment(initComment: InitComment) {
-  let res = { ok: false };
-  while (!res.ok) {
-    const id = crypto.randomUUID();
-    const commentsByUserKey = ["comments_by_users", initComment.userId, id];
-    const commentsByItemKey = ["comments_by_item", initComment.itemId, id];
-    const comment: Comment = { ...initComment, id, createdAt: new Date() };
-
-    res = await kv.atomic()
-      .check({ key: commentsByUserKey, versionstamp: null })
-      .check({ key: commentsByItemKey, versionstamp: null })
-      .set(commentsByUserKey, comment)
-      .set(commentsByItemKey, comment)
-      .commit();
-
-    return comment;
-  }
+export function newCommentProps(): Pick<Comment, "id" | "createdAt"> {
+  return {
+    id: crypto.randomUUID(),
+    createdAt: new Date(),
+  };
 }
 
-export async function getCommentsByItem(
-  itemId: string,
-  options?: Deno.KvListOptions,
-) {
-  const iter = await kv.list<Comment>({
-    prefix: ["comments_by_item", itemId],
-  }, options);
-  const comments = [];
-  for await (const res of iter) comments.push(res.value);
-  return comments;
+export async function createComment(comment: Comment) {
+  const commentsByItemKey = ["comments_by_item", comment.itemId, comment.id];
+
+  const res = await kv.atomic()
+    .check({ key: commentsByItemKey, versionstamp: null })
+    .set(commentsByItemKey, comment)
+    .commit();
+
+  if (!res.ok) throw new Error(`Failed to create comment: ${comment}`);
 }
 
-// VOTE STUFF
-interface InitVote {
-  userId: string;
-  itemId: string;
+export async function getCommentsByItem(itemId: string) {
+  return await getValues<Comment>({ prefix: ["comments_by_item", itemId] });
 }
 
-export async function createVote(initVote: InitVote) {
-  const itemKey = ["items", initVote.itemId];
-  const voteByUserKey = ["votes_by_users", initVote.userId, initVote.itemId];
-
-  let res = { ok: false };
-  while (!res.ok) {
-    const itemRes = await kv.get<Book>(itemKey);
-
-    if (itemRes.value === null) throw new Error("Item does not exist");
-
-    const itemByUserKey = [
-      "items_by_user",
-      itemRes.value.userId,
-      itemRes.value.id,
-    ];
-
-    const itemByUserRes = await kv.get<Book>(itemByUserKey);
-
-    if (itemByUserRes.value === null) {
-      throw new Error("Item by user does not exist");
-    }
-
-    itemByUserRes.value.score++;
-    itemRes.value.score++;
-
-    res = await kv.atomic()
-      .check({ key: voteByUserKey, versionstamp: null })
-      .check(itemByUserRes)
-      .check(itemRes)
-      .set(itemByUserRes.key, itemByUserRes.value)
-      .set(itemRes.key, itemRes.value)
-      .set(voteByUserKey, undefined)
-      .commit();
-  }
+// Vote
+interface Vote {
+  item: Item;
+  user: User;
 }
 
-export async function deleteVote(initVote: InitVote) {
-  const itemKey = ["items", initVote.itemId];
-  const voteByUserKey = ["votes_by_users", initVote.userId, initVote.itemId];
+export async function createVote(vote: Vote) {
+  vote.item.score++;
 
-  let res = { ok: false };
-  while (!res.ok) {
-    const itemRes = await kv.get<Book>(itemKey);
-    const voteByUserRes = await kv.get<Book>(voteByUserKey);
+  const itemKey = ["items", vote.item.id];
+  const itemsByTimeKey = [
+    "items_by_time",
+    vote.item.createdAt.getTime(),
+    vote.item.id,
+  ];
+  const itemsByUserKey = ["items_by_user", vote.item.userId, vote.item.id];
+  const votedItemsByUserKey = [
+    "voted_items_by_user",
+    vote.user.id,
+    vote.item.id,
+  ];
+  const votedUsersByItemKey = [
+    "voted_users_by_item",
+    vote.item.id,
+    vote.user.id,
+  ];
 
-    if (itemRes.value === null) throw new Error("Item does not exist");
+  const [itemRes, itemsByTimeRes, itemsByUserRes] = await kv.getMany([
+    itemKey,
+    itemsByTimeKey,
+    itemsByUserKey,
+  ]);
+  const res = await kv.atomic()
+    .check(itemRes)
+    .check(itemsByTimeRes)
+    .check(itemsByUserRes)
+    .check({ key: votedItemsByUserKey, versionstamp: null })
+    .check({ key: votedUsersByItemKey, versionstamp: null })
+    .set(itemKey, vote.item)
+    .set(itemsByTimeKey, vote.item)
+    .set(itemsByUserKey, vote.item)
+    .set(votedItemsByUserKey, vote.item)
+    .set(votedUsersByItemKey, vote.user)
+    .commit();
 
-    const itemByUserKey = [
-      "items_by_user",
-      itemRes.value.userId,
-      itemRes.value.id,
-    ];
+  if (!res.ok) throw new Error(`Failed to set vote: ${vote}`);
 
-    const itemByUserRes = await kv.get<Book>(itemByUserKey);
+  await incrementAnalyticsMetricPerDay("votes_count", new Date());
 
-    if (itemByUserRes.value === null) {
-      throw new Error("Item by user does not exist");
-    }
-    if (voteByUserRes.value === null) return;
-
-    itemByUserRes.value.score--;
-    itemRes.value.score--;
-
-    res = await kv.atomic()
-      .check(itemByUserRes)
-      .check(itemRes)
-      .check(voteByUserRes)
-      .set(itemByUserRes.key, itemByUserRes.value)
-      .set(itemRes.key, itemRes.value)
-      .delete(voteByUserKey)
-      .commit();
-  }
+  return vote;
 }
 
-export async function getVotedItemIdsByUser(
-  userId: string,
-  options?: Deno.KvListOptions,
-) {
-  const iter = await kv.list<undefined>({
-    prefix: ["votes_by_users", userId],
-  }, options);
-  const voteItemIds = [];
-  for await (const res of iter) voteItemIds.push(res.key.at(-1) as string);
-  return voteItemIds;
+export async function deleteVote(vote: Vote) {
+  vote.item.score--;
+
+  const itemKey = ["items", vote.item.id];
+  const itemsByTimeKey = [
+    "items_by_time",
+    vote.item.createdAt.getTime(),
+    vote.item.id,
+  ];
+  const itemsByUserKey = ["items_by_user", vote.item.userId, vote.item.id];
+  const votedItemsByUserKey = [
+    "voted_items_by_user",
+    vote.user.id,
+    vote.item.id,
+  ];
+  const votedUsersByItemKey = [
+    "voted_users_by_item",
+    vote.item.id,
+    vote.user.id,
+  ];
+
+  const [itemRes, itemsByTimeRes, itemsByUserRes] = await kv.getMany([
+    itemKey,
+    itemsByTimeKey,
+    itemsByUserKey,
+  ]);
+  const res = await kv.atomic()
+    .check(itemRes)
+    .check(itemsByTimeRes)
+    .check(itemsByUserRes)
+    .set(itemKey, vote.item)
+    .set(itemsByTimeKey, vote.item)
+    .set(itemsByUserKey, vote.item)
+    .delete(votedItemsByUserKey)
+    .delete(votedUsersByItemKey)
+    .commit();
+
+  if (!res.ok) throw new Error(`Failed to delete vote: ${vote}`);
 }
 
-// USER STUFF
-export interface InitUser {
+export async function getVotedItemsByUser(userId: string) {
+  return await getValues<Item>({ prefix: ["voted_items_by_user", userId] });
+}
+
+// User
+export interface User {
   id: string;
   login: string;
   avatarUrl: string;
-  // stripeCustomerId: string;
   sessionId: string;
-}
-
-export interface User extends InitUser {
+  stripeCustomerId?: string;
+  // The below properties can be automatically generated upon comment creation
   isSubscribed: boolean;
-  joinDate: Date;
 }
 
-export async function createUser(user: InitUser) {
+export function newUserProps(): Pick<User, "isSubscribed"> {
+  return {
+    isSubscribed: false,
+  };
+}
+
+/**
+ * Creates a new user in KV. Throws if the user already exists.
+ *
+ * @example
+ * ```ts
+ * import { createUser, newUser } from "@/utils/db.ts";
+ *
+ * const user = {
+ *   id: "id",
+ *   login: "login",
+ *   avatarUrl: "https://example.com/avatar-url",
+ *   sessionId: "sessionId",
+ *   ...newUserProps(),
+ * };
+ * await createUser(user);
+ * await incrementAnalyticsMetricPerDay("users_count", new Date());
+ * ```
+ */
+export async function createUser(user: User) {
   const usersKey = ["users", user.id];
   const usersByLoginKey = ["users_by_login", user.login];
   const usersBySessionKey = ["users_by_session", user.sessionId];
-  // const usersByStripeCustomerKey = [
-  //   "users_by_stripe_customer",
-  //   user.stripeCustomerId,
-  // ];
-  const date = new Date();
 
-  user = { ...user, isSubscribed: false, joinDate: date } as User;
+  const atomicOp = kv.atomic();
 
-  const res = await kv.atomic()
+  if (user.stripeCustomerId !== undefined) {
+    const usersByStripeCustomerKey = [
+      "users_by_stripe_customer",
+      user.stripeCustomerId,
+    ];
+    atomicOp
+      .check({ key: usersByStripeCustomerKey, versionstamp: null })
+      .set(usersByStripeCustomerKey, user);
+  }
+
+  const res = await atomicOp
     .check({ key: usersKey, versionstamp: null })
     .check({ key: usersByLoginKey, versionstamp: null })
     .check({ key: usersBySessionKey, versionstamp: null })
-    // .check({ key: usersByStripeCustomerKey, versionstamp: null })
     .set(usersKey, user)
     .set(usersByLoginKey, user)
     .set(usersBySessionKey, user)
-    // .set(usersByStripeCustomerKey, user)
     .commit();
 
-  if (!res.ok) {
-    throw res;
-  }
-
-  return user;
+  if (!res.ok) throw new Error(`Failed to create user: ${user}`);
 }
 
-export async function getUserById(id: string) {
-  const res = await kv.get<User>(["users", id]);
-  return res.value;
-}
-
-export async function getUserByLogin(login: string) {
-  const res = await kv.get<User>(["users_by_login", login]);
-  return res.value;
-}
-
-export async function getUserBySessionId(sessionId: string) {
-  let res = await kv.get<User>(["users_by_session", sessionId], {
-    consistency: "eventual",
-  });
-  if (!res.value) {
-    res = await kv.get<User>(["users_by_session", sessionId]);
-  }
-  return res.value;
-}
-
-// export async function getUserByStripeCustomerId(stripeCustomerId: string) {
-//   const res = await kv.get<User>([
-//     "users_by_stripe_customer",
-//     stripeCustomerId,
-//   ]);
-//   return res.value;
-// }
-
-function isEntry<T>(entry: Deno.KvEntryMaybe<T>) {
-  return entry.versionstamp !== null;
-}
-
-function assertIsEntry<T>(
-  entry: Deno.KvEntryMaybe<T>,
-): asserts entry is Deno.KvEntry<T> {
-  if (!isEntry(entry)) {
-    throw new AssertionError(`${entry.key} does not exist`);
-  }
-}
-
-/** This assumes that the previous session has been cleared */
-export async function setUserSession(
-  user: Omit<User, "isSubscribed">,
-  sessionId: string,
-) {
-  console.log('setting new user session');
-  const usersKey = ["users", user.id];
-  const usersByLoginKey = ["users_by_login", user.login];
-  const usersBySessionKey = ["users_by_session", sessionId];
-  // const usersByStripeCustomerKey = [
-  //   "users_by_stripe_customer",
-  //   user.stripeCustomerId,
-  // ];
-
-  const [
-    userRes,
-    userByLoginRes,
-    // userByStripeCustomerRes,
-  ] = await kv.getMany<User[]>([
-    usersKey,
-    usersByLoginKey,
-    // usersByStripeCustomerKey,
-  ]);
-
-  [
-    userRes,
-    userByLoginRes,
-    // userByStripeCustomerRes,
-  ].forEach((res) => assertIsEntry<User>(res));
-
-  user = { ...user, sessionId } as User;
-
-  const res = await kv.atomic()
-    .check(userRes)
-    .check(userByLoginRes)
-    .check({ key: usersBySessionKey, versionstamp: null })
-    // .check(userByStripeCustomerRes)
-    .set(usersKey, user)
-    .set(usersByLoginKey, user)
-    .set(usersBySessionKey, user)
-    // .set(usersByStripeCustomerKey, user)
-    .commit();
-
-  if (!res.ok) {
-    throw res;
-  }
-}
-
-export async function deleteUser(user: User) {
+export async function updateUser(user: User) {
   const usersKey = ["users", user.id];
   const usersByLoginKey = ["users_by_login", user.login];
   const usersBySessionKey = ["users_by_session", user.sessionId];
-  // const usersByStripeCustomerKey = [
-  //   "users_by_stripe_customer",
-  //   user.stripeCustomerId,
-  // ];
 
-  const [
-    userRes,
-    userByLoginRes,
-    userBySessionRes,
-    userByStripeCustomerRes,
-  ] = await kv.getMany<User[]>([
-    usersKey,
-    usersByLoginKey,
-    usersBySessionKey,
-    // usersByStripeCustomerKey,
-  ]);
+  const atomicOp = kv.atomic();
 
-  const res = await kv.atomic()
-    .check(userRes)
-    .check(userByLoginRes)
-    .check(userBySessionRes)
-    .check(userByStripeCustomerRes)
-    .delete(usersKey)
-    .delete(usersByLoginKey)
-    .delete(usersBySessionKey)
-    // .delete(usersByStripeCustomerKey)
+  if (user.stripeCustomerId !== undefined) {
+    const usersByStripeCustomerKey = [
+      "users_by_stripe_customer",
+      user.stripeCustomerId,
+    ];
+    atomicOp
+      .set(usersByStripeCustomerKey, user);
+  }
+
+  const res = await atomicOp
+    .set(usersKey, user)
+    .set(usersByLoginKey, user)
+    .set(usersBySessionKey, user)
     .commit();
 
-  if (!res.ok) {
-    throw res;
-  }
+  if (!res.ok) throw new Error(`Failed to update user: ${user}`);
 }
 
 export async function deleteUserBySession(sessionId: string) {
   await kv.delete(["users_by_session", sessionId]);
 }
 
-export async function getUsersByIds(ids: string[]) {
+export async function getUser(id: string) {
+  return await getValue<User>(["users", id]);
+}
+
+export async function getUserByLogin(login: string) {
+  return await getValue<User>(["users_by_login", login]);
+}
+
+export async function getUserBySession(sessionId: string) {
+  const usersBySessionKey = ["users_by_session", sessionId];
+  return await getValue<User>(usersBySessionKey, {
+    consistency: "eventual",
+  }) ?? await getValue<User>(usersBySessionKey);
+}
+
+export async function getUserByStripeCustomer(stripeCustomerId: string) {
+  return await getValue<User>([
+    "users_by_stripe_customer",
+    stripeCustomerId,
+  ]);
+}
+
+export async function getManyUsers(ids: string[]) {
   const keys = ids.map((id) => ["users", id]);
   const res = await kv.getMany<User[]>(keys);
   return res.map((entry) => entry.value!);
+}
+
+export async function getAreVotedBySessionId(
+  items: Item[],
+  sessionId?: string,
+) {
+  if (!sessionId) return [];
+  const sessionUser = await getUserBySession(sessionId);
+  if (!sessionUser) return [];
+  const votedItems = await getVotedItemsByUser(sessionUser.id);
+  const votedItemIds = votedItems.map((item) => item.id);
+  return items.map((item) => votedItemIds.includes(item.id));
+}
+
+export function compareScore(a: Item, b: Item) {
+  return Number(b.score) - Number(a.score);
+}
+
+// Analytics
+export async function incrementAnalyticsMetricPerDay(
+  metric: string,
+  date: Date,
+) {
+  // convert to ISO format that is zero UTC offset
+  const metricKey = [
+    metric,
+    `${date.toISOString().split("T")[0]}`,
+  ];
+  await kv.atomic()
+    .sum(metricKey, 1n)
+    .commit();
+}
+
+export async function incrementVisitsPerDay(date: Date) {
+  // convert to ISO format that is zero UTC offset
+  const visitsKey = [
+    "visits",
+    `${date.toISOString().split("T")[0]}`,
+  ];
+  await kv.atomic()
+    .sum(visitsKey, 1n)
+    .commit();
+}
+
+export async function getVisitsPerDay(date: Date) {
+  return await getValue<bigint>([
+    "visits",
+    `${date.toISOString().split("T")[0]}`,
+  ]);
+}
+
+export async function getAnalyticsMetricsPerDay(
+  metric: string,
+  options?: Deno.KvListOptions,
+) {
+  const iter = await kv.list<bigint>({ prefix: [metric] }, options);
+  const metricsValue = [];
+  const dates = [];
+  for await (const res of iter) {
+    metricsValue.push(Number(res.value));
+    dates.push(String(res.key[1]));
+  }
+  return { metricsValue, dates };
+}
+
+export async function getManyAnalyticsMetricsPerDay(
+  metrics: string[],
+  options?: Deno.KvListOptions,
+) {
+  const analyticsByDay = await Promise.all(
+    metrics.map((metric) => getAnalyticsMetricsPerDay(metric, options)),
+  );
+
+  return analyticsByDay;
+}
+
+export async function getAllVisitsPerDay(options?: Deno.KvListOptions) {
+  const iter = await kv.list<bigint>({ prefix: ["visits"] }, options);
+  const visits = [];
+  const dates = [];
+  for await (const res of iter) {
+    visits.push(Number(res.value));
+    dates.push(String(res.key[1]));
+  }
+  return { visits, dates };
 }
