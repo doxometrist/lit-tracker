@@ -1,5 +1,5 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-import type { Stripe } from "stripe";
+import type Stripe from "stripe";
 import { SITE_DESCRIPTION } from "@/utils/constants.ts";
 import "std/dotenv/load.ts";
 import { stripe } from "@/utils/payments.ts";
@@ -10,9 +10,8 @@ async function createPremiumTierProduct(stripe: Stripe) {
    * However, these can be adjusted to fit your use case.
    */
   return await stripe.products.create({
-    name: "Premium tier",
-    description:
-      "Get the official Deno Hunt Premium User badge next to your display name 🦕",
+    name: "Premium",
+    description: "Unlock premium features like flair and more.",
     default_price_data: {
       unit_amount: 500,
       currency: "usd",
@@ -55,6 +54,8 @@ async function createDefaultPortalConfiguration(
 }
 
 async function main() {
+  if (stripe === undefined) throw new Error("Stripe is disabled.");
+
   const product = await createPremiumTierProduct(stripe);
 
   if (typeof product.default_price !== "string") return;

@@ -2,8 +2,6 @@
 import { Handlers } from "$fresh/server.ts";
 import { PageProps } from "$fresh/server.ts";
 import { getPosts, Post } from "@/utils/posts.ts";
-import Head from "@/components/Head.tsx";
-import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import type { State } from "@/routes/_middleware.ts";
 
 interface BlogPageData extends State {
@@ -13,6 +11,9 @@ interface BlogPageData extends State {
 export const handler: Handlers<BlogPageData, State> = {
   async GET(_req, ctx) {
     const posts = await getPosts();
+
+    ctx.state.title = "Blog";
+
     return ctx.render({ ...ctx.state, posts });
   },
 };
@@ -21,9 +22,9 @@ function PostCard(props: Post) {
   return (
     <div class="py-8 border(t gray-200)">
       <a class="sm:col-span-2" href={`/blog/${props.slug}`}>
-        <h3 class="text(3xl gray-900) font-bold">
+        <h2 class="text-3xl font-bold">
           {props.title}
-        </h3>
+        </h2>
         {props.publishedAt.toString() !== "Invalid Date" && (
           <time class="text-gray-500">
             {new Date(props.publishedAt).toLocaleDateString("en-US", {
@@ -31,7 +32,7 @@ function PostCard(props: Post) {
             })}
           </time>
         )}
-        <div class="mt-4 text-gray-900">
+        <div class="mt-4">
           {props.summary}
         </div>
       </a>

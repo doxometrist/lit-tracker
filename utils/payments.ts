@@ -1,24 +1,44 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import Stripe from "stripe";
 
-/** This constant allows preview deployments to successfully start up, making everything outside of the dashboard viewable. */
-const DUMMY_SECRET_KEY =
-  "sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+const STRIPE_SECRET_KEY = Deno.env.get("STRIPE_SECRET_KEY");
 
-if (!Deno.env.get("STRIPE_SECRET_KEY")) {
-  console.warn(
-    "`STRIPE_SECRET_KEY` environment variable is not defined. Dummy Stripe API key is currently in use. Stripe functionality is now limited.",
+export const stripe = STRIPE_SECRET_KEY !== undefined
+  ? new Stripe(
+    STRIPE_SECRET_KEY,
+    {
+      apiVersion: "2022-11-15",
+      // Use the Fetch API instead of Node's HTTP client.
+      httpClient: Stripe.createFetchHttpClient(),
+    },
+  )
+  : undefined;
+
+if (stripe) {
+  console.log(
+    "`STRIPE_SECRET_KEY` environment variable is defined. Stripe is enabled.",
+  );
+} else {
+  console.log(
+    "`STRIPE_SECRET_KEY` environment variable is not defined. Stripe is disabled.",
   );
 }
 
-export const stripe = new Stripe(
-  Deno.env.get("STRIPE_SECRET_KEY") ?? DUMMY_SECRET_KEY,
-  {
-    apiVersion: "2022-11-15",
-    // Use the Fetch API instead of Node's HTTP client.
-    httpClient: Stripe.createFetchHttpClient(),
-  },
-);
+/**
+ * We assume that the product has a default price.
+ * The official types allow for the default_price to be `undefined | null | string`
+ */
+export type StripProductWithPrice = Stripe.Product & {
+  default_price: Stripe.Price;
+};
+
+export function isProductWithPrice(
+  product: Stripe.Product,
+): product is StripProductWithPrice {
+  return product.default_price !== undefined &&
+    product.default_price !== null &&
+    typeof product.default_price !== "string";
+}
 
 export function formatAmountForDisplay(
   amount: number,
@@ -30,11 +50,8 @@ export function formatAmountForDisplay(
       style: "currency",
       currency,
       currencyDisplay: "symbol",
+      maximumFractionDigits: 0,
     },
   );
-  const parts = numberFormat.formatToParts(amount);
-  const amountToFormat = parts.some((part) => part.type === "decimal")
-    ? amount / 100
-    : amount;
-  return numberFormat.format(amountToFormat);
+  return numberFormat.format(amount);
 }

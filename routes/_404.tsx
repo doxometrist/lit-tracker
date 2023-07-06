@@ -1,10 +1,9 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-import Head from "@/components/Head.tsx";
 import Logo from "@/components/Logo.tsx";
-import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
-import type { UnknownPageProps } from "$fresh/server.ts";
+import { Head } from "https://deno.land/x/fresh@1.1.5/runtime.ts";
+import { SITE_WIDTH_STYLES } from "../utils/constants.ts";
 
-export default function NotFoundPage(props: UnknownPageProps) {
+export default function NotFoundPage() {
   return (
     <>
       <Head title="Page not found" href={props.url.href} />

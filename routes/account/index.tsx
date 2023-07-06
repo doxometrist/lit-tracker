@@ -1,12 +1,14 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers, PageProps } from "$fresh/server.ts";
-import Head from "@/components/Head.tsx";
 import type { AccountState } from "./_middleware.ts";
 import { BUTTON_STYLES } from "@/utils/constants.ts";
 import { ComponentChild } from "preact";
+import { stripe } from "@/utils/payments.ts";
 
 export const handler: Handlers<AccountState, AccountState> = {
   GET(_request, ctx) {
+    ctx.state.title = "Account";
+
     return ctx.render(ctx.state);
   },
 };
@@ -41,6 +43,24 @@ export default function AccountPage(props: PageProps<AccountState>) {
   const action = props.data.user.isSubscribed ? "Manage" : "Upgrade";
 
   return (
+    <main class="max-w-lg m-auto w-full flex-1 p-4 flex flex-col justify-center">
+      <img
+        src={props.data.user?.avatarUrl}
+        alt="User Avatar"
+        crossOrigin="anonymous"
+        class="max-w-[50%] self-center rounded-full aspect-square mb-4 md:mb-6"
+      />
+      <ul>
+        <Row
+          title="Username"
+          text={props.data.user.login}
+        />
+        <Row
+          title="Subscription"
+          text={props.data.user.isSubscribed ? "Premium 🦕" : "Free"}
+        >
+          {stripe && (
+            <a
     <>
       <Head title="Account" href={props.url.href} />
       <Layout session={props.data.sessionId}>

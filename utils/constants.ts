@@ -24,3 +24,9 @@ export const MAX_LIST_LENGTH = 10;
 
 export const DEFAULT_IMG = "https://islandpress.org/sites/default/files/default_book_cover_2015.jpg";
 export const DEFAULT_AUTHOR = 'Anon';
+  "px-4 py-2 bg-primary text-white text-lg rounded-lg border-1 border-primary transition duration-300 disabled:(opacity-50 cursor-not-allowed) hover:(bg-transparent text-primary)";
+export const SITE_BAR_STYLES = "flex justify-between p-4 gap-4";
+export const NAV_STYLES =
+  "flex flex-wrap justify-start gap-x-8 gap-y-4 items-center justify-between h-full";
+export const LINK_STYLES =
+  "text-gray-500 transition duration-300 hover:text-black dark:hover:text-white";

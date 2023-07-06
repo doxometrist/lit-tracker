@@ -1,18 +1,21 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import Head from "@/components/Head.tsx";
-import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
+import { INPUT_STYLES, SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import {
   compareScore,
   getAllItems,
   getAreVotedBySessionId,
   getItemsSince,
   getManyUsers,
-  incrementAnalyticsMetricPerDay,
-  type Item
+  type Item,
 } from "@/utils/db.ts";
-import { PAGE_LENGTH, calcLastPage, calcPageNum } from "@/utils/pagination.ts";
+import { calcLastPage, calcPageNum, PAGE_LENGTH } from "@/utils/pagination.ts";
 import { DAY, WEEK } from "std/datetime/constants.ts";
+import Features from "../components/Features.tsx";
+import Hero from "../components/LandingHero.tsx";
+import Layout from "../components/Layout.tsx";
+import Carousel from "../islands/Carousel.tsx";
 import { Book } from "../utils/db_interfaces.ts";
 import type { State } from "./_middleware.ts";
 
@@ -26,8 +29,6 @@ function calcTimeAgoFilter(url: URL) {
 
 export const handler: Handlers<HomePageData, State> = {
   async GET(req, ctx) {
-    await incrementAnalyticsMetricPerDay("visits_count", new Date());
-
     const url = new URL(req.url);
     const pageNum = calcPageNum(url);
     const timeAgo = calcTimeAgoFilter(url);
@@ -58,11 +59,11 @@ export const handler: Handlers<HomePageData, State> = {
 
 function TimeSelector() {
   return (
-    <div class="flex justify-center">
+    <div class="flex justify-center my-4 gap-2">
       {/* These links do not preserve current URL queries. E.g. if ?page=2, that'll be removed once one of these links is clicked */}
-      <a class="hover:underline mr-4" href="/?time-ago=week">Last Week</a>
-      <a class="hover:underline mr-4" href="/?time-ago=month">Last Month</a>
-      <a class="hover:underline mr-4" href="/?time-ago=all">All time</a>
+      <a class={INPUT_STYLES} href="/?time-ago=week">Last Week</a>
+      <a class={INPUT_STYLES} href="/?time-ago=month">Last Month</a>
+      <a class={INPUT_STYLES} href="/?time-ago=all">All time</a>
     </div>
   );
 }

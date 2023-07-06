@@ -1,18 +1,14 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import type { State } from "@/routes/_middleware.ts";
-import Head from "@/components/Head.tsx";
 import ItemSummary from "@/components/ItemSummary.tsx";
 import PageSelector from "@/components/PageSelector.tsx";
-import {
-  BUTTON_STYLES,
-  INPUT_STYLES,
-  SITE_WIDTH_STYLES,
-} from "@/utils/constants.ts";
+import { BUTTON_STYLES, INPUT_STYLES } from "@/utils/constants.ts";
 import { calcLastPage, calcPageNum, PAGE_LENGTH } from "@/utils/pagination.ts";
 import {
   type Comment,
   createComment,
+  createNotification,
   getAreVotedBySessionId,
   getCommentsByItem,
   getItem,
@@ -21,11 +17,12 @@ import {
   getUserBySession,
   type Item,
   newCommentProps,
+  newNotificationProps,
+  Notification,
   type User,
 } from "@/utils/db.ts";
-import { redirect } from "@/utils/redirect.ts";
 import UserPostedAt from "@/components/UserPostedAt.tsx";
-import { redirectToLogin } from "@/utils/redirect.ts";
+import { redirect, redirectToLogin } from "@/utils/redirect.ts";
 
 interface ItemPageData extends State {
   user: User;
@@ -65,6 +62,8 @@ export const handler: Handlers<ItemPageData, State> = {
 
     const lastPage = calcLastPage(allComments.length, PAGE_LENGTH);
 
+    ctx.state.title = item.title;
+
     return ctx.render({
       ...ctx.state,
       item,
@@ -87,17 +86,34 @@ export const handler: Handlers<ItemPageData, State> = {
       return new Response(null, { status: 400 });
     }
 
+    const itemId = ctx.params.id;
     const user = await getUserBySession(ctx.state.sessionId);
+    const item = await getItem(itemId);
+
+    if (item === null || user === null) {
+      return new Response(null, { status: 404 });
+    }
 
     const comment: Comment = {
-      userId: user!.id,
-      itemId: ctx.params.id,
+      userId: user.id,
+      itemId: itemId,
       text,
       ...newCommentProps(),
     };
     await createComment(comment);
 
-    return redirect(`/item/${ctx.params.id}`);
+    if (item.userId !== user.id) {
+      const notification: Notification = {
+        userId: item.userId,
+        type: "comment",
+        text: `${user.login} commented on your post: ${item.title}`,
+        originUrl: `/item/${itemId}`,
+        ...newNotificationProps(),
+      };
+      await createNotification(notification);
+    }
+
+    return redirect(`/item/${itemId}`);
   },
 };
 
@@ -105,7 +121,7 @@ function CommentInput() {
   return (
     <form method="post">
       <textarea
-        class={INPUT_STYLES}
+        class={`${INPUT_STYLES} w-full`}
         type="text"
         name="text"
         required
@@ -131,30 +147,27 @@ function CommentSummary(
 
 export default function ItemPage(props: PageProps<ItemPageData>) {
   return (
-    <>
-      <Head title={props.data.item.title} href={props.url.href} />
-      <div class={`${SITE_WIDTH_STYLES} flex-1 px-4 space-y-8`}>
-        <ItemSummary
-          item={props.data.item}
-          isVoted={props.data.isVoted}
-          user={props.data.user}
-        />
-        <CommentInput />
-        <div>
-          {props.data.comments.map((comment, index) => (
-            <CommentSummary
-              user={props.data.commentsUsers[index]}
-              comment={comment}
-            />
-          ))}
-        </div>
-        {props.data.lastPage > 1 && (
-          <PageSelector
-            currentPage={calcPageNum(props.url)}
-            lastPage={props.data.lastPage}
+    <main class="flex-1 p-4 space-y-8">
+      <ItemSummary
+        item={props.data.item}
+        isVoted={props.data.isVoted}
+        user={props.data.user}
+      />
+      <CommentInput />
+      <div>
+        {props.data.comments.map((comment, index) => (
+          <CommentSummary
+            user={props.data.commentsUsers[index]}
+            comment={comment}
           />
-        )}
+        ))}
       </div>
-    </>
+      {props.data.lastPage > 1 && (
+        <PageSelector
+          currentPage={calcPageNum(props.url)}
+          lastPage={props.data.lastPage}
+        />
+      )}
+    </main>
   );
 }

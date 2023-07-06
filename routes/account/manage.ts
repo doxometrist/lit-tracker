@@ -7,7 +7,10 @@ import { redirect } from "@/utils/redirect.ts";
 // deno-lint-ignore no-explicit-any
 export const handler: Handlers<any, AccountState> = {
   async GET(req, ctx) {
-    // todo here create new session in the paymnet process, return url
+    // if (stripe === undefined || ctx.state.user.stripeCustomerId === undefined) {
+    //   return ctx.renderNotFound();
+    // }
+
     // const { url } = await stripe.billingPortal.sessions.create({
     //   customer: ctx.state.user.stripeCustomerId,
     //   return_url: new URL(req.url).origin + "/account",
