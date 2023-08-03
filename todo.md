@@ -23,6 +23,9 @@
       simplest?! as parsing the body doesn't seem too easy
 - [ ] make edit work for the backup branch
 
+do a course and module system, tracking must be a thing!
+as a precursor to the university thing
+
 # August plan
 
 ### the wait step
