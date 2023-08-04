@@ -4,7 +4,7 @@
 
 - [ ] tag system
 - [ ] upload from goodreads
-- [ ] search feature
+- [ ] search feature - only through tags
 - [ ] featured lists on the landing page
 - [ ] a field for checking many books on a list and removing them - would need
       an island with static internal component and a reference to a post request

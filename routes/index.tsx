@@ -1,5 +1,4 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-import { CSS, render } from "https://deno.land/x/gfm@0.2.3/mod.ts";
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import Features from "@/components/Features.tsx";
 import Head from "@/components/Head.tsx";
@@ -8,14 +7,14 @@ import Layout from "@/components/Layout.tsx";
 import { SITE_WIDTH_STYLES } from "@/utils/constants.ts";
 import { getAllItems } from "@/utils/db.ts";
 import { Book } from "@/utils/db_interfaces.ts";
-import type { State } from "./_middleware.ts";
 import Carousel from "../islands/Carousel.tsx";
+import type { State } from "./_middleware.ts";
 
 interface HomePageData extends State {
   items: Book[];
 }
 
-export function comparePages(a: Book, b: Book) {
+function comparePages(a: Book, b: Book) {
   const x = Number(a.pages);
   const y = Number(b.pages);
   if (x > y) {
@@ -41,7 +40,6 @@ export const handler: Handlers<HomePageData, State> = {
     return ctx.render({ ...ctx.state, items });
   },
 };
-
 
 export default function HomePage(props: PageProps<HomePageData>) {
   return (
