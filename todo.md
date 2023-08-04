@@ -1,38 +1,66 @@
 # July plan - tbf most of the 'advanced features' are not disrupted by the changes
 
-### QoL features
+- [ ] tag system - [ ] add locations in the kv store - by tag and by book - [ ]
+      search feature - only through tags
 
-- [ ] tag system
-- [ ] upload from goodreads
-- [ ] search feature - only through tags
-- [ ] featured lists on the landing page
+- [ ] track with Open Library API
+
+### API stuff
+
+Open Library API: This is another great resource for book data.
+https://github.com/internetarchive/openlibrary
+
+issues with similarity https://openlibrary.org/help/faq/reading-log
+
+quite helpful https://openlibrary.org/help/faq/reading-log#lists
+
+ok, description needs to be always about why in this list
+
+and list tranking and time as main features
+
+full docs https://openlibrary.org/swagger/docs
+
+search API https://openlibrary.org/dev/docs/api/search
+
+- [ ] featured lists on the landing page - algorithmically? would need to track?
+      just hard code for now?
+- [ ] a global featured field, or just by ID
 - [ ] a field for checking many books on a list and removing them - would need
       an island with static internal component and a reference to a post request
 - [ ] add row reset button for uploads
 
 - [ ] reading time prediction - chat described, with tensorflow
-- [ ] kv: 'reads/userid/bookid/profile' where % read and status of it
-- [ ] tags 'tagname/bookIds'
+      https://chat.openai.com/share/7e01b909-e36d-4f09-a417-51329516e1e6
+  - [ ] kv: 'reads/userid/bookid/profile' where % read and status of it
+  - [ ] tags 'tagname/bookIds'
+  https://www.metaculus.com/questions/5121/date-of-artificial-general-intelligence/
+  
+could also get page numbers
+https://openlibrary.org/works/OL45804W.json
+https://developers.google.com/books/docs/v1/reference/volumes
 
-#### refactorings
+thumbnail and all is there
+
+https://openlibrary.org/works/OL45804W/Fantastic_Mr_Fox
+  https://opendata.stackexchange.com/questions/1904/is-there-a-database-that-provides-lengths-of-books
 
 - [ ] refactor new book index form and the [id] variant form
 - [ ] add a modal confirmation for every delete action
 - [ ] add middleware for all 401 actions
 - [ ] edit books and lists - maybe simply through a POST request will be the
       simplest?! as parsing the body doesn't seem too easy
-- [ ] make edit work for the backup branch
+- [ ] do a course and module system, tracking must be a thing! as a precursor to the university thing
 
-do a course and module system, tracking must be a thing!
-as a precursor to the university thing
+also covers are available
+https://openlibrary.org/dev/docs/api/covers
 
-# August plan
 
-### the wait step
 
+
+# the wait step
 - [ ] wait for release v1.0
+- [ ] reset this repo to avoid the synching effort.
 - [ ] then add onto the working and more stable my stuff
-- [ ] possibly work on the json portability as well
 - [ ] add environment variables in Deno deploy
 - [ ] deploy
 
@@ -51,36 +79,3 @@ as a precursor to the university thing
 
 - [ ] premium tier with longer reading lists
 - [ ] ads maybe?
-
-# Old
-
-### weird and rejected
-
-- [ ] throttling does not seem to quite work
-- [ ] transfer ownership functionality?
-
-### when stuck - old
-
-- [ ] merge unrelated histories based on the other remote
-- [ ] reconcile name changes
-- [ ] extract stuff that changes from mine that changes - layout items for
-      instance should be imported
-
-### full edit window feature
-
-- [x] edit lists ah it's about the islands that accept a callback! maybe all as
-      1 island? wait none of them (it was a bout a wrong import)
-- [x] one page with structured table, can preseed with pdf OR with csv
-- [x] make the POST requests use JSON not query parameters. remember about
-      params for action
-- [x] must add the JSON api also for creation
-
-### quick fixes
-
-- [x] ensure pages prepopulation works
-- [x] delete list - button with a dialog
-- [x] bookcard display author
-- [x] display of list - photo should be to the side wrt description
-- [x] display book cards as a grid
-- [x] add advanced Typescript features (Omit type) - there is already extends
-- [x] add liked projects page?

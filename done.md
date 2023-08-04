@@ -1,5 +1,49 @@
 
 
+# Old
+
+### weird and rejected
+
+- [ ] throttling does not seem to quite work
+- [ ] transfer ownership functionality?
+### when stuck - old
+- [ ] merge unrelated histories based on the other remote
+- [ ] reconcile name changes
+- [ ] extract stuff that changes from mine that changes - layout items for
+      instance should be imported
+
+### full edit window feature
+
+- [x] edit lists ah it's about the islands that accept a callback! maybe all as
+      1 island? wait none of them (it was a bout a wrong import)
+- [x] one page with structured table, can preseed with pdf OR with csv
+- [x] make the POST requests use JSON not query parameters. remember about
+      params for action
+- [x] must add the JSON api also for creation
+
+### quick fixes
+
+- [x] ensure pages prepopulation works
+- [x] delete list - button with a dialog
+- [x] bookcard display author
+- [x] display of list - photo should be to the side wrt description
+- [x] display book cards as a grid
+- [x] add advanced Typescript features (Omit type) - there is already extends
+- [x] add liked projects page?
+
+## rejected book APIs
+Goodreads API: It used to be an excellent source of book information; however,
+as of December 2020, it is no longer available for public use.
+
+Google Books API: This allows you to search their extensive book database.
+probably not open source
+ISBNdb API: This database has more than 24 million unique ISBNs with a vast
+array of metadata.
+
+really bad formatting and mainly for php
+https://isbndb.com/apidocs/v2
+
+
 ## routes
 
 browse lists
