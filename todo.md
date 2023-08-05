@@ -87,3 +87,15 @@ also covers are available https://openlibrary.org/dev/docs/api/covers
 
 - [ ] premium tier with longer reading lists
 - [ ] ads maybe?j
+
+### Books api links
+https://openlibrary.org/developers/api
+https://openlibrary.org/dev/docs/api/books
+https://openlibrary.org/books/OL7353617M/Fantastic_Mr._Fox
+https://openlibrary.org/books/OL7353617M.json
+https://openlibrary.org/works/OL45804W/Fantastic_Mr_Fox
+https://openlibrary.org/works/OL45804W.json
+https://developers.google.com/books/docs/v1/reference/volumes
+https://opendata.stackexchange.com/questions/1904/is-there-a-database-that-provides-lengths-of-books
+https://openlibrary.org/works/OL45804W.json
+
