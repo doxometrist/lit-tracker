@@ -3,6 +3,10 @@
 - [ ] tag system - [ ] add locations in the kv store - by tag and by book - [ ]
       search feature - only through tags
 
+      https://openlibrary.org/dev/docs/api/lists#create-list
+      might backup lists here, but as optional
+      they should be primarily as a nomoat object
+
 ### API stuff
 
 Open Library API: This is another great resource for book data.
@@ -19,6 +23,11 @@ and list tranking and time as main features
 full docs https://openlibrary.org/swagger/docs
 
 search API https://openlibrary.org/dev/docs/api/search
+
+could take average of editions tbh
+- primary is search by isbn - search api
+- manua isbn entry
+- average length
 
 - [ ] featured lists on the landing page - algorithmically? would need to track?
       just hard code for now? - a global featured field, or just by ID
