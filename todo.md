@@ -1,4 +1,9 @@
 
+need functions for reading length prediction 
+best if in a tight loop, so maybe rebase the project now?
+theoretically there should be only small fixes from that. but should that be continuous?
+I am just adding routes and unless these collide, it should be fine
+
 - [ ] display covers hot loaded on runtime https://openlibrary.org/dev/docs/api/covers
 - [ ] reading time prediction - chat described, with tensorflow
       https://chat.openai.com/share/7e01b909-e36d-4f09-a417-51329516e1e6
