@@ -45,7 +45,8 @@ there must be one page for working on and adding stuff, it must be an island nes
 - [ ] add a roadmap page - chat confirmed that comes after mvp
 
 
-## roadmap
+## roadmap - need emojis for each of these
+- [ ] ensuring mobile friendly css
 - [ ] download full csv data
 - [ ] tag system - [ ] add locations in the kv store - by tag and by book - [ ]
       search feature - only through tags
@@ -55,10 +56,10 @@ there must be one page for working on and adding stuff, it must be an island nes
       https://openlibrary.org/dev/docs/api/lists#create-list
       might backup lists here, but as optional
       they should be primarily as a nomoat object
-- [ ] do a course and module system, tracking must be a thing! as a precursor to
-      the university thing
 - [ ] featured lists on the landing page - algorithmically? would need to track?
       just hard code for now? - a global featured field, or just by ID
+- [ ] do a course and module system, tracking must be a thing! as a precursor to
+      the university thing
 ### Capturing value
 
 - [ ] premium tier with longer reading lists
