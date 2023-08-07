@@ -10,14 +10,8 @@ type BookDisplayed= {
 record:BookRecord,
 // todo add here the properties from fetching, such as description
 }
+// reading list can be kept as it is
 
-type ReadingList={
-  bookRecords:BookRecord[],
-  authorId:string,
-  description:string,
-
-
-}
 
 export async function getWork(id:string):WorkResponse{
 
