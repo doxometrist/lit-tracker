@@ -2,6 +2,11 @@
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import { calcLastPage, calcPageNum, PAGE_LENGTH } from "@/utils/pagination.ts";
 import type { State } from "./_middleware.ts";
+import Hero from "@/components/Hero.tsx";
+import Features from "@/components/Features.tsx";
+
+import Carousel from "../islands/Carousel.tsx";
+
 import ItemSummary from "@/components/ItemSummary.tsx";
 import PageSelector from "@/components/PageSelector.tsx";
 import {
@@ -121,6 +126,9 @@ export default function HomePage(props: PageProps<HomePageData>) {
       <Head href={props.url.href} />
       <main class="flex-1 p-4">
         {NEEDS_SETUP && <SetupInstruction />}
+<Hero/>
+<Features/>
+<Carousel/>
         <TimeSelector url={props.url} />
         {props.data.items.length === 0 && (
           <>

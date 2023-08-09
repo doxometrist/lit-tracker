@@ -30,9 +30,10 @@ import * as $24 from "./routes/signin.ts";
 import * as $25 from "./routes/signout.ts";
 import * as $26 from "./routes/submit.tsx";
 import * as $27 from "./routes/user/[login].tsx";
-import * as $$0 from "./islands/Chart.tsx";
-import * as $$1 from "./islands/PageInput.tsx";
-import * as $$2 from "./islands/VoteButton.tsx";
+import * as $$0 from "./islands/Carousel.tsx";
+import * as $$1 from "./islands/Chart.tsx";
+import * as $$2 from "./islands/PageInput.tsx";
+import * as $$3 from "./islands/VoteButton.tsx";
 
 const manifest = {
   routes: {
@@ -66,9 +67,10 @@ const manifest = {
     "./routes/user/[login].tsx": $27,
   },
   islands: {
-    "./islands/Chart.tsx": $$0,
-    "./islands/PageInput.tsx": $$1,
-    "./islands/VoteButton.tsx": $$2,
+    "./islands/Carousel.tsx": $$0,
+    "./islands/Chart.tsx": $$1,
+    "./islands/PageInput.tsx": $$2,
+    "./islands/VoteButton.tsx": $$3,
   },
   baseUrl: import.meta.url,
 };

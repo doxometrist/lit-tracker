@@ -22,8 +22,11 @@ export default {
           // This line is required. Otherwise, if removed, the values of other colors with be removed.
           ...colors,
           // Modify primary and secondary colors according to your color-scheme
-          primary: "#be185d",
-          secondary: "#4338ca",
+          primary: "#483C32", // dark wood
+          secondary: "#800000", // dark maroon
+	  accent: "#F2E9E4", // cream
+	  bone: "#E4DECD",
+	  dark_bone: "#B8A58D"
         },
         // deno-lint-ignore no-explicit-any
       }) as Preset<any>,

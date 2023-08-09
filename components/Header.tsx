@@ -63,6 +63,28 @@ export default function Header(
         class={"hidden flex-col gap-x-4 divide-y divide-solid sm:(flex items-center flex-row divide-y-0)"}
       >
         <a
+          href="/about"
+          class={cx(
+            props.url.pathname === "/about"
+              ? ACTIVE_LINK_STYLES
+              : LINK_STYLES,
+            NAV_ITEM,
+          )}
+        >
+          About
+        </a>
+        <a
+          href="/Discover"
+          class={cx(
+            props.url.pathname === "/discover"
+              ? ACTIVE_LINK_STYLES
+              : LINK_STYLES,
+            NAV_ITEM,
+          )}
+        >
+          Discover
+        </a>
+        <a
           href="/dashboard"
           class={cx(
             props.url.pathname === "/dashboard"
@@ -90,6 +112,19 @@ export default function Header(
           : null}
         {props.sessionId
           ? (
+<div>
+<a
+href="/my-lists"
+
+              class={cx(
+                props.url.pathname === "/my-lists"
+                  ? ACTIVE_LINK_STYLES
+                  : LINK_STYLES,
+                NAV_ITEM,
+              )}>
+My lists
+</a>
+
             <a
               href="/account"
               class={cx(
@@ -101,6 +136,7 @@ export default function Header(
             >
               Account
             </a>
+</div>
           )
           : <a href="/signin" class={cx(LINK_STYLES, NAV_ITEM)}>Sign in</a>}
         <a

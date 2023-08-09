@@ -1,6 +1,6 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
-export const SITE_NAME = "Deno Hunt (Beta)";
-export const SITE_DESCRIPTION = "Discover new Deno projects. Share your own.";
+export const SITE_NAME = "lit tracker";
+export const SITE_DESCRIPTION = "Track your reading lists.";
 export const REDIRECT_PATH_AFTER_LOGIN = "/";
 
 /**
@@ -9,9 +9,9 @@ export const REDIRECT_PATH_AFTER_LOGIN = "/";
  * 2. Writing custom components which offer no additional functionality beyond styling
  */
 export const BUTTON_STYLES =
-  "px-4 py-2 bg-primary text-white rounded-lg border-1 border-primary transition duration-300 disabled:(opacity-50 cursor-not-allowed) hover:(bg-transparent text-primary)";
+  "px-4 py-2 bg-primary text-bone rounded-lg border-1 border-primary transition duration-300 disabled:(opacity-50 cursor-not-allowed) hover:(bg-transparent text-dark_bone)";
 export const INPUT_STYLES =
-  "px-4 py-2 bg-transparent rounded rounded-lg outline-none border-1 border-gray-300 hover:border-black transition duration-300 disabled:(opacity-50 cursor-not-allowed) dark:(hover:border-white)";
+  "px-4 py-2 bg-accent rounded rounded-lg outline-none border-1 border-gray-300 hover:border-black transition duration-300 disabled:(opacity-50 cursor-not-allowed) dark:(hover:border-white)";
 export const SITE_BAR_STYLES = "flex justify-between p-4 gap-4";
 export const NAV_STYLES =
   "flex flex-wrap justify-start gap-x-8 gap-y-4 items-center justify-between h-full";
@@ -20,3 +20,7 @@ export const LINK_STYLES =
 export const ACTIVE_LINK_STYLES = "!text-black !dark:text-white";
 export const HEADING_STYLES = "text-3xl font-bold";
 export const HEADING_WITH_MARGIN_STYLES = HEADING_STYLES + " mb-8";
+
+export const PREMIUM_LIST_LIMIT = 10;
+export const DEFAULT_LIST_LIMIT = 10;
+export const DEFAULT_IMG = "https://islandpress.org/sites/default/files/default_book_cover_2015.jpg";

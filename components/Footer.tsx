@@ -30,17 +30,9 @@ export default function Footer(props: { url: URL }) {
           <Rss class="h-6 w-6" />
         </a>
         <a
-          href="https://discord.gg/deno"
+          href="https://github.com/doxometrist/lit-tracker"
           target="_blank"
-          aria-label="Deno SaaSKit on Discord"
-          class={LINK_STYLES}
-        >
-          <Discord class="h-6 w-6" />
-        </a>
-        <a
-          href="https://github.com/denoland/saaskit"
-          target="_blank"
-          aria-label="Deno SaaSKit repo on GitHub"
+          aria-label="Lit tracker repo on GitHub"
           class={LINK_STYLES}
         >
           <GitHub class="h-6 w-6" />
@@ -53,6 +45,37 @@ export default function Footer(props: { url: URL }) {
             alt="Made with Fresh"
           />
         </a>
+ <span>
+          <script
+            type="text/javascript"
+            src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+            data-name="bmc-button"
+            data-slug="doxometrist"
+            data-color="#800000"
+            data-emoji="📖"
+            data-font="Cookie"
+            data-text="Buy me a book"
+            data-outline-color="#ffffff"
+            data-font-color="#ffffff"
+            data-coffee-color="#FFDD00"
+          >
+          </script>
+        </span>
+ <span>
+          <a
+            href="https://twitter.com/doxometrist?ref_src=twsrc%5Etfw"
+            class="twitter-follow-button"
+            data-show-count="true"
+          >
+            Follow @doxometrist
+          </a>
+          <script
+            async
+            src="https://platform.twitter.com/widgets.js"
+            charSet="utf-8"
+          >
+          </script>
+        </span>
       </nav>
     </footer>
   );
