@@ -31,7 +31,7 @@ export default function Header(
           <img
             height="48"
             width="48"
-            src="/logo.webp"
+            src="/logo.png"
             alt={SITE_NAME + " logo"}
             class="h-12 w-12"
           />
@@ -74,7 +74,7 @@ export default function Header(
           About
         </a>
         <a
-          href="/Discover"
+          href="/discover"
           class={cx(
             props.url.pathname === "/discover"
               ? ACTIVE_LINK_STYLES

@@ -16,7 +16,7 @@ export default function Head(
   return (
     <_Head>
       <Meta
-        title={props?.title ? `${props.title} ▲ ${SITE_NAME}` : SITE_NAME}
+        title={props?.title ? `${props.title} ╤ ${SITE_NAME}` : SITE_NAME}
         description={props?.description ?? SITE_DESCRIPTION}
         href={props.href}
       />

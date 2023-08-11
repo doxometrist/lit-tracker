@@ -24,3 +24,5 @@ export const HEADING_WITH_MARGIN_STYLES = HEADING_STYLES + " mb-8";
 export const PREMIUM_LIST_LIMIT = 10;
 export const DEFAULT_LIST_LIMIT = 10;
 export const DEFAULT_IMG = "https://islandpress.org/sites/default/files/default_book_cover_2015.jpg";
+
+export const DEFAULT_AUTHOR = 'Anon';
