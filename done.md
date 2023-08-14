@@ -2,6 +2,90 @@
 
 # Old
 
+
+### Capturing value
+- [ ] premium tier with longer reading lists - also does not make sense
+- [ ] ads maybe?j - nah making it free as goth600 said
+
+routes
+-[x] about
+-[x] books
+-[x]discover
+-[ ] lists
+-[ ] my-lists
+-[ ] new-book
+- [ ] new-list
+- [ ] tracking
+- [ ] uploaded-by-me
+- [  ] uploads
+
+routes
+- [x]  415 Aug  9 08:48 _404.tsx_
+- [x]  561 Aug  9 08:48 _500.tsx_
+84 Aug  9 08:48 account
+50 Aug  9 08:48 api
+ 638 Aug  9 08:48 _app.tsx_
+38 Aug  9 08:48 blog
+1.7K Aug  9 08:48 callback.ts
+82 Aug  9 08:48 dashboard
+1.4K Aug  9 08:48 feed.ts - weird, xml shows up there
+5.1K Aug  9 12:43 index.tsx
+16 Aug  9 08:48 item
+1.5K Aug  9 08:48 _middleware.ts_
+60 Aug  9 08:48 notifications
+6.1K Aug  9 08:48 pricing.tsx
+ 771 Aug  9 08:48 signin.ts
+ 495 Aug  9 08:48 signout.ts
+4.3K Aug  9 08:48 submit.tsx
+22 Aug  9 08:48 user
+
+need functions for reading length prediction 
+best if in a tight loop, so maybe rebase the project now?
+theoretically there should be only small fixes from that. but should that be continuous?
+I am just adding routes and unless these collide, it should be fine
+### adapt to the saaskit way
+- [x] reset this repo to avoid the synching effort - add onto the working and more stable my stuff
+- [x] add the new remote
+- [x] change app tsx
+- [x] add components etc
+- [x] slowly work through routes
+- [x] make sure all utils are used
+
+
+### irrelevant when doing from scratch
+- [ ] refactor new book index form and the [id] variant form
+July plan - tbf most of the 'advanced features' are not disrupted by the changes
+
+- [x] omit head and meta
+- [x] extract specific things from layout
+- [x] bookcard, featrues and hero are needed tbh
+
+static
+- [x] delete github mark, change logo
+
+islands
+- [x] moved 2.6K Aug  9 12:42 Carousel.tsx
+- [x] not useful  130 Aug  9 08:48 Chart.tsx
+already there 543 Aug  9 08:48 PageInput.tsx
+also already there 1.2K Aug  9 08:48 VoteButton.tsx
+
+utils that are out there
+1.5K Aug  9 08:48 constants.ts - done
+many others are alread yhere
+
+ipfs facade does not stay here, as that for nomoat lib
+search.ts is not used anywhere
+
+csv stuff joined together, the same for tracking and AGI
+
+
+- [x] add middleware for all 401 actions - to not check for session everytime - just add one function
+- [x] just got version v0.6
+- [x] add environment variables in Deno deploy
+- [x] deploy
+- [x] add a modal confirmation for every delete action - tbh only list delete action will be out there given the book api. deletion of book from api not meriting a confitmation
+
+
 ### weird and rejected
 
 - [ ] throttling does not seem to quite work
