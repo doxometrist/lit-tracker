@@ -1,5 +1,8 @@
 ### that key page for list edition
 
+- [ ] improve the architecture - just use services in the GET stages
+- [ ] tbh might just start from scratch and export the components. would be
+      simpler
 - [ ] edit books and lists - maybe simply through a POST request will be the -
       always do post by default, if need repeating change into api form there
       must be one page for working on and adding stuff, it must be an island
